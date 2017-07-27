@@ -1,0 +1,16 @@
+- group conversations
+  - create new group
+  - add members
+  - (owner) remove members
+  - remove self from group
+  - when no members left, delete conversation
+
+- conversations
+  - incorporate date with messages, not just time
+  - 24hr time OR am/pm with 12hr
+  - notifications number for new incoming message
+  - newest added conversations on bottom.. or top? either way
+  
+- misc
+  - typeahead - NEEDED for group conversations
+  - styling
