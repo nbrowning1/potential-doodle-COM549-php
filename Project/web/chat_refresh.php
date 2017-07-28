@@ -37,11 +37,21 @@
   // TODO: group message not hardcoded
   $chatMessages = getChatMessages($db, $conversation, false);
 
+  $previousDateStr = null;
+
   foreach ($chatMessages as $message) {
     
     $date = strtotime($message->date_time);
-    $time = date("g:i", $date);
+    $dateStr = date("d/m/y", $date);
     
+    // show date if date changed - visually separates messages on different dates
+    if ($previousDateStr != $dateStr) {
+      echo "<p class=\"chat-date-indicator\">$dateStr</p>";
+      
+      $previousDateStr = $dateStr;
+    }
+    
+    $time = date("H:i", $date);
     
     // mark element with a class to show which user the message belongs to
     $msgCreator = $message->creator;
@@ -50,10 +60,13 @@
     $creatorIndicator = $createdByCurrentUser ? 'message-my' : 'message-other';
     
     $messageToDisplay = $message->message;
-    $timeContent = '<span>' . $time . '</span>';
-    // display message with time either to right or left depending on message creator
-    $messageWithTime = $createdByCurrentUser ? "$messageToDisplay $timeContent" : "$timeContent $messageToDisplay";
+    $msgContent = "<span class=\"chat-message-content\">$messageToDisplay</span>";
+    $timeContent = "<span class=\"chat-message-time-content $creatorIndicator\">$time</span>";
+    $timeIcon = '<span class="glyphicon glyphicon-time"></span>';
     
-    echo "<p class=\"chat-message $creatorIndicator\">$messageWithTime</p>";
+    // display message with time either to right or left depending on message creator
+    $messageWithTime = $createdByCurrentUser ? "$msgContent $timeContent $timeIcon" : "$timeIcon $timeContent $msgContent";
+    
+    echo "<div class=\"chat-message $creatorIndicator\">$messageWithTime</div>";
   }
 ?>

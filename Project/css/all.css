@@ -68,14 +68,38 @@ body {
 
 #chat-section .chat-message {
   margin: 10px;
+  word-break: break-all;
 }
 
+.chat-date-indicator {
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.chat-message-content {
+  text-align: left;
+  max-width: 90%;
+  display: inline-block;
+}
+
+/* messages from this user */
 .chat-message.message-my {
   text-align: right;
 }
 
+.chat-message-time-content.message-my {
+  margin-left: 10px;
+}
+
+/* messages from other users */
 .chat-message.message-other {
   text-align: left;
+}
+
+.chat-message-time-content.message-other {
+  margin-right: 10px;
 }
 
 .nomargin-container {

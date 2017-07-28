@@ -11,6 +11,12 @@
   - notifications number for new incoming message
   - newest added conversations on bottom.. or top? either way
   
+- register / login
+  - password hints
+  
 - misc
-  - typeahead - NEEDED for group conversations
+  - typeahead 
+    - NEEDED for group conversations
   - styling
+  - general validation about length of stuff
+  - validate message length - lower limit and test - gives PHP error currently

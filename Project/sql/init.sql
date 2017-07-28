@@ -59,7 +59,7 @@ CREATE TABLE `Groups_Users` (
 CREATE TABLE `Chat_Messages` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
  `creator_id` int(11) NOT NULL,
- `message` varchar(30) NOT NULL,
+ `message` varchar(8000) NOT NULL,
  `conversation_id` int(11),
  `group_conversation_id` int(11),
  `datetime` DATETIME DEFAULT CURRENT_TIMESTAMP,
