@@ -111,3 +111,8 @@ body {
   font-style: italic;
   margin: 5px;
 }
+
+#add-group-users {
+  display: block;
+  margin-bottom: 15px;
+}

@@ -44,5 +44,9 @@ function addNewConversation($userToAddUsername) {
   }
   return new AddStatus(true, null);
 }
+
+function addNewGroupConversation($userToAddUsername) {
+  
+}
   
 ?>

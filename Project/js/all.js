@@ -20,7 +20,7 @@ $(document).ready(function() {
         // make sure chat pane is updated on page load for active chat
         var activeConversations = document.getElementsByClassName('active');
         if (activeConversations[0]) {
-          updateChatPane(activeConversations[0]);
+          updateChatPane(activeConversations[0], false);
         }
       }
     });
@@ -35,7 +35,7 @@ $(document).ready(function() {
     });
     $(this).addClass("active");
     
-    updateChatPane(event.target);
+    updateChatPane(event.target, true);
   });
   
   $(document).on('click', '.conversation .glyphicon-remove', function(event) {
@@ -54,7 +54,7 @@ $(document).ready(function() {
     });
   });
   
-  function updateChatPane(activeConversationEl) {
+  function updateChatPane(activeConversationEl, scroll) {
     var activeChat = activeConversationEl.id;
     
     $.ajax({
@@ -64,7 +64,9 @@ $(document).ready(function() {
       success: function(html) {
         // refresh chat pane with html returned by PHP - the applicable messages for this conversation
         $("#chat-pane").html(html);
-        goToBottom('chat-section');
+        if (scroll) {
+          goToBottom('chat-section');
+        }
       }
     });
   }
