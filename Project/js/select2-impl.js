@@ -1,5 +1,6 @@
 $(document).ready(function() {
   
+  // could probably be made better with https://stackoverflow.com/questions/25338058/select2-load-json-resultset-via-ajax-and-search-locally?noredirect=1&lq=1
   $('#add-group-users').select2({
     placeholder: "Add people",
     
@@ -17,8 +18,8 @@ $(document).ready(function() {
         
         return {
           results: $.map(data, function (item) {
-            // filter by 'contains' search term
-            return item.username.indexOf(params.term) == -1 ?
+            // filter by 'contains ignore case' search term
+            return item.username.toUpperCase().indexOf(params.term.toUpperCase()) == -1 ?
               null : 
               {
                 text: item.username,

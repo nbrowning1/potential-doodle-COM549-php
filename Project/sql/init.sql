@@ -10,7 +10,7 @@ USE `Project`;
 --
 CREATE TABLE `Users` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
- `username` varchar(20) NOT NULL,
+ `username` varchar(20) NOT NULL UNIQUE,
  `password` varchar(50) NOT NULL,
  `hint` varchar(30) NOT NULL,
  `answer` varchar(30) NOT NULL,
@@ -41,7 +41,7 @@ CREATE TABLE `Conversations` (
 CREATE TABLE `Group_Conversations` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
  `owner_id` int(11) NOT NULL,
- `name` varchar(30) NOT NULL,
+ `name` varchar(30) NOT NULL UNIQUE,
  `visible` boolean NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
   FOREIGN KEY (owner_id) REFERENCES Users(id)

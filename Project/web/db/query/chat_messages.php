@@ -44,8 +44,7 @@ function getChatMessages($db, $conversation, $isGroupConversation) {
     $creator = getUserById($db, $cmCreatorId);
     
     if ($isGroupConversation) {
-      // TODO: implement
-      $groupConversation = getGroupConversation($db, $cmGroupConversationId);
+      $groupConversation = getGroupById($db, $cmGroupConversationId);
       
       array_push($chatMessages, new ChatMessage($cmId, $creator, $cmMessage, null, $groupConversation, $cmDateTime));
     } else {

@@ -1,15 +1,15 @@
 - group conversations
-  - create new group
   - add members
   - (owner) remove members
   - remove self from group
   - when no members left, delete conversation
 
 - conversations
-  - incorporate date with messages, not just time
-  - 24hr time OR am/pm with 12hr
   - notifications number for new incoming message
   - newest added conversations on bottom.. or top? either way
+  - visible on a per-user basis, idk what the fuck I was thinking
+  - don't allow creating chat message with neither convo or group_convo
+  - only show text input when a chat is active
   
 - register / login
   - password hints
@@ -18,5 +18,6 @@
   - typeahead 
     - NEEDED for group conversations
   - styling
+  - more DB constraints - e.g. uniqueness for group / user names
   - general validation about length of stuff
   - validate message length - lower limit and test - gives PHP error currently

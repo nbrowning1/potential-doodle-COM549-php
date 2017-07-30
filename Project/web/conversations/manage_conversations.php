@@ -1,7 +1,7 @@
 <?php
 
-include_once('db/connection.php');
-include_once('db/include.php');
+include_once('../db/connection.php');
+include_once('../db/include.php');
 
 class AddStatus {
   public $success;
@@ -13,7 +13,7 @@ class AddStatus {
   }
 }
 
-function addNewConversation($userToAddUsername) {
+function addConversationToActiveConversations($userToAddUsername) {
   $currentUsername = $_SESSION['user'];
 
   $db = connectToDb();
@@ -45,8 +45,28 @@ function addNewConversation($userToAddUsername) {
   return new AddStatus(true, null);
 }
 
-function addNewGroupConversation($userToAddUsername) {
+function addGroupConversationToActiveConversations($groupToAddName) {
+  $currentUsername = $_SESSION['user'];
+
+  $db = connectToDb();
+
+  if (empty($groupToAddName)) {
+    return new AddStatus(false, "Enter a group name");
+  }
   
+  $potentialConversation = getGroupByName($db, $groupToAddName);
+  
+  if ($potentialConversation->id != null) {
+    if ($potentialConversation->visible) {
+      return new AddStatus(false, "Conversation already exists");
+    } else {
+      // make visible again
+      updateGroupConversationVisibility($db, $potentialConversation->id);
+    }
+  } else {
+    return new AddStatus(false, "Couldn't find group");
+  }
+  return new AddStatus(true, null);
 }
-  
+
 ?>

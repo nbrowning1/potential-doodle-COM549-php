@@ -1,38 +1,11 @@
 <?php
 
-include_once('add_new_conversation.php');
-
 session_start();
 // if not logged in, redirect to login page
 if (!isset($_SESSION['user'])) {
   header("Location: login/login.html");
   session_destroy();
   exit;
-}
-
-// define variables and initialize with empty values
-$searchErr = "";
-$searchVal = "";
-
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  if (isset($_POST["addConversationIndicator"])) {
-    if (empty($_POST["usernameToAdd"])) {
-        $searchErr = "Enter a value";
-    } else {
-      $searchVal = $_POST["usernameToAdd"];
-      $conversationAddStatus = addNewConversation($searchVal);
-      if (!$conversationAddStatus->success) {
-        $searchErr = $conversationAddStatus->msg;
-      } else {
-        // clear search value on successful search
-        $searchVal = "";
-      }
-    }
-  } else if (isset($_POST["createGroupIndicator"])) {
-    
-  } else {
-    throw new Exception('they jus dont recognise they dont recognise like who the who the fuck is u');
-  }
 }
 
 ?>
@@ -50,24 +23,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <script src="../js/typeahead-impl.js"></script>
     <script src="../js/select2.min.js"></script>
     <script src="../js/select2-impl.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/manage-conversations.js"></script>
     <script src="../js/all.js"></script>
   </head>
   <body>
     
     <!-- search for new conversation -->
-    <form id="search-new-conversation" class="nomargin-container" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+    <form id="search-new-conversation" class="nomargin-container" method="post">
       
       <!-- bootstrap search box with icon -->
       <div class="form-group has-feedback nomargin-container">
-        <!-- indicates which form is posting - hidden -->
-        <input name="addConversationIndicator" type="text" style="display:none" value="notEmpty"/>
         
-        <input name="usernameToAdd" type="text" class="form-control typeahead" placeholder="Add somebody..." value="<?php echo htmlspecialchars($searchVal);?>"/>
+        <input id="username-search" name="nameToAdd" type="text" class="form-control typeahead" placeholder="Add somebody..." />
         <span class="glyphicon glyphicon-search form-control-feedback"></span>
-        <p class="error"><?php echo $searchErr;?></p>
+        <p id="add-conversation-error" class="error"></p>
+        
+        <!-- hidden input for group searches -->
+        <input id="group-search" name="groupToAdd" type="text" style="display: none">
         
         <!-- hidden submission to submit with typeahead -->
-        <input type="submit" style="display: none">
+        <input id="search-conversation-submit" type="submit" style="display: none">
       </div>
     </form>
     
@@ -79,8 +55,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
     
     <br>
-    <div id="conversations-section">
-      <div id="conversations-pane">
+    <div id="conversations">
+      <div id="conversations-section">
+        <div id="conversations-pane">
+        </div>
       </div>
       <button id="create-group" type="button" class="btn btn-info" data-toggle="modal" data-target="#create-group-modal">Create Group</button>
     </div>
@@ -101,16 +79,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </button>
           </div>
           
-          <form id="create-new-group" class="nomargin-container" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+          <!-- action="<?php //echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" -->
+          <form id="create-new-group" class="nomargin-container" method="post">
             <div class="modal-body">
                 <!-- bootstrap search box with icon -->
                 <div class="form-group has-feedback nomargin-container">
-                  <!-- indicates which form is posting - hidden -->
-                  <input name="createGroupIndicator" type="text" style="display:none" value="notEmpty"/>
 
-                  <select id="add-group-users" name="addGroupUsers" class="form-control" multiple="multiple" style="width: 100%;"/>
+                  <select id="add-group-users" name="addGroupUsers[]" class="form-control" multiple="multiple" style="width: 100%;"/>
+                  
+                  <!-- needed to separate error element from select as select2 processing swallows it for some reason -->
+                  <input type="text" style="display:none"/>
+                  
+                  <span id="add-group-users-error" class="error"></span>
 
-                  <input name="groupName" type="text" class="form-control" placeholder="Group Name" style="margin-top: 15px;"/>
+                  <input id="group-name" name="groupName" type="text" class="form-control" placeholder="Group Name" style="margin-top: 15px;"/>
+                  <span id="group-name-error" class="error"></span>
 
                   <!-- hidden submission to submit with typeahead -->
                   <input type="submit" style="display: none">

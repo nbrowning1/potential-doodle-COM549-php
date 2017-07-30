@@ -6,14 +6,17 @@ body {
   float: right;
 }
 
-#conversations-section {
-  display: inline-block;
+#conversations {
   float: left;
   width: 30%;
+}
+
+#conversations-section {
+  display: block;
   overflow-y: auto;
 }
 
-#conversations-pane, #chat-section {
+#conversations-section, #chat-section {
   border: 1px solid black;
   height: 80%;
 }
@@ -47,7 +50,7 @@ body {
 }
 
 #create-group {
-  margin-top: 5px;
+  margin-top: 1px;
 }
 
 #chat-section, #send-message {
@@ -87,6 +90,11 @@ body {
 /* messages from this user */
 .chat-message.message-my {
   text-align: right;
+}
+
+.chat-message-creator {
+  font-weight: bold;
+  text-decoration: underline;
 }
 
 .chat-message-time-content.message-my {
