@@ -8,24 +8,6 @@ $(document).ready(function() {
     updateConversationsPane();
   }, 2000);
   
-  function updateConversationsPane() {
-    $.ajax({
-      type: "POST",
-      url: '../web/conversations_refresh.php',
-      data: { },
-      success: function(html) {
-        // refresh conversations
-        $("#conversations-pane").html(html);
-        
-        // make sure chat pane is updated on page load for active chat
-        var activeConversation = getActiveConversationEl();
-        if (activeConversation) {
-          updateChatPane(activeConversation, false);
-        }
-      }
-    });
-  }
-  
   // on clicking a conversation, update the active chat window to show the conversation with that person
   $(document).on('click', '.conversation', function(event) {
     
@@ -58,25 +40,6 @@ $(document).ready(function() {
     });
   });
   
-  function updateChatPane(activeConversationEl, scroll) {
-    var activeChat = activeConversationEl.id;
-    var isGroupConversation = isGroupChat(activeConversationEl);
-    
-    $.ajax({
-      type: "POST",
-      url: '../web/chat_refresh.php',
-      data: { active: activeChat,
-              isGroupConversation: isGroupConversation },
-      success: function(html) {
-        // refresh chat pane with html returned by PHP - the applicable messages for this conversation
-        $("#chat-pane").html(html);
-        if (scroll) {
-          goToBottom('chat-section');
-        }
-      }
-    });
-  }
-  
   $('#send-message').keypress(function (e) {
     // on Enter pressed
     if (e.which == 13) {
@@ -86,7 +49,6 @@ $(document).ready(function() {
       $('#send-message').val('');
       
       var activeConversation = getActiveConversationEl();
-      // check for activeConversation but can't really do this without one.. I think
       var isGroupConversation = activeConversation ? isGroupChat(activeConversation) : false;
       
       $.ajax({
@@ -105,20 +67,56 @@ $(document).ready(function() {
       return false;
     }
     
-    
   });
-  
-  function getActiveConversationEl() {
-    return document.getElementsByClassName('active')[0];
-  }
-  
-  function isGroupChat(conversationEl) {
-    var classList = conversationEl.className.split(/\s+/);
-    return classList.includes('group-conversation');
-  }
-  
-  function goToBottom(id) {
-    var el = document.getElementById(id);
-    el.scrollTop = el.scrollHeight - el.clientHeight;
-  }
 });
+
+function updateConversationsPane() {
+  $.ajax({
+    type: "POST",
+    url: '../web/conversations_refresh.php',
+    data: { },
+    success: function(html) {
+      // refresh conversations
+      $("#conversations-pane").html(html);
+
+      // make sure chat pane is updated on page load for active chat
+      var activeConversation = getActiveConversationEl();
+      if (activeConversation) {
+        updateChatPane(activeConversation, false);
+      }
+    }
+  });
+}
+
+function updateChatPane(activeConversationEl, scroll) {
+  var activeChat = activeConversationEl.id;
+  var isGroupConversation = isGroupChat(activeConversationEl);
+
+  $.ajax({
+    type: "POST",
+    url: '../web/chat_refresh.php',
+    data: { active: activeChat,
+            isGroupConversation: isGroupConversation },
+    success: function(html) {
+      // refresh chat pane with html returned by PHP - the applicable messages for this conversation
+      $("#chat-pane").html(html);
+      if (scroll) {
+        goToBottom('chat-section');
+      }
+    }
+  });
+}
+
+function getActiveConversationEl() {
+  return document.getElementsByClassName('active')[0];
+}
+
+function isGroupChat(conversationEl) {
+  var classList = conversationEl.className.split(/\s+/);
+  return classList.includes('group-conversation');
+}
+
+function goToBottom(id) {
+  var el = document.getElementById(id);
+  el.scrollTop = el.scrollHeight - el.clientHeight;
+}

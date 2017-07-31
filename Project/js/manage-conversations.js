@@ -10,6 +10,7 @@ $(document).ready(function() {
     var formData = serializeForm('#search-new-conversation');
     
     var searchField = $('#username-search');
+    var groupField = $('#group-search');
     
     $.ajax({
       url: '../web/conversations/add_active_conversation.php',
@@ -25,8 +26,10 @@ $(document).ready(function() {
             searchField.blur();
           }
         } else {
-          // clear search value on success
+          // clear field values on success
           searchField.val('');
+          groupField.val('');
+          updateConversationsPane();
         }
       }
     });

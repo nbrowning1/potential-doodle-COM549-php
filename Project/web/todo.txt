@@ -10,6 +10,7 @@
   - visible on a per-user basis, idk what the fuck I was thinking
   - don't allow creating chat message with neither convo or group_convo
   - only show text input when a chat is active
+  - clicking on username makes that user the active convo
   
 - register / login
   - password hints

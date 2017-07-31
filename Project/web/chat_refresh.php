@@ -19,7 +19,17 @@ if (isset($_POST['active'])) {
   $active = 'Nobody right now';
 }
 
-$isGroupConversation = isset($_POST['isGroupConversation']) ? $_POST['isGroupConversation'] : false;
+$isGroupConversationStr = isset($_POST['isGroupConversation']) ? $_POST['isGroupConversation'] : false;
+// needed because ajax calls pass variable values to PHP as a string... https://stackoverflow.com/questions/7408976/bool-parameter-from-jquery-ajax-received-as-literal-string-false-true-in-php
+$isGroupConversation;
+if ($isGroupConversationStr === 'true') {
+  $isGroupConversation = true;
+} else if ($isGroupConversationStr === 'false') {
+  $isGroupConversation = false;
+} else {
+  // must already be boolean - assign directly
+  $isGroupConversation = $isGroupConversationStr;
+}
 
 $_SESSION['active'] = $active;
 

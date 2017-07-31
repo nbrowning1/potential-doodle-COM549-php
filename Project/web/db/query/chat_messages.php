@@ -6,6 +6,7 @@ function insertChatMessageToDb($db, $creator, $message, $conversation, $isGroupC
   
   $conversationId;
   $groupConversationId;
+  
   if ($isGroupConversation) {
     $conversationId = null;
     $groupConversationId = $conversation->id;
