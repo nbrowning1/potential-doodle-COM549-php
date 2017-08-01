@@ -1,41 +1,47 @@
 <?php
-  include_once('../db/connection.php');
-  include_once('../db/query/users.php');
-?>
 
-<html>
-  <head>
-  </head>
-  <body>
-    <?php
-    
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    
-    validateLoginForm($username, $password);
-    $db = connectToDb();
-    
-    if(successfulLogin($db, $username, $password)) {
-      session_start();
-      $_SESSION['user'] = $username;
-      // redirect to chat page
-      header("Location: ../chat.php");
-      exit;
-    } else {
-      // TODO: validation on login page
-      // redirects to login page again
-      header("Location: login.html");
-      exit;
+include_once('../db/connection.php');
+include_once('../db/query/users.php');
+
+$username = $_POST['username'];
+$password = $_POST['password'];
+
+validateLoginForm($username, $password);
+$db = connectToDb();
+
+if(successfulLogin($db, $username, $password)) {
+  session_start();
+  $_SESSION['user'] = $username;
+  // redirect to chat page
+  header("Location: ../chat.php");
+  exit;
+} else {
+  $errorResponse = errorResponse();
+  $errorResponse["validationFailure"] = "Authentication failed";
+  returnError($errorResponse);
+}
+
+function validateLoginForm($username, $password) {
+  if (empty($username) || empty($password)) {
+    $errorResponse = errorResponse();
+    if (empty($username)) {
+      $errorResponse["usernameError"] = "Username cannot be empty";
     }
-    
-    function validateLoginForm($username, $password) {
-      if (empty($username) || empty($password)) {
-        // redirects to login page again
-        header("Location: login.html");
-        exit;
-      }
+    if (empty($password)) {
+      $errorResponse["passwordError"] = "Password cannot be empty";
     }
-    
-    ?>
-  </body>
-</html>
+    returnError($errorResponse);
+  }
+}
+
+function errorResponse() {
+  return array("error"=>true);
+}
+
+function returnError($errorArray) {
+  header('Content-type: application/json');
+  echo json_encode($errorArray);
+  exit;
+}
+
+?>

@@ -34,11 +34,18 @@ if ($isGroupConversationStr === 'true') {
 $_SESSION['active'] = $active;
 
 $conversation;
+$chatTitle;
 if ($isGroupConversation) {
   $conversation = getGroupByName($db, $active);
+  $memberNames = array();
+  foreach ($conversation->members as $member) {
+    array_push($memberNames, $member->user->username);
+  }
+  $chatTitle = '<b>' . $conversation->name . '</b>: <i>' . implode(", ", $memberNames) . '</i>';
 } else {
   $otherUser = getUserByUsername($db, $active);
   $conversation = getConversationByUsers($db, $currentUser, $otherUser);
+  $chatTitle = '<b>' . $otherUser->username . '</b>';
 }
 
 // add message if new one sent
@@ -50,6 +57,8 @@ if (!empty($_POST['message'])) {
 
 $chatMessages = getChatMessages($db, $conversation, $isGroupConversation);
 
+$chatHtml = '';
+
 $previousDateStr = null;
 foreach ($chatMessages as $message) {
   $date = strtotime($message->date_time);
@@ -57,7 +66,7 @@ foreach ($chatMessages as $message) {
 
   // show date if date changed - visually separates messages on different dates
   if ($previousDateStr != $dateStr) {
-    echo "<p class=\"chat-date-indicator\">$dateStr</p>";
+    $chatHtml .= "<p class=\"chat-date-indicator\">$dateStr</p>";
 
     $previousDateStr = $dateStr;
   }
@@ -84,6 +93,14 @@ foreach ($chatMessages as $message) {
     $messageWithTime = $createdByCurrentUser ? "$msgContent $timeContent $timeIcon" : "$timeIcon $timeContent $msgContent";
   }
     
-  echo "<div class=\"chat-message $creatorIndicator\">$messageWithTime</div>";
+  $chatHtml .= "<div class=\"chat-message $creatorIndicator\">$messageWithTime</div>";
 }
+
+$response = array();
+$response['chatContent'] = $chatHtml;
+$response['chatTitle'] = $chatTitle;
+
+header('Content-type: application/json');
+echo json_encode($response);
+exit;
 ?>

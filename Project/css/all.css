@@ -53,9 +53,18 @@ body {
   margin-top: 1px;
 }
 
-#chat-section, #send-message {
+#chat {
   width: 69%;
   float: right;
+}
+
+.title {
+  margin-left: 10px;
+  font-size: 1.5em;
+}
+
+#chat-section, #send-message {
+  width: 100%;
 }
 
 #chat-section {

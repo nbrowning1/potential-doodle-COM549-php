@@ -47,7 +47,6 @@ function successfulLogin($db, $username, $password) {
   }
 
   if ($stmt->num_rows == 0) {
-    echo 'Authentication failed - re-check your username and password.';
     return false;
   }
 

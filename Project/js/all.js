@@ -16,7 +16,6 @@ $(document).ready(function() {
       $(this).removeClass("active");
     });
     $(this).addClass("active");
-    
     updateChatPane(event.target, true);
   });
   
@@ -97,9 +96,11 @@ function updateChatPane(activeConversationEl, scroll) {
     url: '../web/chat_refresh.php',
     data: { active: activeChat,
             isGroupConversation: isGroupConversation },
-    success: function(html) {
+    success: function(response) {
       // refresh chat pane with html returned by PHP - the applicable messages for this conversation
-      $("#chat-pane").html(html);
+      $("#chat-pane").html(response.chatContent);
+      // and update conversation title
+      $('#chat-title').html(response.chatTitle);
       if (scroll) {
         goToBottom('chat-section');
       }

@@ -29,6 +29,17 @@ function getConversations($db, $user) {
     array_push($conversations, new Conversation($cId, $user1, $user2, $cVisible));
   }
   
+  // use ($user) to pass external variable into comparator function
+  usort($conversations, function($a, $b) use ($user) {
+    // find comparison username for first conversation being compared - we want the OTHER user in the conversation to compare
+    $aCompareUsername = $user->id == $a->user_1->id ? $a->user_2->username : $a->user_1->username;
+    // same for the second comparison conversation
+    $bCompareUsername = $user->id == $b->user_1->id ? $b->user_2->username : $b->user_1->username;
+    
+    // returns int value (-1, 0, 1) indicating comparison status
+    return strcmp($aCompareUsername, $bCompareUsername);
+  });
+  
   return $conversations;
 }
 

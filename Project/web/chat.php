@@ -56,17 +56,22 @@ if (!isset($_SESSION['user'])) {
     
     <br>
     <div id="conversations">
+      <!-- used for formatting, to align with chat title on other side - hack but oh well -->
+      <p class="title">&nbsp;</p>
       <div id="conversations-section">
         <div id="conversations-pane">
         </div>
       </div>
       <button id="create-group" type="button" class="btn btn-info" data-toggle="modal" data-target="#create-group-modal">Create Group</button>
     </div>
-    <div id="chat-section">
-      <div id="chat-pane">
+    <div id="chat">
+      <p id="chat-title" class="title"><?php echo isset($_SESSION['active']) ? $_SESSION['active'] : '&nbsp;'; ?></p>
+      <div id="chat-section">
+        <div id="chat-pane">
+        </div>
       </div>
+      <input id="send-message" name="message" type="text" class="form-control" placeholder="Send message..."/>
     </div>
-    <input id="send-message" name="message" type="text" class="form-control" placeholder="Send message..."/>
     
     <!-- Modal -->
     <div class="modal fade" id="create-group-modal" tabindex="-1" role="dialog" aria-labelledby="createGroupModalLabel" aria-hidden="true">

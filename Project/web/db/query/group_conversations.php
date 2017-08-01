@@ -18,7 +18,7 @@ function insertGroupConversationToDb($db, $groupName, $ownerUser, $groupUsers) {
 }
 
 function getAllGroups($db) {
-  $stmt = $db->prepare('SELECT * FROM group_conversations WHERE visible = true');
+  $stmt = $db->prepare('SELECT * FROM group_conversations WHERE visible = true ORDER BY name');
   
   $stmt->execute();
   $stmt->store_result();

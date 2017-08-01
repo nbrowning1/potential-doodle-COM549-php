@@ -44,8 +44,16 @@ function removeGroupOwnerNameFromMembers($groupOwnerUsername, $usernamesToAdd) {
   return $usernamesToAdd;
 }
 
-function createNewGroupConversation($groupOwnerUsername, $groupName, $usernamesToAdd) {
+function createNewGroupConversation($groupOwnerUsername, $groupName, $usernamesToAddVar) {
   $db = connectToDb();
+  
+  // needs to be done because the post variable comes in as a single-element array, where the element contains the array passed from the ajax - so if it matches this criteria, set array to this unnecessarily-nested array - php ????
+  $usernamesToAdd;
+  if (is_array($usernamesToAddVar) && (count($usernamesToAddVar) == 1) && is_array($usernamesToAddVar[0])) {
+    $usernamesToAdd = $usernamesToAddVar[0];
+  } else {
+    $usernamesToAdd = $usernamesToAddVar;
+  }
   
   $ownerUser = getUserByUsername($db, $groupOwnerUsername);
   $usersToAddToGroup = array();
@@ -54,6 +62,7 @@ function createNewGroupConversation($groupOwnerUsername, $groupName, $usernamesT
     if ($usernameToAdd == $groupOwnerUsername) {
       continue;
     }
+    
     $userToAdd = getUserByUsername($db, $usernameToAdd);
     array_push($usersToAddToGroup, $userToAdd);
   }
