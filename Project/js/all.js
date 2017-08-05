@@ -105,9 +105,6 @@ function updateChatPane(activeConversationEl, scroll) {
     chatOptionsDropdown.appendChild(createDropdownDivider());
     chatOptionsDropdown.appendChild(createDropdownItem('options-block-user', 'Block user'));
   }
-//  <li><a href="#">Favourite user</a></li>
-//  <li class="divider"></li>
-//  <li><a href="#">Block user</a></li>
 
   $.ajax({
     type: "POST",

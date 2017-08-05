@@ -100,6 +100,18 @@ body {
   display: inline-block;
 }
 
+.chat-message.unread-message .chat-message-content::after {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  -moz-border-radius: 7.5px;
+  -webkit-border-radius: 7.5px;
+  border-radius: 7.5px;
+  margin-left: 7.5px;
+  background-color: orange;
+}
+
 /* messages from this user */
 .chat-message.message-my {
   text-align: right;

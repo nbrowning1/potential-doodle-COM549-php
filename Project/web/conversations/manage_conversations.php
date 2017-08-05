@@ -48,9 +48,10 @@ function addConversationToActiveConversations($userToAddUsername) {
 }
 
 function addGroupConversationToActiveConversations($groupToAddName) {
-  $currentUsername = $_SESSION['user'];
-
   $db = connectToDb();
+  
+  $currentUsername = $_SESSION['user'];
+  $currentUser = getUserByUsername($db, $currentUsername);
 
   if (empty($groupToAddName)) {
     return new AddStatus(false, "Enter a group name");
@@ -59,11 +60,11 @@ function addGroupConversationToActiveConversations($groupToAddName) {
   $potentialConversation = getGroupByName($db, $groupToAddName);
   
   if ($potentialConversation->id != null) {
-    if ($potentialConversation->visible) {
+    if (groupVisibleForUser($db, $potentialConversation->id, $currentUser)) {
       return new AddStatus(false, "Conversation already exists");
     } else {
       // make visible again
-      updateGroupConversationVisibility($db, $potentialConversation->id);
+      updateGroupUserGroupVisibility($db, $potentialConversation->id, $currentUser);
     }
   } else {
     return new AddStatus(false, "Couldn't find group");

@@ -41,10 +41,8 @@ CREATE TABLE `Conversations` (
 
 CREATE TABLE `Group_Conversations` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
- `owner_id` int(11) NOT NULL,
  `name` varchar(30) NOT NULL UNIQUE,
   PRIMARY KEY (id),
-  FOREIGN KEY (owner_id) REFERENCES Users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Groups_Users` (
@@ -74,7 +72,7 @@ CREATE TABLE `Users_Chat_Messages` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
  `user_id` int(11) NOT NULL,
  `message_id` int(11) NOT NULL,
- `read` boolean NOT NULL,
+ `read_status` boolean NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (user_id) REFERENCES Users(id),
   FOREIGN KEY (message_id) REFERENCES Chat_Messages(id)

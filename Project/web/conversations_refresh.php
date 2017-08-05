@@ -5,6 +5,7 @@ include_once('db/include.php');
 
 session_start();
 $currentUsername = $_SESSION['user'];
+// TODO: more appropriate defaults?
 $active = isset($_SESSION['active']) ? $_SESSION['active'] : -1;
 $hideId = isset($_POST['hide_id']) ? $_POST['hide_id'] : -1;
 
@@ -54,7 +55,7 @@ function echoGroupConversations($db, $currentUser, $active, $hideId) {
     // if active class, add class to modify the style of conversation
     $activeClass = $active == $groupConversation->name ? 'active' : '';
 
-    echo '<a href="#" class="conversation group-conversation btn btn-default ' . $activeClass . '" role="button" id=' . $groupConversation->name . '>' . $groupConversation->name . '<span class="glyphicon glyphicon-remove"></span></div>';
+    echo '<a href="#" class="conversation group-conversation btn btn-default ' . $activeClass . '" role="button" id="' . $groupConversation->name . '">' . $groupConversation->name . '<span class="glyphicon glyphicon-remove"></span></div>';
   }
 }
 

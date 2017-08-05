@@ -1,25 +1,28 @@
 - group conversations
   - add members
-  - (owner) remove members
   - remove self from group
-  - when no members left, delete conversation
+  - rename group
+  - when one member left, delete conversation
 
 - conversations
   - notifications number for new incoming message
-  - newest added conversations on bottom.. or top? either way
-  - visible on a per-user basis, idk what the fuck I was thinking
   - don't allow creating chat message with neither convo or group_convo
   - only show text input when a chat is active
   - clicking on username makes that user the active convo
-  - think there's an issue with group convos that have spaces - deleting them or focusing on them
+  - make chat options do things
   
 - register / login
   - password hints
   
 - misc
   - typeahead 
-    - NEEDED for group conversations
+    - searching by users should also show groups with those users
+    - would be cool to hide blocked users / self
+  - add table for UsersUpdates which can be constantly queried and only updates UI when required (when user receives a message or whatever) - far too eager currently
   - styling
   - more DB constraints - e.g. uniqueness for group / user names
   - general validation about length of stuff
   - validate message length - lower limit and test - gives PHP error currently
+  
+- scalability
+  - mysqli_insert_id might cause some issues when users are using it concurrently. Also, groups.json and users.json caches - need locks for the files and some more robust solution for the DB too - locks? better way to get the ID?

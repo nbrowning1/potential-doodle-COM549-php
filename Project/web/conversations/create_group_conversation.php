@@ -5,69 +5,51 @@ include_once('../db/include.php');
 
 session_start();
 
-$groupOwnerUsername = $_SESSION['user'];
+$groupCreatorUsername = $_SESSION['user'];
 
 $groupName = isset($_POST["groupName"]) ? $_POST["groupName"] : "";
 $usernamesToAdd = array();
 if (isset($_POST["members"])) {
-  array_push($usernamesToAdd, $_POST["members"]);
+  $members = $_POST["members"];
+  if (is_array($members)) {
+    $usernamesToAdd = $members;
+  } else {
+    array_push($usernamesToAdd, $members);
+  }
 }
 
-$usernamesToAdd = removeGroupOwnerNameFromMembers($groupOwnerUsername, $usernamesToAdd);
+$usernamesToAdd = addGroupCreatorNameToMembers($groupCreatorUsername, $usernamesToAdd);
 
-if (empty($groupName) || empty($usernamesToAdd)) {
+if (empty($groupName) || count($usernamesToAdd) < 2) {
   $error = errorResponse();
   if (empty($groupName)) {
     $error["groupNameError"] = "Name cannot be empty";
   }
-  if (empty($usernamesToAdd)) {
+  if (count($usernamesToAdd) < 2) {
     $error["membersError"] = "Must have at least one group member (aside from yourself)";
   }
   returnError($error);
 }
 
-createNewGroupConversation($groupOwnerUsername, $groupName, $usernamesToAdd);
+createNewGroupConversation($groupName, $usernamesToAdd);
 
-function removeGroupOwnerNameFromMembers($groupOwnerUsername, $usernamesToAdd) {
-  $ownerNameIndex = -1;
-  for ($i = 0; $i < count($usernamesToAdd); $i++) {
-    if ($usernamesToAdd[$i] == $groupOwnerUsername) {
-      $ownerNameIndex = $i;
-      break;
-    }
+function addGroupCreatorNameToMembers($groupCreatorUsername, $usernamesToAdd) {
+  if (!in_array($groupCreatorUsername, $usernamesToAdd)) {
+    array_push($usernamesToAdd, $groupCreatorUsername);
   }
-  // if owner name found in members to add, remove
-  if ($ownerNameIndex != -1) {
-    array_splice($usernamesToAdd, $ownerNameIndex, 1);
-  }
-  
   return $usernamesToAdd;
 }
 
-function createNewGroupConversation($groupOwnerUsername, $groupName, $usernamesToAddVar) {
+function createNewGroupConversation($groupName, $usernamesToAdd) {
   $db = connectToDb();
   
-  // needs to be done because the post variable comes in as a single-element array, where the element contains the array passed from the ajax - so if it matches this criteria, set array to this unnecessarily-nested array - php ????
-  $usernamesToAdd;
-  if (is_array($usernamesToAddVar) && (count($usernamesToAddVar) == 1) && is_array($usernamesToAddVar[0])) {
-    $usernamesToAdd = $usernamesToAddVar[0];
-  } else {
-    $usernamesToAdd = $usernamesToAddVar;
-  }
-  
-  $ownerUser = getUserByUsername($db, $groupOwnerUsername);
   $usersToAddToGroup = array();
   foreach ($usernamesToAdd as $usernameToAdd) {
-    // group owner shouldn't be part of members - redundant
-    if ($usernameToAdd == $groupOwnerUsername) {
-      continue;
-    }
-    
     $userToAdd = getUserByUsername($db, $usernameToAdd);
     array_push($usersToAddToGroup, $userToAdd);
   }
   
-  insertGroupConversationToDb($db, $groupName, $ownerUser, $usersToAddToGroup);
+  insertGroupConversationToDb($db, $groupName, $usersToAddToGroup);
   
   updateGroupsCache($db);
 }

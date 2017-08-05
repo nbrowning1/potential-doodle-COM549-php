@@ -50,17 +50,19 @@ if ($isGroupConversation) {
 
 // add message if new one sent
 if (!empty($_POST['message'])) {
-  $message = $_POST['message'];
+  $message = htmlspecialchars($_POST['message']);
 
   insertChatMessageToDb($db, $currentUser, $message, $conversation, $isGroupConversation);
 }
 
-$chatMessages = getChatMessages($db, $conversation, $isGroupConversation);
+$userChatMessages = getChatMessagesForUser($db, $conversation, $isGroupConversation, $currentUser);
 
 $chatHtml = '';
 
 $previousDateStr = null;
-foreach ($chatMessages as $message) {
+foreach ($userChatMessages as $userChatMessage) {
+  $message = $userChatMessage->message;
+  
   $date = strtotime($message->date_time);
   $dateStr = date("d/m/y", $date);
 
@@ -92,8 +94,10 @@ foreach ($chatMessages as $message) {
   } else {
     $messageWithTime = $createdByCurrentUser ? "$msgContent $timeContent $timeIcon" : "$timeIcon $timeContent $msgContent";
   }
+  
+  $unreadMsgClass = $userChatMessage->read ? '' : 'unread-message'; 
     
-  $chatHtml .= "<div class=\"chat-message $creatorIndicator\">$messageWithTime</div>";
+  $chatHtml .= "<div class=\"chat-message $unreadMsgClass $creatorIndicator \">$messageWithTime</div>";
 }
 
 $response = array();

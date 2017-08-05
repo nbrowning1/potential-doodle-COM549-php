@@ -10,6 +10,7 @@ function insertGroupUsersForGroup($db, $groupId, $groupUsers) {
     $stmt->bind_param('ii', $groupId, $groupUser->id);
     $stmt->execute();
     if ($stmt->error) {
+      echo $stmt->error;
       throw new RuntimeException('Unexpected error occurred: ' . $stmt->error);
     }
 
@@ -49,13 +50,29 @@ function getGroupIdsForUser($db, $user) {
   return $groupIds;
 }
 
-function updateGroupUserGroupVisibility($db, $groupConversationId, $user) {
+function groupVisibleForUser($db, $groupConversationId, $user) {
   $stmt = $db->prepare('SELECT * FROM groups_users WHERE group_id = ? AND user_id = ?');
   
   $stmt->bind_param('ii', $groupConversationId, $user->id);
   $stmt->execute();
   $stmt->store_result();
   $stmt->bind_result($guId, $guGroupId, $guUserId, $guGroupVisibility);
+  
+  $stmt->fetch();
+  
+  return $guGroupVisibility;
+}
+
+function updateGroupUserGroupVisibility($db, $groupConversationId, $user) {
+  
+  $stmt = $db->prepare('SELECT * FROM groups_users WHERE group_id = ? AND user_id = ?');
+  
+  $stmt->bind_param('ii', $groupConversationId, $user->id);
+  $stmt->execute();
+  $stmt->store_result();
+  $stmt->bind_result($guId, $guGroupId, $guUserId, $guGroupVisibility);
+  
+  $stmt->fetch();
   
   // invert visibility
   $newVisible = $guGroupVisibility ? 0 : 1;

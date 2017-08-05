@@ -1,10 +1,11 @@
 <?php
 
-function insertGroupConversationToDb($db, $groupName, $ownerUser, $groupUsers) {
-  $query = 'INSERT INTO group_conversations(owner_id, name) VALUES (?, ?)';
+function insertGroupConversationToDb($db, $groupName, $groupUsers) {
+
+  $query = 'INSERT INTO group_conversations(name) VALUES (?)';
   $stmt = $db->prepare($query);
   
-  $stmt->bind_param('is', $ownerUser->id, $groupName);
+  $stmt->bind_param('s', $groupName);
   $stmt->execute();
   if ($stmt->error) {
     throw new RuntimeException('Unexpected error occurred: ' . $stmt->error);
@@ -22,11 +23,11 @@ function getAllGroups($db) {
   
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($gcId, $gcOwnerId, $gcName);
+  $stmt->bind_result($gcId, $gcName);
   
   $groups = array();
   while ($stmt->fetch()) {
-    $group = createGroupObj($db, $gcId, $gcOwnerId, $gcName);
+    $group = createGroupObj($db, $gcId, $gcName);
     array_push($groups, $group);
   }
   
@@ -39,11 +40,11 @@ function getGroupById($db, $groupConversationId) {
   $stmt->bind_param('i', $groupConversationId);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($gcId, $gcOwnerId, $gcName);
+  $stmt->bind_result($gcId, $gcName);
   
   $stmt->fetch();
   
-  return createGroupObj($db, $gcId, $gcOwnerId, $gcName);
+  return createGroupObj($db, $gcId, $gcName);
 }
 
 function getGroupByName($db, $groupName) {
@@ -52,11 +53,11 @@ function getGroupByName($db, $groupName) {
   $stmt->bind_param('s', $groupName);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($gcId, $gcOwnerId, $gcName);
+  $stmt->bind_result($gcId, $gcName);
   
   $stmt->fetch();
   
-  return createGroupObj($db, $gcId, $gcOwnerId, $gcName);
+  return createGroupObj($db, $gcId, $gcName);
 }
 
 function getGroupsForUser($db, $user) {
@@ -66,10 +67,9 @@ function getGroupsForUser($db, $user) {
   
   $groupsForUser = array();
   foreach ($allGroups as $group) {
-    $userOwnsGroup = $group->owner->id == $user->id;
     $userPartOfGroup = in_array($group->id, $groupIdsUserBelongsTo);
     
-    if ($userOwnsGroup || $userPartOfGroup) {
+    if ($userPartOfGroup) {
       array_push($groupsForUser, $group);
     }
   }
@@ -77,9 +77,8 @@ function getGroupsForUser($db, $user) {
   return $groupsForUser;
 }
 
-function createGroupObj($db, $id, $ownerId, $name) {
-  $ownerUser = getUserById($db, $ownerId);
-  $group = new GroupConversation($id, $ownerUser, $name);
+function createGroupObj($db, $id, $name) {
+  $group = new GroupConversation($id, $name);
   $group->members = getGroupUsersForGroup($db, $group);
   
   return $group;

@@ -13,5 +13,6 @@ require_once('query/conversations.php');
 require_once('query/group_conversations.php');
 require_once('query/groups_users.php');
 require_once('query/chat_messages.php');
+require_once('query/user_chat_messages.php');
 
 ?>
