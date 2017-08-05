@@ -27,7 +27,7 @@ function getGroupUsersForGroup($db, $group) {
   
   $groupUsers = array();
   while ($stmt->fetch()) {
-    array_push($groupUsers, new GroupUser($guId, $group, getUserById($db, $guUserId)), $guGroupVisibility);
+    array_push($groupUsers, new GroupUser($guId, $group, getUserById($db, $guUserId), $guGroupVisibility));
   }
   
   return $groupUsers;
