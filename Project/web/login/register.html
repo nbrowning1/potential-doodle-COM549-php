@@ -2,17 +2,26 @@
   <head>
     <link rel="stylesheet" href="../../css/bootstrap.min.css">
     <link rel="stylesheet" href="../../css/all.css">
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/utils.js"></script>
+    <script src="register.js"></script>
   </head>
   <body>
     <h2>Register a new account</h2>
     <br>
-    <form action="register.php" method="post">
+    <form id="register-form" method="post">
       <p style="width: 125px; display: inline-block;">Username</p> <input name="username" type="text">
+      <span id="username-error" class="error"></span>
       <br>
       <p style="width: 125px; display: inline-block;">Password</p> <input name="password" type="password">
+      <span id="password-error" class="error"></span>
       <br>
-      <p style="width: 125px; display: inline-block;">Confirm Password</p> <input name="confirm_password" type="password">
-      <br><br>
+      <p style="width: 125px; display: inline-block;">Confirm Password</p> 
+      <input name="confirmPassword" type="password">
+      <span id="confirm-password-error" class="error"></span>
+      <br>
+      <span id="validation-error" class="error"></span>
+      <br>
       <input style="margin-left: 150px;" type="submit" value="Submit">
       
       <br>

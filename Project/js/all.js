@@ -56,9 +56,11 @@ $(document).ready(function() {
         data: { use_same_active: true,
                 message: message,
                 isGroupConversation: isGroupConversation },
-        success: function(html) {
+        success: function(response) {
           // refresh chat pane with html returned by PHP - the applicable messages for this conversation
-          $("#chat-pane").html(html);
+          $("#chat-pane").html(response.chatContent);
+          // and update conversation title
+          $('#chat-title').html(response.chatTitle);
           goToBottom('chat-section');
         }
       });
@@ -90,6 +92,22 @@ function updateConversationsPane() {
 function updateChatPane(activeConversationEl, scroll) {
   var activeChat = activeConversationEl.id;
   var isGroupConversation = isGroupChat(activeConversationEl);
+  
+  var chatOptionsDropdown = document.getElementById('chat-options-dropdown');
+  $(chatOptionsDropdown).empty();
+  if (isGroupConversation) {
+    chatOptionsDropdown.appendChild(createDropdownItem('options-add-member', 'Add member'));
+    chatOptionsDropdown.appendChild(createDropdownItem('options-rename-group', 'Rename group'));
+    chatOptionsDropdown.appendChild(createDropdownDivider());
+    chatOptionsDropdown.appendChild(createDropdownItem('options-leave-group', 'Leave group'));
+  } else {
+    chatOptionsDropdown.appendChild(createDropdownItem('options-favourite-user', 'Favourite user'));
+    chatOptionsDropdown.appendChild(createDropdownDivider());
+    chatOptionsDropdown.appendChild(createDropdownItem('options-block-user', 'Block user'));
+  }
+//  <li><a href="#">Favourite user</a></li>
+//  <li class="divider"></li>
+//  <li><a href="#">Block user</a></li>
 
   $.ajax({
     type: "POST",
@@ -106,6 +124,22 @@ function updateChatPane(activeConversationEl, scroll) {
       }
     }
   });
+}
+
+function createDropdownItem(id, text) {
+  var item = document.createElement('li');
+  var link = document.createElement('a');
+  link.href = '#';
+  link.id = id;
+  link.textContent = text;
+  item.appendChild(link);
+  return item;
+}
+
+function createDropdownDivider() {
+  var divider = document.createElement('li');
+  divider.className = 'divider';
+  return divider;
 }
 
 function getActiveConversationEl() {

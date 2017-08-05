@@ -32,7 +32,8 @@ CREATE TABLE `Conversations` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
  `user_1_id` int(11) NOT NULL,
  `user_2_id` int(11) NOT NULL,
- `visible` boolean NOT NULL DEFAULT 0,
+ `user_1_visibility` boolean NOT NULL DEFAULT 0,
+ `user_2_visibility` boolean NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
   FOREIGN KEY (user_1_id) REFERENCES Users(id),
   FOREIGN KEY (user_2_id) REFERENCES Users(id)
@@ -42,7 +43,6 @@ CREATE TABLE `Group_Conversations` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
  `owner_id` int(11) NOT NULL,
  `name` varchar(30) NOT NULL UNIQUE,
- `visible` boolean NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
   FOREIGN KEY (owner_id) REFERENCES Users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -51,6 +51,7 @@ CREATE TABLE `Groups_Users` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
  `group_id` int(11) NOT NULL,
  `user_id` int(11) NOT NULL,
+ `group_visibility` boolean NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
   FOREIGN KEY (group_id) REFERENCES Group_Conversations(id),
   FOREIGN KEY (user_id) REFERENCES Users(id)

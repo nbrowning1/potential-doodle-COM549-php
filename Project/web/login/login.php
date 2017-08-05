@@ -2,6 +2,7 @@
 
 include_once('../db/connection.php');
 include_once('../db/query/users.php');
+include_once('../utils.php');
 
 $username = $_POST['username'];
 $password = $_POST['password'];
@@ -9,16 +10,17 @@ $password = $_POST['password'];
 validateLoginForm($username, $password);
 $db = connectToDb();
 
-if(successfulLogin($db, $username, $password)) {
+if (successfulLogin($db, $username, $password)) {
   session_start();
   $_SESSION['user'] = $username;
-  // redirect to chat page
-  header("Location: ../chat.php");
-  exit;
+  
+  // send redirect response to let JS handle it because apparently header doesn't work
+  $redirectResponse = redirectResponse("../chat.php");
+  returnJson($redirectResponse);
 } else {
   $errorResponse = errorResponse();
   $errorResponse["validationFailure"] = "Authentication failed";
-  returnError($errorResponse);
+  returnJson($errorResponse);
 }
 
 function validateLoginForm($username, $password) {
@@ -30,18 +32,8 @@ function validateLoginForm($username, $password) {
     if (empty($password)) {
       $errorResponse["passwordError"] = "Password cannot be empty";
     }
-    returnError($errorResponse);
+    returnJson($errorResponse);
   }
-}
-
-function errorResponse() {
-  return array("error"=>true);
-}
-
-function returnError($errorArray) {
-  header('Content-type: application/json');
-  echo json_encode($errorArray);
-  exit;
 }
 
 ?>

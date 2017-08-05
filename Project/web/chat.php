@@ -66,6 +66,15 @@ if (!isset($_SESSION['user'])) {
     </div>
     <div id="chat">
       <p id="chat-title" class="title"><?php echo isset($_SESSION['active']) ? $_SESSION['active'] : '&nbsp;'; ?></p>
+      <div id="chat-options" class="dropdown">
+        <button class="btn btn-default" data-toggle="dropdown" type="button" aria-expanded="false">Actions <span class="caret"></span></button>
+        <ul id="chat-options-dropdown" class="dropdown-menu pull-right" role="menu">
+          <!--<li><a href="#">Favourite user</a></li>
+          <li class="divider"></li>
+          <li><a href="#">Block user</a></li>-->
+        </ul>
+      </div>
+      
       <div id="chat-section">
         <div id="chat-pane">
         </div>

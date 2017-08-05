@@ -1,77 +1,71 @@
 <?php
-  include_once('../db/connection.php');
-  include_once('../db/include.php');
+//ob_start();
+
+//header("Location: login.html");
+//echo "<script type='text/javascript'>window.top.location='http://example.com/';</script>";
+//exit;
+
+include_once('../db/connection.php');
+include_once('../db/include.php');
+include_once('../utils.php');
+
+$username = $_POST['username'];
+$password = $_POST['password'];
+$confirmPassword = $_POST['confirmPassword'];
+
+$db = connectToDb();
+validateForm($username, $password, $confirmPassword);
+
+if (!usernameIsAvailable($db, $username)) {
+  $errorResponse = errorResponse();
+  $errorResponse["validationFailure"] = "Username taken - please choose another";
+  returnJson($errorResponse);
+}
+
+// TODO: add validation check (false if DB constraints fail)
+insertUserToDb($db, $username, $password, 'hint', 'password');
+
+updateUsersCache($db);
+
+$db->close();
+
+$redirectResponse = redirectResponse("login.html");
+returnJson($redirectResponse);
+
+// TODO: add length checks
+function validateForm($username, $password, $confirmPassword) {
+  if (empty($username) || empty($password) || empty($confirmPassword)) {
+    $errorResponse = errorResponse();
+    if (empty($username)) {
+      $errorResponse["usernameError"] = "Username cannot be empty";
+    }
+    if (empty($password)) {
+      $errorResponse["passwordError"] = "Password cannot be empty";
+    }
+    if (empty($confirmPassword)) {
+      $errorResponse["confirmPasswordError"] = "Confirm Password cannot be empty";
+    }
+    returnJson($errorResponse);
+  }
+  
+  if ($password != $confirmPassword) {
+    $errorResponse = errorResponse();
+    $errorResponse["confirmPasswordError"] = "Passwords do not match";
+    returnJson($errorResponse);
+  }
+}
+
+function updateUsersCache($db) {
+  $users = getAllUsers($db);
+  $usersToWrite = array();
+
+  foreach ($users as $user) {
+    $usersToWrite[] = array('username'=> $user->username);
+  } 
+
+  $fp = fopen('../../cache/users.json', 'w');
+  fwrite($fp, json_encode($usersToWrite));
+  fclose($fp);
+}
+
 ?>
-
-<html>
-  <head>
-  </head>
-  <body>
-    <?php
-    
-    // TODO: add hint and answer
-    $username = $_POST['username'];
-    $password = $_POST['password'];
-    $confirmPassword = $_POST['confirm_password'];
-    
-    $db = connectToDb();
-    validateForm($username, $password, $confirmPassword);
-    // TODO: redirect back if failure
-    if (!usernameIsAvailable($db, $username)) {
-      echo 'Username not available';
-      exit;
-    }
-    
-    insertUserToDb($db, $username, $password, 'hint', 'password');
-    
-    updateUsersCache($db);
-    
-    $db->close();
-    
-    session_start();
-    $_SESSION['user'] = $username;
-    // redirects to chat and exits this file
-    header("Location: ../chat.php");
-    exit;
-    
-    // TODO: add length checks, redirect back on failure
-    function validateForm($username, $password, $confirmPassword) {
-      // check all form fields filled in
-      if (!filled_out($_POST)) {
-        echo 'You have not filled the form out correctly - please go back and try again.';
-        exit;
-      }
-      
-      // check that password / confirmation matches
-      if ($password != $confirmPassword) {
-        echo 'The passwords you entered do not match - please go back and try again.';
-        exit;
-      }
-    }
-    
-    function filled_out($form_vars) {
-      // test that each variable has a value
-      foreach ($form_vars as $key => $value) {
-        if ((!isset($key)) || ($value == '')) {
-          return false;
-        }
-      }
-      return true;
-    }
-    
-    function updateUsersCache($db) {
-      $users = getAllUsers($db);
-      $usersToWrite = array();
-      
-      foreach ($users as $user) {
-        $usersToWrite[] = array('username'=> $user->username);
-      } 
-
-      $fp = fopen('../../cache/users.json', 'w');
-      fwrite($fp, json_encode($usersToWrite));
-      fclose($fp);
-    }
-    
-    ?>
-  </body>
-</html>

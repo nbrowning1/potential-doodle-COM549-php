@@ -1,7 +1,7 @@
 <?php
 
 function insertGroupConversationToDb($db, $groupName, $ownerUser, $groupUsers) {
-  $query = 'INSERT INTO group_conversations(owner_id, name, visible) VALUES (?, ?, 1)';
+  $query = 'INSERT INTO group_conversations(owner_id, name) VALUES (?, ?)';
   $stmt = $db->prepare($query);
   
   $stmt->bind_param('is', $ownerUser->id, $groupName);
@@ -18,15 +18,15 @@ function insertGroupConversationToDb($db, $groupName, $ownerUser, $groupUsers) {
 }
 
 function getAllGroups($db) {
-  $stmt = $db->prepare('SELECT * FROM group_conversations WHERE visible = true ORDER BY name');
+  $stmt = $db->prepare('SELECT * FROM group_conversations ORDER BY name');
   
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($gcId, $gcOwnerId, $gcName, $gcVisible);
+  $stmt->bind_result($gcId, $gcOwnerId, $gcName);
   
   $groups = array();
   while ($stmt->fetch()) {
-    $group = createGroupObj($db, $gcId, $gcOwnerId, $gcName, $gcVisible);
+    $group = createGroupObj($db, $gcId, $gcOwnerId, $gcName);
     array_push($groups, $group);
   }
   
@@ -39,11 +39,11 @@ function getGroupById($db, $groupConversationId) {
   $stmt->bind_param('i', $groupConversationId);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($gcId, $gcOwnerId, $gcName, $gcVisible);
+  $stmt->bind_result($gcId, $gcOwnerId, $gcName);
   
   $stmt->fetch();
   
-  return createGroupObj($db, $gcId, $gcOwnerId, $gcName, $gcVisible);
+  return createGroupObj($db, $gcId, $gcOwnerId, $gcName);
 }
 
 function getGroupByName($db, $groupName) {
@@ -52,11 +52,11 @@ function getGroupByName($db, $groupName) {
   $stmt->bind_param('s', $groupName);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($gcId, $gcOwnerId, $gcName, $gcVisible);
+  $stmt->bind_result($gcId, $gcOwnerId, $gcName);
   
   $stmt->fetch();
   
-  return createGroupObj($db, $gcId, $gcOwnerId, $gcName, $gcVisible);
+  return createGroupObj($db, $gcId, $gcOwnerId, $gcName);
 }
 
 function getGroupsForUser($db, $user) {
@@ -77,20 +77,9 @@ function getGroupsForUser($db, $user) {
   return $groupsForUser;
 }
 
-function updateGroupConversationVisibility($db, $groupConversationId) {
-  $group = getGroupById($db, $groupConversationId);
-  
-  // invert visibility
-  $newVisible = $group->visible ? 0 : 1;
-  
-  $sql = "UPDATE group_conversations SET visible = $newVisible WHERE id = $groupConversationId";
-  
-  $db->query($sql);
-}
-
-function createGroupObj($db, $id, $ownerId, $name, $visible) {
+function createGroupObj($db, $id, $ownerId, $name) {
   $ownerUser = getUserById($db, $ownerId);
-  $group = new GroupConversation($id, $ownerUser, $name, $visible);
+  $group = new GroupConversation($id, $ownerUser, $name);
   $group->members = getGroupUsersForGroup($db, $group);
   
   return $group;

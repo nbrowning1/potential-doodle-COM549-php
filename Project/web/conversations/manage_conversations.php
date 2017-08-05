@@ -32,11 +32,13 @@ function addConversationToActiveConversations($userToAddUsername) {
   $potentialConversation = getConversationByUsers($db, $currentUser, $userToAdd);
   
   if ($potentialConversation->id != null) {
-    if ($potentialConversation->visible) {
+    $conversationAlreadyVisibleForUser = (($currentUser->id == $potentialConversation->user_1->id && $potentialConversation->user_1_visibility == 1) || ($currentUser->id == $potentialConversation->user_2->id && $potentialConversation->user_2_visibility == 1));
+    
+    if ($conversationAlreadyVisibleForUser) {
       return new AddStatus(false, "Conversation already exists");
     } else {
       // make visible again
-      updateConversationVisibility($db, $potentialConversation->id);
+      updateConversationVisibility($db, $potentialConversation->id, $currentUser->id);
     }
   } else {
     // create new conversation between users

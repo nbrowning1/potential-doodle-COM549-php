@@ -1,3 +1,7 @@
+html {
+  padding-bottom: 15px;
+}
+
 body {
   margin: 15px;
 }
@@ -49,7 +53,7 @@ body {
   color: red;
 }
 
-#create-group {
+#create-group, #send-message {
   margin-top: 1px;
 }
 
@@ -132,4 +136,12 @@ body {
 #add-group-users {
   display: block;
   margin-bottom: 15px;
+}
+
+#chat-title, #chat-options {
+  display: inline-block;
+}
+
+#chat-options {
+  float: right;
 }

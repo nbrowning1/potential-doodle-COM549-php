@@ -1,10 +1,10 @@
 <?php
 
-function insertConversationToDb($db, $user1, $user2) {
-  $query = 'INSERT INTO conversations(user_1_id, user_2_id) VALUES (?, ?)';
+function insertConversationToDb($db, $initiatingUser, $otherUser) {
+  $query = 'INSERT INTO conversations(user_1_id, user_2_id, user_1_visibility, user_2_visibility) VALUES (?, ?, 1, 0)';
   $stmt = $db->prepare($query);
   
-  $stmt->bind_param('ii', $user1->id, $user2->id);
+  $stmt->bind_param('ii', $initiatingUser->id, $otherUser->id);
   $stmt->execute();
   if ($stmt->error) {
     throw new RuntimeException('Unexpected error occurred: ' . $stmt->error);
@@ -14,19 +14,19 @@ function insertConversationToDb($db, $user1, $user2) {
 }
 
 function getConversations($db, $user) {
-  $stmt = $db->prepare('SELECT * FROM conversations WHERE (user_1_id = ? OR user_2_id = ?) AND visible = true');
+  $stmt = $db->prepare('SELECT * FROM conversations WHERE (user_1_id = ? AND user_1_visibility = 1) OR (user_2_id = ? AND user_2_visibility = 1)');
   
   $stmt->bind_param('ii', $user->id, $user->id);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($cId, $cUser1Id, $cUser2Id, $cVisible);
+  $stmt->bind_result($cId, $cUser1Id, $cUser2Id, $cUser1Visibility, $cUser2Visibility);
   
   $conversations = array();
   while ($stmt->fetch()) {
     $user1 = getUserById($db, $cUser1Id);
     $user2 = getUserById($db, $cUser2Id);
     
-    array_push($conversations, new Conversation($cId, $user1, $user2, $cVisible));
+    array_push($conversations, new Conversation($cId, $user1, $user2, $cUser1Visibility, $cUser2Visibility));
   }
   
   // use ($user) to pass external variable into comparator function
@@ -49,13 +49,13 @@ function getConversationById($db, $conversationId) {
   $stmt->bind_param('i', $conversationId);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($cId, $cUser1Id, $cUser2Id, $cVisible);
+  $stmt->bind_result($cId, $cUser1Id, $cUser2Id, $cUser1Visibility, $cUser2Visibility);
   
   $stmt->fetch();
   
   $user1 = getUserById($db, $cUser1Id);
   $user2 = getUserById($db, $cUser2Id);
-  return new Conversation($cId, $user1, $user2, $cVisible);
+  return new Conversation($cId, $user1, $user2, $cUser1Visibility, $cUser2Visibility);
 }
 
 function getConversationByUsers($db, $user1, $user2) {
@@ -64,22 +64,29 @@ function getConversationByUsers($db, $user1, $user2) {
   $stmt->bind_param('iiii', $user1->id, $user2->id, $user1->id, $user2->id);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($cId, $cUser1Id, $cUser2Id, $cVisible);
+  $stmt->bind_result($cId, $cUser1Id, $cUser2Id, $cUser1Visibility, $cUser2Visibility);
   
   $stmt->fetch();
   
   $user1 = getUserById($db, $cUser1Id);
   $user2 = getUserById($db, $cUser2Id);
-  return new Conversation($cId, $user1, $user2, $cVisible);
+  return new Conversation($cId, $user1, $user2, $cUser1Visibility, $cUser2Visibility);
 }
 
-function updateConversationVisibility($db, $conversationId) {
+function updateConversationVisibility($db, $conversationId, $userId) {
   $conversation = getConversationById($db, $conversationId);
   
-  // invert visibility
-  $newVisible = $conversation->visible ? 0 : 1;
+  $targetUserIsFirstUser = false;
+  if ($conversation->user_1->id == $userId) {
+    $targetUserIsFirstUser = true;
+  }
   
-  $sql = "UPDATE conversations SET visible = $newVisible WHERE id = $conversationId";
+  $visibility = $targetUserIsFirstUser ? $conversation->user_1_visibility : $conversation->user_2_visibility;
+  // invert visibility
+  $newVisible = $visibility ? 0 : 1;
+  
+  $visibilityColumnToUpdate = $targetUserIsFirstUser ? 'user_1_visibility' : 'user_2_visibility';
+  $sql = "UPDATE conversations SET $visibilityColumnToUpdate = $newVisible WHERE id = $conversationId";
   
   $db->query($sql);
 }

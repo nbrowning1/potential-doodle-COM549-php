@@ -29,7 +29,7 @@ function echoRegularConversations($db, $currentUser, $active, $hideId) {
 
     // hide conversation if refresh request desires it
     if ($otherUser->username == $hideId) {
-      updateConversationVisibility($db, $conversation->id);
+      updateConversationVisibility($db, $conversation->id, $currentUser->id);
       continue;
     }
 
@@ -47,7 +47,7 @@ function echoGroupConversations($db, $currentUser, $active, $hideId) {
     
     // hide conversation if refresh request desires it
     if ($groupConversation->name == $hideId) {
-      updateGroupConversationVisibility($db, $groupConversation->id);
+      updateGroupUserGroupVisibility($db, $groupConversation->id, $currentUser);
       continue;
     }
 

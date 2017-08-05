@@ -9,7 +9,7 @@ $(document).ready(function() {
     
     var formData = serializeForm('#search-new-conversation');
     
-    var searchField = $('#username-search');
+    var usernameField = $('#username-search');
     var groupField = $('#group-search');
     
     $.ajax({
@@ -23,12 +23,12 @@ $(document).ready(function() {
         if (data.error) {
           if (data.searchError) {
             addConversationErrorEl.text(data.searchError);
-            searchField.blur();
           }
         } else {
           // clear field values on success
-          searchField.val('');
-          groupField.val('');
+          usernameField.blur();
+          usernameField.val("");
+          groupField.val("");
           updateConversationsPane();
         }
       }
