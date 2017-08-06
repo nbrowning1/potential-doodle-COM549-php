@@ -9,8 +9,9 @@
   - don't allow creating chat message with neither convo or group_convo
   - only show text input when a chat is active
   - clicking on username makes that user the active convo
-  - make chat options do things
+  - make all chat options do things
   - longer wait to mark messages as read
+  - if conversation hidden and receive a message to it, make it visible
   
 - register / login
   - forgot password functionality
@@ -18,8 +19,7 @@
   
 - misc
   - typeahead 
-    - searching by users should also show groups with those users
-    - would be cool to hide blocked users / self
+    - would be cool to hide blocked users (or show it)
   - add table for UsersUpdates which can be constantly queried and only updates UI when required (when user receives a message or whatever) - far too eager currently
   - styling
   - more DB constraints - e.g. uniqueness for group / user names

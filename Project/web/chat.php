@@ -38,7 +38,6 @@ if (!isset($_SESSION['user'])) {
         
         <input id="username-search" name="nameToAdd" type="text" class="form-control typeahead" placeholder="Add somebody..." />
         <span class="glyphicon glyphicon-search form-control-feedback"></span>
-        <p id="add-conversation-error" class="error"></p>
         
         <!-- hidden input for group searches -->
         <input id="group-search" name="groupToAdd" type="text" style="display: none">
@@ -57,8 +56,8 @@ if (!isset($_SESSION['user'])) {
     
     <br>
     <div id="conversations">
-      <!-- used for formatting, to align with chat title on other side - hack but oh well -->
-      <p class="title">&nbsp;</p>
+      <!-- partially used for formatting, to align with chat title on other side - hence the 'title' class -->
+      <p id="add-conversation-error" class="title error">&nbsp;</p>
       <div id="conversations-section">
         <div id="conversations-pane">
         </div>
@@ -70,9 +69,7 @@ if (!isset($_SESSION['user'])) {
       <div id="chat-options" class="dropdown">
         <button class="btn btn-default" data-toggle="dropdown" type="button" aria-expanded="false">Actions <span class="caret"></span></button>
         <ul id="chat-options-dropdown" class="dropdown-menu pull-right" role="menu">
-          <!--<li><a href="#">Favourite user</a></li>
-          <li class="divider"></li>
-          <li><a href="#">Block user</a></li>-->
+          <!-- populated by JS -->
         </ul>
       </div>
       
