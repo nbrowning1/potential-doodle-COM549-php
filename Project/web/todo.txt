@@ -5,11 +5,11 @@
   - when one member left, delete conversation
 
 - conversations
-  - notifications number for new incoming message
   - don't allow creating chat message with neither convo or group_convo
   - only show text input when a chat is active
   - clicking on username makes that user the active convo
   - make chat options do things
+  - longer wait to mark messages as read
   
 - register / login
   - password hints

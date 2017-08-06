@@ -55,7 +55,7 @@ if (!empty($_POST['message'])) {
   insertChatMessageToDb($db, $currentUser, $message, $conversation, $isGroupConversation);
 }
 
-$userChatMessages = getChatMessagesForUser($db, $conversation, $isGroupConversation, $currentUser);
+$userChatMessages = getAllChatMessagesForUser($db, $conversation, $isGroupConversation, $currentUser);
 
 $chatHtml = '';
 
@@ -99,6 +99,9 @@ foreach ($userChatMessages as $userChatMessage) {
     
   $chatHtml .= "<div class=\"chat-message $unreadMsgClass $creatorIndicator \">$messageWithTime</div>";
 }
+
+// since user clicked on chat window, mark messages as read
+markMessagesAsReadForUser($db, $currentUser, $userChatMessages);
 
 $response = array();
 $response['chatContent'] = $chatHtml;

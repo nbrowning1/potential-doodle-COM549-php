@@ -35,19 +35,36 @@ function getUserChatMessagesForUser($db, $user) {
 }
 
 function markMessagesAsReadForUser($db, $user, $messages) {
+  
+  if (empty($messages)) {
+    return;
+  }
+  
   // build IN clause because PHP prepared statements don't support this array-like parameter type
   $inClause = '';
-  foreach ($messages as $message) {
+  
+  if (is_array($messages)) {
+    foreach ($messages as $message) {
+      $messageId = $message->message->id;
+      
+      // bit of safety since we're raw querying here
+      if (!is_numeric($messageId)) {
+        continue;
+      }
+
+      if (empty($inClause)) {
+        $inClause .= $messageId;
+      } else {
+        $inClause .= ", $messageId";
+      }
+    }
+  } else {
     // bit of safety since we're raw querying here
-    if (!is_numeric($message->id)) {
+    if (!is_numeric($messageId)) {
       continue;
     }
-      
-    if (empty($inClause)) {
-      $inClause .= $message->id;
-    } else {
-      $inClause .= ", $message->id";
-    }
+
+    $inClause .= $message->id;
   }
   
   $stmt = $db->prepare("UPDATE users_chat_messages SET read_status = 1 WHERE user_id = ? AND message_id IN ($inClause)");

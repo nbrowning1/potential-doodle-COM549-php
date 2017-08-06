@@ -48,6 +48,12 @@ body {
   padding-top: 10px;
 }
 
+.conversation .conversation-number-unread {
+  display: inline-block;
+  border: 2px solid orange;
+  border-radius: 25px;
+}
+
 .conversation .glyphicon-remove {
   float: right;
   color: red;

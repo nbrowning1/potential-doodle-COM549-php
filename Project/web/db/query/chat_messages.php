@@ -53,7 +53,7 @@ function insertChatMessageToDb($db, $creator, $message, $conversation, $isGroupC
   }
 }
 
-function getChatMessagesForUser($db, $conversation, $isGroupConversation, $user) {
+function getAllChatMessagesForUser($db, $conversation, $isGroupConversation, $user) {
   
   $columnName;
   if ($isGroupConversation) {
@@ -65,6 +65,28 @@ function getChatMessagesForUser($db, $conversation, $isGroupConversation, $user)
   $query = "SELECT chat_messages.*, users_chat_messages.read_status
   FROM chat_messages
   INNER JOIN users_chat_messages ON chat_messages.id = users_chat_messages.message_id WHERE $columnName = ? AND users_chat_messages.user_id = ?";
+  
+  return getChatMessagesForUser($query, $db, $conversation, $isGroupConversation, $user);
+}
+
+function getUnreadChatMessagesForUser($db, $conversation, $isGroupConversation, $user) {
+  
+  $columnName;
+  if ($isGroupConversation) {
+    $columnName = 'group_conversation_id';
+  } else {
+    $columnName = 'conversation_id';
+  }
+  
+  $query = "SELECT chat_messages.*, users_chat_messages.read_status
+  FROM chat_messages
+  INNER JOIN users_chat_messages ON chat_messages.id = users_chat_messages.message_id WHERE $columnName = ? AND users_chat_messages.user_id = ? AND users_chat_messages.read_status = 0";
+  
+  return getChatMessagesForUser($query, $db, $conversation, $isGroupConversation, $user);
+}
+
+function getChatMessagesForUser($query, $db, $conversation, $isGroupConversation, $user) {
+  
   $stmt = $db->prepare($query);
   
   $stmt->bind_param('ii', $conversation->id, $user->id);
