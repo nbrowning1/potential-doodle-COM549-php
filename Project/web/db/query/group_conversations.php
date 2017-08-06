@@ -77,6 +77,19 @@ function getGroupsForUser($db, $user) {
   return $groupsForUser;
 }
 
+function updateGroupName($db, $oldName, $newName) {
+  $query = 'UPDATE group_conversations SET name = ? WHERE name = ?';
+  $stmt = $db->prepare($query);
+  
+  $stmt->bind_param('ss', $newName, $oldName);
+  $stmt->execute();
+  if ($stmt->error) {
+    throw new RuntimeException('Unexpected error occurred: ' . $stmt->error);
+  }
+
+  $stmt->free_result();
+}
+
 function createGroupObj($db, $id, $name) {
   $group = new GroupConversation($id, $name);
   $group->members = getGroupUsersForGroup($db, $group);

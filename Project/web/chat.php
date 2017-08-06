@@ -25,6 +25,7 @@ if (!isset($_SESSION['user'])) {
     <script src="../js/select2-impl.js"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/manage-conversations.js"></script>
+    <script src="../js/chat-options.js"></script>
     <script src="../js/all.js"></script>
   </head>
   <body>
@@ -82,7 +83,7 @@ if (!isset($_SESSION['user'])) {
       <input id="send-message" name="message" type="text" class="form-control" placeholder="Send message..."/>
     </div>
     
-    <!-- Modal -->
+    <!-- Create Group Modal -->
     <div class="modal fade" id="create-group-modal" tabindex="-1" role="dialog" aria-labelledby="createGroupModalLabel" aria-hidden="true">
       <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -93,7 +94,6 @@ if (!isset($_SESSION['user'])) {
             </button>
           </div>
           
-          <!-- action="<?php //echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" -->
           <form id="create-new-group" class="nomargin-container" method="post">
             <div class="modal-body">
                 <!-- bootstrap search box with icon -->
@@ -112,6 +112,33 @@ if (!isset($_SESSION['user'])) {
                   <!-- hidden submission to submit with typeahead -->
                   <input type="submit" style="display: none">
                 </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" value="Submit">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Rename Group Modal -->
+    <div class="modal fade" id="rename-group-modal" tabindex="-1" role="dialog" aria-labelledby="renameGroupModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="renameGroupModalLabel">Rename Group: <span id="rename-group-title-old-group"></span></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          
+          <form id="rename-group" class="nomargin-container" method="post">
+            <div class="modal-body">
+
+              <input id="rename-group-name" name="groupName" type="text" class="form-control" placeholder="Group Name" style="margin-top: 15px;"/>
+              <span id="rename-group-name-error" class="error"></span>
+
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

@@ -71,7 +71,7 @@ $(document).ready(function() {
   });
 });
 
-function updateConversationsPane() {
+function updateConversationsPane(updatedConversationName) {
   $.ajax({
     type: "POST",
     url: '../web/conversations_refresh.php',
@@ -79,11 +79,18 @@ function updateConversationsPane() {
     success: function(html) {
       // refresh conversations
       $("#conversations-pane").html(html);
-
-      // make sure chat pane is updated on page load for active chat
-      var activeConversation = getActiveConversationEl();
-      if (activeConversation) {
-        updateChatPane(activeConversation, false);
+      
+      if (updatedConversationName) {
+        // if conversation name updated, active will be out of date and we should re-set active conversation to the newly renamed conversation
+        var renamedConversation = $(".conversation[id='" + updatedConversationName + "']")[0];
+        renamedConversation.click();
+        
+      } else {
+        // make sure chat pane is updated on page load for active chat
+        var activeConversation = getActiveConversationEl();
+        if (activeConversation) {
+          updateChatPane(activeConversation, false);
+        }
       }
     }
   });
@@ -93,18 +100,7 @@ function updateChatPane(activeConversationEl, scroll) {
   var activeChat = activeConversationEl.id;
   var isGroupConversation = isGroupChat(activeConversationEl);
   
-  var chatOptionsDropdown = document.getElementById('chat-options-dropdown');
-  $(chatOptionsDropdown).empty();
-  if (isGroupConversation) {
-    chatOptionsDropdown.appendChild(createDropdownItem('options-add-member', 'Add member'));
-    chatOptionsDropdown.appendChild(createDropdownItem('options-rename-group', 'Rename group'));
-    chatOptionsDropdown.appendChild(createDropdownDivider());
-    chatOptionsDropdown.appendChild(createDropdownItem('options-leave-group', 'Leave group'));
-  } else {
-    chatOptionsDropdown.appendChild(createDropdownItem('options-favourite-user', 'Favourite user'));
-    chatOptionsDropdown.appendChild(createDropdownDivider());
-    chatOptionsDropdown.appendChild(createDropdownItem('options-block-user', 'Block user'));
-  }
+  populateOptionsDropdown(isGroupConversation);
 
   $.ajax({
     type: "POST",
@@ -121,26 +117,6 @@ function updateChatPane(activeConversationEl, scroll) {
       }
     }
   });
-}
-
-function createDropdownItem(id, text) {
-  var item = document.createElement('li');
-  var link = document.createElement('a');
-  link.href = '#';
-  link.id = id;
-  link.textContent = text;
-  item.appendChild(link);
-  return item;
-}
-
-function createDropdownDivider() {
-  var divider = document.createElement('li');
-  divider.className = 'divider';
-  return divider;
-}
-
-function getActiveConversationEl() {
-  return document.getElementsByClassName('active')[0];
 }
 
 function isGroupChat(conversationEl) {

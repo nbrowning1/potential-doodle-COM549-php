@@ -2,6 +2,7 @@
   - add members
   - remove self from group
   - rename group
+    - show special message in chat indicating name change
   - when one member left, delete conversation
 
 - conversations
@@ -12,7 +13,8 @@
   - longer wait to mark messages as read
   
 - register / login
-  - password hints
+  - forgot password functionality
+    - password hints
   
 - misc
   - typeahead 
@@ -23,6 +25,8 @@
   - more DB constraints - e.g. uniqueness for group / user names
   - general validation about length of stuff
   - validate message length - lower limit and test - gives PHP error currently
+  - more robust active conversation indicators that setting name in ID - could cause unexpected behaviour if name conflicts with id of another unrelated element
+  - show number of unread in tab name
   
 - scalability
   - mysqli_insert_id might cause some issues when users are using it concurrently. Also, groups.json and users.json caches - need locks for the files and some more robust solution for the DB too - locks? better way to get the ID?

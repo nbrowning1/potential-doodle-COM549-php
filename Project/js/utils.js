@@ -1,5 +1,4 @@
 function serializeForm(formSelector) {
-
   return $(formSelector).serializeArray().reduce(function(obj, item) {
       if (obj[item.name]) {
           if (obj[item.name].constructor === Array) {
@@ -15,5 +14,8 @@ function serializeForm(formSelector) {
       }
       return obj;
   }, {});
-  
+}
+
+function getActiveConversationEl() {
+  return document.getElementsByClassName('active')[0];
 }
