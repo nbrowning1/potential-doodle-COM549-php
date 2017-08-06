@@ -29,4 +29,4 @@
   - show number of unread in tab name
   
 - scalability
-  - mysqli_insert_id might cause some issues when users are using it concurrently. Also, groups.json and users.json caches - need locks for the files and some more robust solution for the DB too - locks? better way to get the ID?
+  - mysqli_insert_id might cause some issues when users are using it concurrently. some more robust solution for the DB - locks? better way to get the ID?

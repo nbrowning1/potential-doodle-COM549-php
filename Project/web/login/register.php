@@ -25,8 +25,6 @@ if (!usernameIsAvailable($db, $username)) {
 // TODO: add validation check (false if DB constraints fail)
 insertUserToDb($db, $username, $password, 'hint', 'password');
 
-updateUsersCache($db);
-
 $db->close();
 
 $redirectResponse = redirectResponse("login.html");
@@ -53,19 +51,6 @@ function validateForm($username, $password, $confirmPassword) {
     $errorResponse["confirmPasswordError"] = "Passwords do not match";
     returnJson($errorResponse);
   }
-}
-
-function updateUsersCache($db) {
-  $users = getAllUsers($db);
-  $usersToWrite = array();
-
-  foreach ($users as $user) {
-    $usersToWrite[] = array('username'=> $user->username);
-  } 
-
-  $fp = fopen('../../cache/users.json', 'w');
-  fwrite($fp, json_encode($usersToWrite));
-  fclose($fp);
 }
 
 ?>

@@ -1,9 +1,5 @@
---
--- Database: `Project`
---
-CREATE DATABASE IF NOT EXISTS `Project` DEFAULT CHARACTER SET utf8
-COLLATE utf8_general_ci;
-USE `Project`;
+-- only get the 1 DB for uni
+USE `b00652112`;
 
 --
 -- Table structures

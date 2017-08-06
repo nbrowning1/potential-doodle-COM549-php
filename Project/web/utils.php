@@ -1,5 +1,9 @@
 <?php
 
+function successResponse() {
+  return array("success"=>true);
+}
+
 function errorResponse() {
   return array("error"=>true);
 }

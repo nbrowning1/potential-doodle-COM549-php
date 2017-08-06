@@ -5,7 +5,7 @@ $(document).ready(function() {
     placeholder: "Add people",
     
     ajax: {
-      url: "../cache/users.json",
+      url: "../web/get_users.php",
       dataType: 'json',
       delay: 250,
       data: function (term) {
@@ -13,11 +13,11 @@ $(document).ready(function() {
             term: term
         };
       },
-      processResults: function (data, params) {
+      processResults: function (response, params) {
         params.page = params.page || 1;
         
         return {
-          results: $.map(data, function (item) {
+          results: $.map(response.data, function (item) {
             // filter by 'contains ignore case' search term
             return item.username.toUpperCase().indexOf(params.term.toUpperCase()) == -1 ?
               null : 

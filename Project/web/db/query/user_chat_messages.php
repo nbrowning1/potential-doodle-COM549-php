@@ -61,7 +61,7 @@ function markMessagesAsReadForUser($db, $user, $messages) {
   } else {
     // bit of safety since we're raw querying here
     if (!is_numeric($messageId)) {
-      continue;
+      return;
     }
 
     $inClause .= $message->id;

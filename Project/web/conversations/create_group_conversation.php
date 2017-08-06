@@ -50,27 +50,6 @@ function createNewGroupConversation($groupName, $usernamesToAdd) {
   }
   
   insertGroupConversationToDb($db, $groupName, $usersToAddToGroup);
-  
-  updateGroupsCache($db);
-}
-
-function updateGroupsCache($db) {
-  $groups = getAllGroups($db);
-  
-  $groupsToWrite = array();
-
-  foreach ($groups as $group) {
-    $memberNames = array();
-    foreach ($group->members as $member) {
-      array_push($memberNames, $member->user->username);
-    }
-    
-    $groupsToWrite[] = array('groupname'=> $group->name, 'members'=>$memberNames);
-  }
-
-  $fp = fopen('../../cache/groups.json', 'w');
-  fwrite($fp, json_encode($groupsToWrite));
-  fclose($fp);
 }
 
 function errorResponse() {

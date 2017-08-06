@@ -19,6 +19,7 @@ if (!isset($_SESSION['user'])) {
     <link rel="stylesheet" href="../css/all.css">
     <script src="../js/jquery-3.2.1.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/users-groups-refresh.js"></script>
     <script src="../js/typeahead.js"></script>
     <script src="../js/typeahead-impl.js"></script>
     <script src="../js/select2.min.js"></script>

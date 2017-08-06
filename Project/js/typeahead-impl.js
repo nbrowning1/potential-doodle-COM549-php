@@ -4,8 +4,6 @@ $(document).ready(function() {
   var users = [];
   var groups = [];
   
-  // TODO: more often refresh - only refreshes on page load
-  // also probably worth grabbing from DB since the cache does sweet fa to help requests now (bc prefetch is fucking garbage)
   $.ajax({
     type: "POST",
     url: '../web/get_current_user.php',
@@ -14,39 +12,44 @@ $(document).ready(function() {
       if (response.user) {
         currentUser = response.user;
       }
-      populateUsers();
-      populateGroups();
+      
+      // HARD refresh at the start - results of the promise because of the ajax call to get users & groups in the first place
+      UsersGroupsRefresh.refreshUsers()
+        .then(function(updatedUsers) {
+          populateUsers(updatedUsers);
+        });
+      UsersGroupsRefresh.refreshGroups()
+        .then(function(updatedGroups) {
+          populateGroups(updatedGroups);
+        });
     }
   });
   
-  var populateUsers = function() {
-    $.ajax({
-      type: "GET",
-      url: '../cache/users.json',
-      data: { },
-      success: function(response) {
-        $.each(response, function(i, user) {
-          // exclude self
-          if (currentUser !== user.username) {
-            users.push(user.username);
-          }
-        });
+  // occasional polling for updates
+  setInterval(refresh, 30000);
+  
+  // grab refreshed references from UsersGroupsRefresh (does its own refreshing for users & groups)
+  function refresh() {
+    users = [];
+    groups = [];
+    populateUsers(UsersGroupsRefresh.getUsers());
+    populateGroups(UsersGroupsRefresh.getGroups());
+  }
+  
+  function populateUsers(updatedUsers) {
+    $.each(updatedUsers, function(i, user) {
+      // exclude self
+      if (currentUser !== user.username) {
+        users.push(user.username);
       }
     });
   };
 
-  var populateGroups = function() {
-    $.ajax({
-      type: "GET",
-      url: '../cache/groups.json',
-      data: { },
-      success: function(response) {
-        $.each(response, function(i, group) {
-          // exclude groups not containing user
-          if ($.inArray(currentUser, group.members) > -1) {
-            groups.push(group);
-          }
-        });
+  function populateGroups(updatedGroups) {
+    $.each(updatedGroups, function(i, group) {
+      // exclude groups not containing user
+      if ($.inArray(currentUser, group.members) > -1) {
+        groups.push(group);
       }
     });
   };

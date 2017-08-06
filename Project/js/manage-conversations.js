@@ -3,9 +3,9 @@ $(document).ready(function() {
   $(document).on('submit', 'form#search-new-conversation', function(e) {
     e.preventDefault();
     
-    // clear down error fields from previous attempt
+    // clear down error fields from previous attempt (with a space for this particular field to keep things aligned)
     var addConversationErrorEl = $('#add-conversation-error');
-    addConversationErrorEl.text('');
+    addConversationErrorEl.html('&nbsp;');
     
     var formData = serializeForm('#search-new-conversation');
     
