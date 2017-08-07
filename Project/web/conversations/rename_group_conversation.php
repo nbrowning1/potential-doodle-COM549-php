@@ -4,7 +4,9 @@ include_once('../db/connection.php');
 include_once('../db/include.php');
 
 session_start();
-$currentUsername = $_SESSION['user']
+$db = connectToDb();
+  
+$currentUser = getUserByUsername($db, $_SESSION['user']);
 
 $oldName = isset($_POST["oldName"]) ? $_POST["oldName"] : "";
 $newName = isset($_POST["newName"]) ? $_POST["newName"] : "";
@@ -18,16 +20,16 @@ if (empty($newName)) {
   returnError($error);
 }
 
-renameGroupConversation($oldName, $newName);
+renameGroupConversation($db, $oldName, $newName, $currentUser);
 
-function renameGroupConversation($oldName, $newName) {
-  $db = connectToDb();
+function renameGroupConversation($db, $oldName, $newName, $currentUser) {
   
   updateGroupName($db, $oldName, $newName);
   
   $conversation = getGroupByName($db, $newName);
-  // mark creator as 'admin' user as this is an administrative message
-  insertChatMessageToDb($db, getAdminUser(), $message, $conversation, true)
+  $message = "$currentUser->username renamed this conversation from '$oldName' to '$newName'";
+  
+  insertAdminChatMessageToDb($db, $currentUser, $message, $conversation, true);
 }
 
 function errorResponse() {

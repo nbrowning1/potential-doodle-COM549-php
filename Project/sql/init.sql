@@ -62,6 +62,7 @@ CREATE TABLE `Chat_Messages` (
  `conversation_id` int(11),
  `group_conversation_id` int(11),
  `datetime` DATETIME DEFAULT CURRENT_TIMESTAMP,
+ `admin_message` boolean NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
   FOREIGN KEY (creator_id) REFERENCES Users(id),
   FOREIGN KEY (conversation_id) REFERENCES Conversations(id),

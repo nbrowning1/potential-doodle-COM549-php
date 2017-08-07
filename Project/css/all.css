@@ -118,6 +118,12 @@ body {
   background-color: orange;
 }
 
+/* messages like group renamings or other housekeeping */
+.chat-message.message-admin {
+  text-align: center;
+  font-style: italic;
+}
+
 /* messages from this user */
 .chat-message.message-my {
   text-align: right;

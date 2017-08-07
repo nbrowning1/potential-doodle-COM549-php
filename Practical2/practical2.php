@@ -12,38 +12,42 @@ $password = getPostValueIfPresent('password');
 $confirmPassword = getPostValueIfPresent('confirm_password');
 $userType = getPostValueIfPresent('user_type');
 
-// if not actually submitting anything
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+try {
+  // if actually submitting form
+  if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
-  $successStatus = true;
-  $successTable = "";
-  
-  if (formValid($firstName, $surname, $email, $password, $confirmPassword, $userType)) {
-    $db = connectToDb();
-    
-    if (validForDb($db, $email)) {
-      $userTypeId = getUserTypeId($userType);
-      insertUserToDb($db, $firstName, $surname, $email, $password, $userTypeId);
-      showUsersFromDb($db);
+    $successStatus = true;
+    $successTable = "";
 
-      $db->close();
-      
+    if (formValid($firstName, $surname, $email, $password, $confirmPassword, $userType)) {
+      $db = connectToDb();
+
+      if (validForDb($db, $email)) {
+        $userTypeId = getUserTypeId($userType);
+        insertUserToDb($db, $firstName, $surname, $email, $password, $userTypeId);
+        showUsersFromDb($db);
+
+        $db->close();
+
+      } else {
+        $successStatus = false;
+      }
     } else {
       $successStatus = false;
     }
-  } else {
-    $successStatus = false;
+
+    if ($successStatus) {
+      $success = "Added user $firstName $surname - email [$email] as a $userType user";
+
+      // clear down error values because it was a success
+      $fnameError = $snameError = $emailError = $passwordError = $cPasswordError = $userTypeError = $generalError = "";
+    } else {
+      // clear down any previous success message if present
+      $success = "";
+    }
   }
-  
-  if ($successStatus) {
-    $success = "Added user $firstName $surname - email [$email] as a $userType user";
-    
-    // clear down error values because it was a success
-    $fnameError = $snameError = $emailError = $passwordError = $cPasswordError = $userTypeError = $generalError = "";
-  } else {
-    // clear down any previous success message if present
-    $success = "";
-  }
+} catch (Exception $e) {
+  $generalError = $e->getMessage();
 }
 
 function getPostValueIfPresent($name) {
@@ -169,11 +173,12 @@ function validForDb($db, $username) {
 function getUserTypeId($userType) {
   if ($userType == 'Super Admin') {
     return 0;
-  } else if ($userType == 'Regular') {
+  } else if ($userType == 'Admin') {
     return 1;
+  } else if ($userType == 'Coach') {
+    return 2;
   } else {
-    echo 'Invalid user type specified.';
-    exit;
+    throw new Exception('Invalid user type [' . $userType . '] specified.');
   }
 }
 
@@ -239,40 +244,46 @@ function showUsersFromDb($db) {
 
 <html>
   <head>
+    <style>
+    .success {color: green;}
+    .error   {color: red;}
+    .label   {width: 125px; display: inline-block;}
+    </style>
   </head>
   <body>
     <h2>Registration Form</h2>
     <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
       
-      <p style="width: 125px; display: inline-block;">Firstname</p> 
+      <p class="label">Firstname</p> 
       <input name="firstname" type="text" value="<?php echo htmlspecialchars($firstName);?>">
       <span class="error"><?php echo $fnameError;?></span>
       <br>
       
-      <p style="width: 125px; display: inline-block;">Surname</p> 
+      <p class="label">Surname</p> 
       <input name="surname" type="text" value="<?php echo htmlspecialchars($surname);?>">
       <span class="error"><?php echo $snameError;?></span>
       <br>
       
-      <p style="width: 125px; display: inline-block;">Email</p> 
+      <p class="label">Email</p> 
       <input name="email" type="text" value="<?php echo htmlspecialchars($email);?>">
       <span class="error"><?php echo $emailError;?></span>
       <br>
       
-      <p style="width: 125px; display: inline-block;">Password</p> 
+      <p class="label">Password</p> 
       <input name="password" type="password" value="<?php echo htmlspecialchars($password);?>">
       <span class="error"><?php echo $passwordError;?></span>
       <br>
       
-      <p style="width: 125px; display: inline-block;">Confirm Password</p> 
+      <p class="label">Confirm Password</p> 
       <input name="confirm_password" type="password" value="<?php echo htmlspecialchars($confirmPassword);?>">
       <span class="error"><?php echo $cPasswordError;?></span>
       <br>
       
-      <p style="width: 125px; display: inline-block;">User Type</p> 
+      <p class="label">User Type</p> 
       <select name="user_type">
         <option <?php if($userType == 'Super Admin') echo "selected"; ?>>Super Admin</option>
-        <option <?php if($userType == 'Regular') echo "selected"; ?>>Regular</option>
+        <option <?php if($userType == 'Admin') echo "selected"; ?>>Admin</option>
+        <option <?php if($userType == 'Coach') echo "selected"; ?>>Coach</option>
       </select>
       <span class="error"><?php echo $userTypeError;?></span>
       <br>

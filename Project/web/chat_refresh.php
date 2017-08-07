@@ -79,25 +79,34 @@ foreach ($userChatMessages as $userChatMessage) {
   $msgCreator = $message->creator;
   $createdByCurrentUser = $msgCreator->id == $currentUser->id;
 
-  $creatorIndicator = $createdByCurrentUser ? 'message-my' : 'message-other';
-
-  $messageToDisplay = $message->message;
-  $msgContent = "<span class=\"chat-message-content\">$messageToDisplay</span>";
-  $timeContent = "<span class=\"chat-message-time-content $creatorIndicator\">$time</span>";
-  $timeIcon = '<span class="glyphicon glyphicon-time"></span>';
-
-  $messageWithTime;
-  // display message with time either to right or left depending on message creator. If group conversation, display names of other users beside message
-  if ($isGroupConversation) {
-    $msgCreator = "<span class=\"chat-message-creator\">$msgCreator->username</span>:";
-    $messageWithTime = $createdByCurrentUser ? "$msgContent $timeContent $timeIcon" : "$timeIcon $timeContent $msgCreator $msgContent";
+  $finalMessage;
+  $creatorIndicator;
+  if ($message->is_admin_message) {
+    $creatorIndicator = 'message-admin';
+    
+    $finalMessage = "<span class=\"chat-message-content\">$message->message</span>";
   } else {
-    $messageWithTime = $createdByCurrentUser ? "$msgContent $timeContent $timeIcon" : "$timeIcon $timeContent $msgContent";
+    $creatorIndicator = $createdByCurrentUser ? 'message-my' : 'message-other'; 
+    
+    $messageToDisplay = $message->message;
+    $msgContent = "<span class=\"chat-message-content\">$messageToDisplay</span>";
+    $timeContent = "<span class=\"chat-message-time-content $creatorIndicator\">$time</span>";
+    $timeIcon = '<span class="glyphicon glyphicon-time"></span>';
+
+    $finalMessage;
+    // display message with time either to right or left depending on message creator. If group conversation, display names of other users beside message
+    if ($isGroupConversation) {
+      $msgCreator = "<span class=\"chat-message-creator\">$msgCreator->username</span>:";
+      
+      $finalMessage = $createdByCurrentUser ? "$msgContent $timeContent $timeIcon" : "$timeIcon $timeContent $msgCreator $msgContent";
+    } else {
+      $finalMessage = $createdByCurrentUser ? "$msgContent $timeContent $timeIcon" : "$timeIcon $timeContent $msgContent";
+    }
   }
   
   $unreadMsgClass = $userChatMessage->read ? '' : 'unread-message'; 
     
-  $chatHtml .= "<div class=\"chat-message $unreadMsgClass $creatorIndicator \">$messageWithTime</div>";
+  $chatHtml .= "<div class=\"chat-message $unreadMsgClass $creatorIndicator \">$finalMessage</div>";
 }
 
 // since user clicked on chat window, mark messages as read

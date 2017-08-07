@@ -1,5 +1,8 @@
 <?php
-  // check for uVariables == empty?
+  // check that posted
+  if (!$_SERVER["REQUEST_METHOD"] == "POST") {
+    exit;
+  }
 
   // uVariables from practical3.php
   $fullName = "$uFirstName $uSurname";
@@ -7,7 +10,9 @@
   if ($uUserType == 0) {
     $userType = 'Super Admin';
   } else if ($uUserType == 1) {
-    $userType = 'Regular';
+    $userType = 'Admin';
+  } else if ($uUserType == 2) {
+    $userType = 'Coach';
   } else {
     $userType = 'Unknown';
   }
@@ -17,7 +22,7 @@
   <head>
   </head>
   <body>
-    <a href="practical3.html">Logout</a>
+    <a href="practical3.php">Logout</a>
     <br>
     <p>Welcome <?php echo $fullName; ?>!</p>
     <p><b>Username:</b> <?php echo $uUsername ?></p>

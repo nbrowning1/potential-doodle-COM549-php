@@ -2,6 +2,15 @@
 
 function insertChatMessageToDb($db, $creator, $message, $conversation, $isGroupConversation) {
   $query = 'INSERT INTO chat_messages(creator_id, message, conversation_id, group_conversation_id) VALUES (?, ?, ?, ?)';
+  insertChatMessageToDbFromQuery($db, $creator, $message, $conversation, $isGroupConversation, $query);
+}
+
+function insertAdminChatMessageToDb($db, $creator, $message, $conversation, $isGroupConversation) {
+  $query = 'INSERT INTO chat_messages(creator_id, message, conversation_id, group_conversation_id, admin_message) VALUES (?, ?, ?, ?, 1)';
+  insertChatMessageToDbFromQuery($db, $creator, $message, $conversation, $isGroupConversation, $query);
+}
+
+function insertChatMessageToDbFromQuery($db, $creator, $message, $conversation, $isGroupConversation, $query) {
   $stmt = $db->prepare($query);
   
   $conversationId;
@@ -92,7 +101,7 @@ function getChatMessagesForUser($query, $db, $conversation, $isGroupConversation
   $stmt->bind_param('ii', $conversation->id, $user->id);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($cmId, $cmCreatorId, $cmMessage, $cmConversationId, $cmGroupConversationId, $cmDateTime, $ucmRead);
+  $stmt->bind_result($cmId, $cmCreatorId, $cmMessage, $cmConversationId, $cmGroupConversationId, $cmDateTime, $cmAdminMessage, $ucmRead);
   
   $userChatMessages = array();
   while ($stmt->fetch()) {
@@ -101,14 +110,14 @@ function getChatMessagesForUser($query, $db, $conversation, $isGroupConversation
     if ($isGroupConversation) {
       $groupConversation = getGroupById($db, $cmGroupConversationId);
       
-      $chatMessage = new ChatMessage($cmId, $creator, $cmMessage, null, $groupConversation, $cmDateTime);
+      $chatMessage = new ChatMessage($cmId, $creator, $cmMessage, null, $groupConversation, $cmDateTime, $cmAdminMessage);
       
       // null id - not getting from DB, just constructing it from chat message
       array_push($userChatMessages, new UserChatMessage(null, $user, $chatMessage, $ucmRead));
     } else {
       $conversation = getConversationById($db, $cmConversationId);
       
-      $chatMessage = new ChatMessage($cmId, $creator, $cmMessage, $conversation, null, $cmDateTime);
+      $chatMessage = new ChatMessage($cmId, $creator, $cmMessage, $conversation, null, $cmDateTime, $cmAdminMessage);
       
       // null id - not getting from DB, just constructing it from chat message
       array_push($userChatMessages, new UserChatMessage(null, $user, $chatMessage, $ucmRead));
@@ -125,7 +134,7 @@ function getChatMessageById($db, $id) {
   $stmt->bind_param('i', $id);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($cmId, $cmCreatorId, $cmMessage, $cmConversationId, $cmGroupConversationId, $cmDateTime);
+  $stmt->bind_result($cmId, $cmCreatorId, $cmMessage, $cmConversationId, $cmGroupConversationId, $cmDateTime, $cmAdminMessage);
   
   $stmt->fetch();
   $creator = getUserById($db, $cmCreatorId);
@@ -134,11 +143,11 @@ function getChatMessageById($db, $id) {
   if ($isGroupConversation) {
     $groupConversation = getGroupById($db, $cmGroupConversationId);
 
-    return new ChatMessage($cmId, $creator, $cmMessage, null, $groupConversation, $cmDateTime);
+    return new ChatMessage($cmId, $creator, $cmMessage, null, $groupConversation, $cmDateTime, $cmAdminMessage);
   } else {
     $conversation = getConversationById($db, $cmConversationId);
 
-    return new ChatMessage($cmId, $creator, $cmMessage, $conversation, null, $cmDateTime);
+    return new ChatMessage($cmId, $creator, $cmMessage, $conversation, null, $cmDateTime, $cmAdminMessage);
   }
 }
 
