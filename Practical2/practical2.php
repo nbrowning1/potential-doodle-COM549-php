@@ -245,6 +245,7 @@ function showUsersFromDb($db) {
 <html>
   <head>
     <style>
+    *        {font-family: Arial, Helvetica, sans-serif;}
     .success {color: green;}
     .error   {color: red;}
     .label   {width: 125px; display: inline-block;}

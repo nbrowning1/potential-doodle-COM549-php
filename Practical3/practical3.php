@@ -85,6 +85,7 @@ function validateCredentials($stmt) {
 <html>
   <head>
     <style>
+    *        {font-family: Arial, Helvetica, sans-serif;}
     .error   {color: red;}
     .label   {width: 125px; display: inline-block;}
     </style>
