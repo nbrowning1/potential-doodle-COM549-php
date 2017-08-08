@@ -16,6 +16,7 @@ CREATE TABLE `Users` (
  `answer` varchar(30) NOT NULL,
  `reg_date` datetime NOT NULL,
  `user_type` int(1) NOT NULL,
+ `has_updates` boolean NOT NULL DEFAULT 0,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

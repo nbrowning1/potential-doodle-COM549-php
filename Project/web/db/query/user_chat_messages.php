@@ -14,6 +14,10 @@ function insertUserChatMessageToDb($db, $userId, $messageId, $read) {
   }
 
   $stmt->free_result();
+  
+  // if not read, this should mark the user as 'having updates' so that their conversations refresh
+  $hasUpdatesVal = $readInsertVal ? 0 : 1;
+  setUserHasUpdatesById($db, $userId, $hasUpdatesVal);
 }
 
 function getUserChatMessagesForUser($db, $user) {

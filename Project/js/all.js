@@ -5,7 +5,20 @@ $(document).ready(function() {
   
   // constantly poll conversations to update them on new messages etc.
   setInterval(function() {
-    updateConversationsPane();
+    // only do the heavy lifting and view refreshing if the user has pending changes they haven't seen
+    checkViewNeedsRefreshed().then(function(response) {
+
+      if (response.refreshNeeded === true) {
+        setHasUpdatesForCurrentUser(false);
+        updateConversationsPane();
+      
+      // explicit boolean check to check valid response returned
+      } else if (response.refreshNeeded !== false) {
+        console.log('Failure occurred evaluating whether view needs refreshed');
+      }
+    }).catch(function(err) {
+      console.log(err);
+    });
   }, 2000);
   
   // on clicking a conversation, update the active chat window to show the conversation with that person
@@ -17,6 +30,9 @@ $(document).ready(function() {
     });
     $(this).addClass("active");
     updateChatPane(event.target, true);
+    
+    // after short timeout, update conversations pane to get rid of notifications number etc. - not instant
+    setTimeout(updateConversationsPane, 1500);
   });
   
   $(document).on('click', '.conversation .glyphicon-remove', function(event) {
@@ -70,6 +86,37 @@ $(document).ready(function() {
     
   });
 });
+
+function checkViewNeedsRefreshed() {
+  return new Promise(function(resolve, reject) {
+    $.ajax({
+      type: "POST",
+      url: '../web/refresh_checker.php',
+      data: { },
+      success: function(response) {
+        resolve(response);
+      },
+      error: function(err) {
+        reject(err);
+      }
+    });
+  });
+}
+
+function setHasUpdatesForCurrentUser(status) {
+  $.ajax({
+    type: "POST",
+    url: '../web/refresh_updater.php',
+    data: { 
+      hasUpdates: status
+    },
+    success: function(response) {
+      if (!response.successfulUpdate) {
+        console.log('Error occurred setting refresh not needed');
+      }
+    }
+  });
+}
 
 function updateConversationsPane(updatedConversationName) {
   $.ajax({

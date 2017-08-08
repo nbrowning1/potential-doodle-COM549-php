@@ -60,11 +60,11 @@ function getAllUsers($db) {
   
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType);
+  $stmt->bind_result($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType, $uHasUpdates);
   
   $users = array();
   while ($stmt->fetch()) {
-    array_push($users, new User($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType));
+    array_push($users, new User($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType, $uHasUpdates));
   }
   
   return $users;
@@ -76,10 +76,10 @@ function getUserByUsername($db, $username) {
   $stmt->bind_param('s', $username);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType);
+  $stmt->bind_result($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType, $uHasUpdates);
   
   $stmt->fetch();
-  return new User($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType);
+  return new User($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType, $uHasUpdates);
 }
 
 function getUserById($db, $userId) {
@@ -88,10 +88,27 @@ function getUserById($db, $userId) {
   $stmt->bind_param('i', $userId);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType);
+  $stmt->bind_result($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType, $uHasUpdates);
   
   $stmt->fetch();
-  return new User($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType);
+  return new User($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType, $uHasUpdates);
 }
+
+function setUserHasUpdatesByUsername($db, $username, $value) {
+  $updateValue = $value ? 1 : 0;
+  $stmt = $db->prepare('UPDATE users SET has_updates = ? WHERE username = ?');
+  
+  $stmt->bind_param('is', $updateValue, $username);
+  $stmt->execute();
+}
+
+function setUserHasUpdatesById($db, $id, $value) {
+  $updateValue = $value ? 1 : 0;
+  $stmt = $db->prepare('UPDATE users SET has_updates = ? WHERE id = ?');
+  
+  $stmt->bind_param('ii', $updateValue, $id);
+  $stmt->execute();
+}
+
 
 ?>
