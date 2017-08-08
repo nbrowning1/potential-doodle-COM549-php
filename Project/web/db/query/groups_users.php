@@ -15,6 +15,9 @@ function insertGroupUsersForGroup($db, $groupId, $groupUsers) {
     }
 
     $stmt->free_result();
+    
+    // mark each user as having updates so their conversations will refresh with the new group
+    setUserHasUpdatesById($db, $groupUser->id, 1);
   } 
 }
 

@@ -19,7 +19,15 @@ $(document).ready(function() {
     }).catch(function(err) {
       console.log(err);
     });
-  }, 2000);
+  }, 1000);
+  
+  // constantly checking if unread messages are showing, and refreshing conversations pane if they are, to dismiss any read notifications - if we can find unread messages, we must already be looking at them on the active chat pane
+  setInterval(function() {
+    if ($(".chat-message.unread-message").length > 0) {
+      updateConversationsPane();
+      goToBottom('chat-section');
+    }
+  }, 500);
   
   // on clicking a conversation, update the active chat window to show the conversation with that person
   $(document).on('click', '.conversation', function(event) {

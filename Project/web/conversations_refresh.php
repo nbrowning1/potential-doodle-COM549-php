@@ -45,7 +45,7 @@ function echoRegularConversations($db, $currentUser, $active, $hideId) {
       $displayName .= " <div class=\"conversation-number-unread\">&nbsp;$unreadMsgCount&nbsp;</div>";
     }
 
-    echo '<a href="#" class="conversation btn btn-default ' . $activeClass . '" role="button" id=' . $otherUser->username . '>' . $displayName . '<span class="glyphicon glyphicon-remove"></span></div>';
+    echo '<a href="#" class="conversation btn btn-default ' . $activeClass . '" role="button" id="' . $otherUser->username . '">' . $displayName . '<span class="glyphicon glyphicon-remove"></span></div>';
   }
 }
 

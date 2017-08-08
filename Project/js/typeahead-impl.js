@@ -54,7 +54,7 @@ $(document).ready(function() {
     });
   };
   
-  var userMatcher = function(usernames) {
+  var userMatcher = function() {
     return function findMatches(q, cb) {
       var matches, substringRegex;
 
@@ -63,7 +63,7 @@ $(document).ready(function() {
       // regex used to determine if a string contains the substring `q`
       substrRegex = new RegExp(q, 'i');
 
-      $.each(usernames, function(i, username) {
+      $.each(users, function(i, username) {
         if (substrRegex.test(username)) {
           matches.push(username);
         }
@@ -73,7 +73,7 @@ $(document).ready(function() {
     };
   };
   
-  var groupMatcher = function(groups) {
+  var groupMatcher = function() {
     return function findMatches(q, cb) {
       var matches, substringRegex;
       
@@ -109,11 +109,11 @@ $(document).ready(function() {
     },
     {
       name: 'users',
-      source: userMatcher(users)
+      source: userMatcher()
     },
     {
       name: 'groups',
-      source: groupMatcher(groups),
+      source: groupMatcher(),
       displayKey: function(group) {
         return group.groupname;
       },
