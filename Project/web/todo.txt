@@ -2,6 +2,7 @@
   - add members
   - remove self from group
   - when one member left, delete conversation
+  - more validation when creating - does it already exist? easy check
 
 - conversations
   - don't allow creating chat message with neither convo or group_convo

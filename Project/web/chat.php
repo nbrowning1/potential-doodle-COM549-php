@@ -77,6 +77,10 @@ if (!isset($_SESSION['user'])) {
       <div id="chat-section">
         <div id="chat-pane">
         </div>
+        <div id="no-active-chat-pane">
+          <h2>Choose a conversation on the left to chat!</h2>
+          <h4>Or add a new conversation by searching on the upper left</h4>
+        </div>
       </div>
       <input id="send-message" name="message" type="text" class="form-control" placeholder="Send message..."/>
     </div>

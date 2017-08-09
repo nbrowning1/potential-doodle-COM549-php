@@ -211,11 +211,13 @@ function hideChat() {
     $('#chat-options').removeClass('active-chat');
     $('#send-message').removeClass('active-chat');
     $('#chat-pane').html('');
+    $('#no-active-chat-pane').removeClass('active-chat');
   }
 }
 
 function showChat() {
   if (!($('#chat-section').hasClass('active-chat'))) {
+    $('#no-active-chat-pane').addClass('active-chat');
     $('#chat-section').addClass('active-chat');
     $('#chat-title').addClass('active-chat');
     $('#chat-options').addClass('active-chat');
