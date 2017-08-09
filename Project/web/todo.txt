@@ -1,8 +1,6 @@
 - group conversations
   - add members
   - remove self from group
-  - rename group
-    - show special message in chat indicating name change
   - when one member left, delete conversation
 
 - conversations
@@ -12,6 +10,8 @@
   - make all chat options do things
   - longer wait to mark messages as read
   - if conversation hidden and receive a message to it, make it visible
+  - hiding conversation should hide chat pane
+  - edit message functionality - edit or delete
   
 - register / login
   - forgot password functionality
@@ -20,12 +20,11 @@
 - misc
   - typeahead 
     - would be cool to hide blocked users (or show it)
-  - add table for UsersUpdates which can be constantly queried and only updates UI when required (when user receives a message or whatever) - far too eager currently
   - styling
   - more DB constraints - e.g. uniqueness for group / user names
   - general validation about length of stuff
   - validate message length - lower limit and test - gives PHP error currently
-  - more robust active conversation indicators that setting name in ID - could cause unexpected behaviour if name conflicts with id of another unrelated element
+  - more robust active conversation indicators than setting name in ID - could cause unexpected behaviour if name conflicts with id of another unrelated element
   - show number of unread in tab name
   
 - scalability
