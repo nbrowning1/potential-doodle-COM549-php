@@ -21,8 +21,15 @@ body {
 }
 
 #conversations-section, #chat-section {
-  border: 1px solid black;
   height: 80%;
+}
+
+#conversations-section, #chat-section.active-chat {
+  border: 1px solid black;
+}
+
+#chat-section {
+  border: none;
 }
 
 #conversations-pane {
@@ -162,7 +169,12 @@ body {
   margin-bottom: 15px;
 }
 
-#chat-title, #chat-options {
+/* default hidden */
+#chat-title, #chat-options, #send-message {
+  display: none;
+}
+
+#chat-title.active-chat, #chat-options.active-chat, #send-message.active-chat {
   display: inline-block;
 }
 

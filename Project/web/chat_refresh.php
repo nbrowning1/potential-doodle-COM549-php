@@ -2,6 +2,7 @@
 
 include_once('db/connection.php');
 include_once('db/include.php');
+include_once('utils.php');
 
 session_start();
 $currentUsername = $_SESSION['user'];
@@ -12,11 +13,14 @@ $currentUser = getUserByUsername($db, $currentUsername);
 $active;
 if (isset($_POST['active'])) {
   $active = $_POST['active']; 
-} else if ($_POST['use_same_active']) {
+} else if ($_POST['use_same_active'] && !empty($_SESSION['active'])) {
   // used for new message where we're already on the active chat window
   $active = $_SESSION['active'];
 } else {
-  $active = 'Nobody right now';
+  $response = array();
+  $response['noChat'] = true;
+  returnJson($response);
+  exit;
 }
 
 $isGroupConversationStr = isset($_POST['isGroupConversation']) ? $_POST['isGroupConversation'] : false;
@@ -116,7 +120,5 @@ $response = array();
 $response['chatContent'] = $chatHtml;
 $response['chatTitle'] = $chatTitle;
 
-header('Content-type: application/json');
-echo json_encode($response);
-exit;
+returnJson($response);
 ?>

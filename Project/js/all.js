@@ -1,5 +1,7 @@
 $(document).ready(function() {
   
+  hideChat();
+  
   // initial load
   updateConversationsPane();
   
@@ -31,6 +33,7 @@ $(document).ready(function() {
   
   // on clicking a conversation, update the active chat window to show the conversation with that person
   $(document).on('click', '.conversation', function(event) {
+    showChat();
     
     // update conversations immediately on UI as to which is active
     $(".conversation").each(function(index) {
@@ -50,6 +53,8 @@ $(document).ready(function() {
     var conversationToDelete = conversationToDeleteEl.id;
     
     var isGroupConversation = isGroupChat(conversationToDeleteEl);
+    
+    hideChat();
     
     $.ajax({
       type: "POST",
@@ -81,11 +86,17 @@ $(document).ready(function() {
                 message: message,
                 isGroupConversation: isGroupConversation },
         success: function(response) {
-          // refresh chat pane with html returned by PHP - the applicable messages for this conversation
-          $("#chat-pane").html(response.chatContent);
-          // and update conversation title
-          $('#chat-title').html(response.chatTitle);
-          goToBottom('chat-section');
+          // if not on an active conversation, hide
+          if (response.noChat) {
+            hideChat();
+          } else {
+          
+            // refresh chat pane with html returned by PHP - the applicable messages for this conversation
+            $("#chat-pane").html(response.chatContent);
+            // and update conversation title
+            $('#chat-title').html(response.chatTitle);
+            goToBottom('chat-section');
+          }
         }
       });
       
@@ -145,6 +156,8 @@ function updateConversationsPane(updatedConversationName) {
         var activeConversation = getActiveConversationEl();
         if (activeConversation) {
           updateChatPane(activeConversation, false);
+        } else {
+          hideChat();
         }
       }
     }
@@ -163,12 +176,19 @@ function updateChatPane(activeConversationEl, scroll) {
     data: { active: activeChat,
             isGroupConversation: isGroupConversation },
     success: function(response) {
-      // refresh chat pane with html returned by PHP - the applicable messages for this conversation
-      $("#chat-pane").html(response.chatContent);
-      // and update conversation title
-      $('#chat-title').html(response.chatTitle);
-      if (scroll) {
-        goToBottom('chat-section');
+      // if not on an active conversation, hide
+      if (response.noChat) {
+        hideChat();
+      } else {
+        showChat();
+        
+        // refresh chat pane with html returned by PHP - the applicable messages for this conversation
+        $("#chat-pane").html(response.chatContent);
+        // and update conversation title
+        $('#chat-title').html(response.chatTitle);
+        if (scroll) {
+          goToBottom('chat-section');
+        }
       }
     }
   });
@@ -182,4 +202,23 @@ function isGroupChat(conversationEl) {
 function goToBottom(id) {
   var el = document.getElementById(id);
   el.scrollTop = el.scrollHeight - el.clientHeight;
+}
+
+function hideChat() {
+  if ($('#chat-section').hasClass('active-chat')) {
+    $('#chat-section').removeClass('active-chat');
+    $('#chat-title').removeClass('active-chat');
+    $('#chat-options').removeClass('active-chat');
+    $('#send-message').removeClass('active-chat');
+    $('#chat-pane').html('');
+  }
+}
+
+function showChat() {
+  if (!($('#chat-section').hasClass('active-chat'))) {
+    $('#chat-section').addClass('active-chat');
+    $('#chat-title').addClass('active-chat');
+    $('#chat-options').addClass('active-chat');
+    $('#send-message').addClass('active-chat');
+  }
 }
