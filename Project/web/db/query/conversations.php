@@ -91,6 +91,12 @@ function updateConversationVisibility($db, $conversationId, $userId) {
   $db->query($sql);
 }
 
+function setConversationVisibleForBothUsers($db, $conversationId) {
+  $stmt = $db->prepare("UPDATE conversations SET user_1_visibility = 1, user_2_visibility = 1 WHERE id = ?");
+  
+  $stmt->bind_param('i', $conversationId);
+  $stmt->execute();
+}
 
 
 ?>

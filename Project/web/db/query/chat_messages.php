@@ -45,6 +45,9 @@ function insertChatMessageToDbFromQuery($db, $creator, $message, $conversation, 
       $readStatus = ($creator->id == $userId) ? 1 : 0;
       
       insertUserChatMessageToDb($db, $userId, $messageId, $readStatus);
+      
+      // make conversation visible for member as new message was added
+      setGroupUserGroupVisibleToTrue($db, $groupConversationId, $userId);
     }
     
   } else {
@@ -59,6 +62,9 @@ function insertChatMessageToDbFromQuery($db, $creator, $message, $conversation, 
     
     insertUserChatMessageToDb($db, $user1Id, $messageId, $user1ReadStatus);
     insertUserChatMessageToDb($db, $user2Id, $messageId, $user2ReadStatus);
+    
+    // make conversation visible for both users as new message was added
+    setConversationVisibleForBothUsers($db, $conversationId);
   }
 }
 

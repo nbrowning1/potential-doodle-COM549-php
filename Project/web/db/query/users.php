@@ -55,6 +55,19 @@ function successfulLogin($db, $username, $password) {
   return true;
 }
 
+// gets the username as defined when they created the account, as login is case-insensitive
+function getUsernameProperCase($db, $usernameAnyCase) {
+  $stmt = $db->prepare('SELECT username FROM users WHERE username = ?');
+  
+  $stmt->bind_param('s', $usernameAnyCase);
+  $stmt->execute();
+  $stmt->bind_result($usernameProperCase);
+  
+  $stmt->fetch();
+  
+  return $usernameProperCase;
+}
+
 function getAllUsers($db) {
   $stmt = $db->prepare('SELECT * FROM users');
   

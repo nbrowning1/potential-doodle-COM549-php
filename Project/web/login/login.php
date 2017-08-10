@@ -12,7 +12,7 @@ $db = connectToDb();
 
 if (successfulLogin($db, $username, $password)) {
   session_start();
-  $_SESSION['user'] = $username;
+  $_SESSION['user'] = getUsernameProperCase($db, $username);
   
   // send redirect response to let JS handle it because apparently header doesn't work
   $redirectResponse = redirectResponse("../chat.php");
