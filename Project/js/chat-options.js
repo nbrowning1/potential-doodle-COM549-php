@@ -13,7 +13,8 @@ $(document).ready(function() {
   });
   
   $(document).on('click', asId(GROUP_LEAVE_ID), function(event) {
-    console.log('leave group for ' + getActiveId());
+    var groupName = getActiveId();
+    $('#leave-group-title-current-group').text(groupName);
   });
   
   $(document).on('click', asId(FAVOURITE_USER_ID), function(event) {
@@ -104,6 +105,28 @@ $(document).ready(function() {
     // don't want form to actually submit - no refresh
     return false;
   });
+  
+  // LEAVE GROUP
+  $(document).on('click', '#leave-group-confirm-btn', function(e) {
+    var groupName = $('#leave-group-title-current-group').text();
+    
+    $.ajax({
+      url: '../web/conversations/leave_group_conversation.php',
+      type: 'POST',
+      data: {
+        groupName: groupName
+      },
+      success: function(data) {
+        if (data.error) {
+          // TODO : do something
+        } else {
+          // dismiss modal
+          $('#leave-group-modal').modal('toggle');
+          updateConversationsPane();
+        }
+      }
+    });
+  });
 });
 
 const GROUP_ADD_MEMBER_ID = 'options-add-member';
@@ -123,7 +146,7 @@ function populateOptionsDropdown(isGroupConversation) {
     chatOptionsDropdown.appendChild(createDropdownItem(GROUP_ADD_MEMBER_ID, 'Add member', 'add-member-group-modal'));
     chatOptionsDropdown.appendChild(createDropdownItem(GROUP_RENAME_ID, 'Rename group', 'rename-group-modal'));
     chatOptionsDropdown.appendChild(createDropdownDivider());
-    chatOptionsDropdown.appendChild(createDropdownItem(GROUP_LEAVE_ID, 'Leave group'));
+    chatOptionsDropdown.appendChild(createDropdownItem(GROUP_LEAVE_ID, 'Leave group', 'leave-group-modal'));
   } else {
     chatOptionsDropdown.appendChild(createDropdownItem(FAVOURITE_USER_ID, 'Favourite user'));
     chatOptionsDropdown.appendChild(createDropdownDivider());

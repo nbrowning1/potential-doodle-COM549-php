@@ -94,5 +94,21 @@ function setGroupUserGroupVisibleToTrue($db, $groupConversationId, $userId) {
   $stmt->execute();
 }
 
+function removeUserFromGroup($db, $groupConversationId, $userId) {
+  
+  $stmt = $db->prepare("DELETE FROM groups_users WHERE group_id = ? AND user_id = ?");
+  
+  $stmt->bind_param('ii', $groupConversationId, $userId);
+  $stmt->execute();
+  
+  $group = getGroupById($db, $groupConversationId);
+  
+  // if all users have left group, delete conversation - no need for it anymore since it's inaccessible
+  $groupUsersRemaining = getGroupUsersForGroup($db, $group);
+  if (count($groupUsersRemaining) == 0) {
+    removeGroupConversationById($db, $groupConversationId);
+  }
+}
+
 
 ?>

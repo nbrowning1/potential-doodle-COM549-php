@@ -65,9 +65,9 @@ CREATE TABLE `Chat_Messages` (
  `datetime` DATETIME DEFAULT CURRENT_TIMESTAMP,
  `admin_message` boolean NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
-  FOREIGN KEY (creator_id) REFERENCES Users(id),
-  FOREIGN KEY (conversation_id) REFERENCES Conversations(id),
-  FOREIGN KEY (group_conversation_id) REFERENCES Group_Conversations(id)
+  FOREIGN KEY (creator_id) REFERENCES Users(id) ON DELETE CASCADE,
+  FOREIGN KEY (conversation_id) REFERENCES Conversations(id) ON DELETE CASCADE,
+  FOREIGN KEY (group_conversation_id) REFERENCES Group_Conversations(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Users_Chat_Messages` (
@@ -76,6 +76,6 @@ CREATE TABLE `Users_Chat_Messages` (
  `message_id` int(11) NOT NULL,
  `read_status` boolean NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (user_id) REFERENCES Users(id),
-  FOREIGN KEY (message_id) REFERENCES Chat_Messages(id)
+  FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+  FOREIGN KEY (message_id) REFERENCES Chat_Messages(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

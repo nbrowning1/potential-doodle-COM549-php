@@ -186,5 +186,28 @@ if (!isset($_SESSION['user'])) {
         </div>
       </div>
     </div>
+    
+    <!-- Leave Group Modal -->
+    <div class="modal fade" id="leave-group-modal" tabindex="-1" role="dialog" aria-labelledby="leaveGroupModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="leaveGroupModalLabel">Leave Group: <span id="leave-group-title-current-group"></span></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          
+          <div class="modal-body" style="text-align: center;">
+            <h3>Are you sure you want to leave this group?</h3>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button id="leave-group-confirm-btn" type="button" class="btn btn-primary">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

@@ -90,6 +90,14 @@ function updateGroupName($db, $oldName, $newName) {
   $stmt->free_result();
 }
 
+function removeGroupConversationById($db, $groupConversationId) {
+  
+  $stmt = $db->prepare("DELETE FROM group_conversations WHERE id = ?");
+  
+  $stmt->bind_param('i', $groupConversationId);
+  $stmt->execute();
+}
+
 function createGroupObj($db, $id, $name) {
   $group = new GroupConversation($id, $name);
   $group->members = getGroupUsersForGroup($db, $group);

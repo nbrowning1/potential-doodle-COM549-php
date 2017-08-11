@@ -75,10 +75,6 @@ function addMembersToGroupConversation($db, $groupName, $usernamesToAdd, $curren
   insertAdminChatMessageToDb($db, $currentUser, $message, $group, true);
 }
 
-function addMessageToConversation($db, $currentUsername, $groupName) {
-  
-}
-
 function errorResponse() {
   return array("error"=>true);
 }
