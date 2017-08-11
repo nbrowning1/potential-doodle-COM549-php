@@ -12,6 +12,7 @@ CREATE TABLE `Users` (
  `answer` varchar(30) NOT NULL,
  `reg_date` datetime NOT NULL,
  `user_type` int(1) NOT NULL,
+ `has_updates` boolean NOT NULL DEFAULT 0,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -58,6 +59,7 @@ CREATE TABLE `Chat_Messages` (
  `conversation_id` int(11),
  `group_conversation_id` int(11),
  `datetime` DATETIME DEFAULT CURRENT_TIMESTAMP,
+ `admin_message` boolean NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
   FOREIGN KEY (creator_id) REFERENCES Users(id),
   FOREIGN KEY (conversation_id) REFERENCES Conversations(id),

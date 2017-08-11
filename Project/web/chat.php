@@ -66,12 +66,14 @@ if (!isset($_SESSION['user'])) {
       <button id="create-group" type="button" class="btn btn-info" data-toggle="modal" data-target="#create-group-modal">Create Group</button>
     </div>
     <div id="chat">
-      <p id="chat-title" class="title"><?php echo isset($_SESSION['active']) ? $_SESSION['active'] : '&nbsp;'; ?></p>
-      <div id="chat-options" class="dropdown">
-        <button class="btn btn-default" data-toggle="dropdown" type="button" aria-expanded="false">Actions <span class="caret"></span></button>
-        <ul id="chat-options-dropdown" class="dropdown-menu pull-right" role="menu">
-          <!-- populated by JS -->
-        </ul>
+      <div id="chat-header">
+        <p id="chat-title" class="title"><?php echo isset($_SESSION['active']) ? $_SESSION['active'] : '&nbsp;'; ?></p>
+        <div id="chat-options" class="dropdown">
+          <button class="btn btn-default" data-toggle="dropdown" type="button" aria-expanded="false">Actions <span class="caret"></span></button>
+          <ul id="chat-options-dropdown" class="dropdown-menu pull-right" role="menu">
+            <!-- populated by JS -->
+          </ul>
+        </div>
       </div>
       
       <div id="chat-section">
@@ -114,6 +116,40 @@ if (!isset($_SESSION['user'])) {
                   <!-- hidden submission to submit with typeahead -->
                   <input type="submit" style="display: none">
                 </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <input type="submit" class="btn btn-primary" value="Submit">
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Add Member Group Modal -->
+    <div class="modal fade" id="add-member-group-modal" tabindex="-1" role="dialog" aria-labelledby="addMemberGroupModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="addMemberGroupModalLabel">Add Members to Group: <span id="add-member-group-title-current-group"></span></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          
+          <form id="add-member-group" class="nomargin-container" method="post">
+            <div class="modal-body">
+
+              <select id="add-member-existing-group" name="addGroupUsers[]" class="form-control" multiple="multiple" style="width: 100%;"/>
+                  
+              <!-- needed to separate error element from select as select2 processing swallows it for some reason -->
+              <input type="text" style="display:none"/>
+
+              <span id="add-member-existing-group-error" class="error"></span>
+
+              <!-- hidden submission to submit with typeahead -->
+              <input type="submit" style="display: none">
+
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>

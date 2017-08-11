@@ -169,6 +169,19 @@ body {
   margin-bottom: 15px;
 }
 
+#chat-title, #add-conversation-error {
+  height: 40px;
+  overflow-y: auto;
+}
+
+#chat-title {
+  width: 85%;
+}
+
+#chat-options {
+  width: 10%;
+}
+
 /* default hidden */
 #chat-title, #chat-options, #send-message, #no-active-chat-pane.active-chat {
   display: none;

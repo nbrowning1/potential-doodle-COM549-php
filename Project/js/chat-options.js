@@ -2,7 +2,8 @@ $(document).ready(function() {
   
   // chat options
   $(document).on('click', asId(GROUP_ADD_MEMBER_ID), function(event) {
-    console.log('add member for ' + getActiveId());
+    var groupName = getActiveId();
+    $('#add-member-group-title-current-group').text(groupName);
   });
   
   $(document).on('click', asId(GROUP_RENAME_ID), function(event) {
@@ -28,6 +29,46 @@ $(document).ready(function() {
   }
   
   // modals
+  // ADD MEMBERS TO GROUP
+  $(document).on('submit', 'form#add-member-group', function(e) {
+    e.preventDefault();
+    
+    var groupName = $('#add-member-group-title-current-group').text();
+    
+    // clear down error fields from previous attempt
+    var addMemberGroupErrorEl = $('#add-member-existing-group-error');
+    addMemberGroupErrorEl.text('');
+    
+    var formData = serializeForm('#add-member-group');
+    
+    $.ajax({
+      url: '../web/conversations/add_members_group_conversation.php',
+      type: 'POST',
+      data: {
+        groupName: groupName,
+        members: formData['addGroupUsers[]']
+      },
+      success: function(data) {
+        if (data.error) {
+          if (data.membersError) {
+            addMemberGroupErrorEl.text(data.membersError);
+          }
+        } else {
+          // dismiss modal
+          $('#add-member-group-modal').modal('toggle');
+          
+          // and clear field values
+          $('#add-group-users').text('');
+          updateConversationsPane();
+        }
+      }
+    });
+    
+    // don't want form to actually submit - no refresh
+    return false;
+  });
+  
+  // RENAME GROUP
   $(document).on('submit', 'form#rename-group', function(e) {
     e.preventDefault();
     
@@ -79,7 +120,7 @@ function populateOptionsDropdown(isGroupConversation) {
   var chatOptionsDropdown = document.getElementById('chat-options-dropdown');
   $(chatOptionsDropdown).empty();
   if (isGroupConversation) {
-    chatOptionsDropdown.appendChild(createDropdownItem(GROUP_ADD_MEMBER_ID, 'Add member'));
+    chatOptionsDropdown.appendChild(createDropdownItem(GROUP_ADD_MEMBER_ID, 'Add member', 'add-member-group-modal'));
     chatOptionsDropdown.appendChild(createDropdownItem(GROUP_RENAME_ID, 'Rename group', 'rename-group-modal'));
     chatOptionsDropdown.appendChild(createDropdownDivider());
     chatOptionsDropdown.appendChild(createDropdownItem(GROUP_LEAVE_ID, 'Leave group'));
