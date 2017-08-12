@@ -22,7 +22,27 @@ $(document).ready(function() {
   });
   
   $(document).on('click', asId(BLOCK_USER_ID), function(event) {
-    console.log('block user for ' + getActiveId());
+    var usernameToBlock = getActiveId();
+    $('#block-user-title-user-name').text(usernameToBlock);
+  });
+  
+  $(document).on('click', asId(UNBLOCK_USER_ID), function(event) {
+    var usernameToUnblock = getActiveId();
+    $.ajax({
+      url: '../web/conversations/manage_block_user.php',
+      type: 'POST',
+      data: {
+        username: usernameToUnblock,
+        blockStatus: 'unblock'
+      },
+      success: function(data) {
+        if (data.error) {
+          // TODO : do something
+        } else {
+          updateConversationsPane();
+        }
+      }
+    });
   });
   
   function getActiveId() {
@@ -127,19 +147,44 @@ $(document).ready(function() {
       }
     });
   });
+  
+  // BLOCK USER
+  $(document).on('click', '#block-user-confirm-btn', function(e) {
+    var username = $('#block-user-title-user-name').text();
+    
+    $.ajax({
+      url: '../web/conversations/manage_block_user.php',
+      type: 'POST',
+      data: {
+        username: username,
+        blockStatus: 'block'
+      },
+      success: function(data) {
+        if (data.error) {
+          // TODO : do something
+        } else {
+          // dismiss modal
+          $('#block-user-modal').modal('toggle');
+          updateConversationsPane();
+        }
+      }
+    });
+  });
 });
 
 const GROUP_ADD_MEMBER_ID = 'options-add-member';
 const GROUP_RENAME_ID = 'options-rename-group';
 const GROUP_LEAVE_ID = 'options-leave-group';
 const FAVOURITE_USER_ID = 'options-favourite-user';
+const UNFAVOURITE_USER_ID = 'options-unfavourite-user';
 const BLOCK_USER_ID = 'options-block-user';
+const UNBLOCK_USER_ID = 'options-unblock-user';
   
 function asId(idName) {
   return '#' + idName;
 }
 
-function populateOptionsDropdown(isGroupConversation) {
+function populateOptionsDropdown(isGroupConversation, isBlockedUser) {
   var chatOptionsDropdown = document.getElementById('chat-options-dropdown');
   $(chatOptionsDropdown).empty();
   if (isGroupConversation) {
@@ -150,7 +195,12 @@ function populateOptionsDropdown(isGroupConversation) {
   } else {
     chatOptionsDropdown.appendChild(createDropdownItem(FAVOURITE_USER_ID, 'Favourite user'));
     chatOptionsDropdown.appendChild(createDropdownDivider());
-    chatOptionsDropdown.appendChild(createDropdownItem(BLOCK_USER_ID, 'Block user'));
+   
+    if (isBlockedUser) {
+      chatOptionsDropdown.appendChild(createDropdownItem(UNBLOCK_USER_ID, 'Unblock user'));
+    } else {
+      chatOptionsDropdown.appendChild(createDropdownItem(BLOCK_USER_ID, 'Block user', 'block-user-modal'));
+    }
   }
   
   function createDropdownItem(id, text, modalId) {

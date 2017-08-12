@@ -40,12 +40,16 @@ function echoRegularConversations($db, $currentUser, $active, $hideId) {
     // if active class, add class to modify the style of conversation
     $activeClass = $active == $otherUser->username ? 'active' : '';
     
+    // if user is blocked, add class to modify the style of conversation
+    $userIsBlocked = isUserBlockedForUser($db, $currentUser, $otherUser);
+    $blockedClass = $userIsBlocked ? 'blocked' : '';
+    
     $displayName = $otherUser->username;
     if ($unreadMsgCount > 0) {
       $displayName .= " <div class=\"conversation-number-unread\">&nbsp;$unreadMsgCount&nbsp;</div>";
     }
 
-    echo '<a href="#" class="conversation btn btn-default ' . $activeClass . '" role="button" id="' . $otherUser->username . '">' . $displayName . '<span class="glyphicon glyphicon-remove"></span></div>';
+    echo '<a href="#" class="conversation btn btn-default ' . $activeClass . ' ' . $blockedClass . '" role="button" id="' . $otherUser->username . '">' . $displayName . '<span class="glyphicon glyphicon-remove"></span></div>';
   }
 }
 

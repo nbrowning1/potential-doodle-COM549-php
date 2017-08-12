@@ -1,8 +1,6 @@
 <?php
 
-// may need to require user here?
-
-class BlockedUser {
+class UserBlockedUser {
   public $id;
   public $user;
   public $blocked_user;

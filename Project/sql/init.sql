@@ -20,13 +20,22 @@ CREATE TABLE `Users` (
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `Blocked_Users` (
+CREATE TABLE `Users_Blocked_Users` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
  `user_id` int(11) NOT NULL,
  `blocked_user_id` int(11) NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (user_id) REFERENCES Users(id),
   FOREIGN KEY (blocked_user_id) REFERENCES Users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `Users_Favourite_Users` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `user_id` int(11) NOT NULL,
+ `favourite_user_id` int(11) NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES Users(id),
+  FOREIGN KEY (favourite_user_id) REFERENCES Users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Conversations` (

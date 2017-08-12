@@ -55,6 +55,23 @@ body {
   padding-top: 10px;
 }
 
+.conversation.blocked {
+  color: whitesmoke;
+  background-color: grey;
+  font-style: italic;
+}
+
+.conversation.blocked.active {
+  background-color: black;
+  color: whitesmoke;
+}
+
+.conversation.blocked::after {
+  content: '(blocked)';
+  display: inline-block;
+  margin-left: 5px;
+}
+
 .conversation .conversation-number-unread {
   display: inline-block;
   border: 2px solid orange;

@@ -1,7 +1,4 @@
 - group conversations
-  - add members
-  - remove self from group
-  - when one member left, delete conversation
   - more validation when creating - does it already exist? easy check
   - clicking on username makes that user the active convo
 
@@ -15,6 +12,7 @@
     - password hints
   
 - misc
+  - use private functions where possible
   - typeahead 
     - would be cool to hide blocked users (or show it)
   - styling

@@ -209,5 +209,28 @@ if (!isset($_SESSION['user'])) {
         </div>
       </div>
     </div>
+    
+    <!-- Block User Modal -->
+    <div class="modal fade" id="block-user-modal" tabindex="-1" role="dialog" aria-labelledby="blockUserModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="blockUserModalLabel">Leave Group: <span id="block-user-title-user-name"></span></h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          
+          <div class="modal-body" style="text-align: center;">
+            <h3>Are you sure you want to block this user? You won't be able to send them messages, and you will appear to not exist to this user</h3>
+          </div>
+          
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button id="block-user-confirm-btn" type="button" class="btn btn-primary">Confirm</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

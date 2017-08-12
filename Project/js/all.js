@@ -167,8 +167,9 @@ function updateConversationsPane(updatedConversationName) {
 function updateChatPane(activeConversationEl, scroll) {
   var activeChat = activeConversationEl.id;
   var isGroupConversation = isGroupChat(activeConversationEl);
+  var isBlockedUser = isBlockedUserChat(activeConversationEl);
   
-  populateOptionsDropdown(isGroupConversation);
+  populateOptionsDropdown(isGroupConversation, isBlockedUser);
 
   $.ajax({
     type: "POST",
@@ -181,6 +182,9 @@ function updateChatPane(activeConversationEl, scroll) {
         hideChat();
       } else {
         showChat();
+        if (response.blockedUser) {
+          makeMessageInputInaccessible();
+        }
         
         // refresh chat pane with html returned by PHP - the applicable messages for this conversation
         $("#chat-pane").html(response.chatContent);
@@ -197,6 +201,14 @@ function updateChatPane(activeConversationEl, scroll) {
 function isGroupChat(conversationEl) {
   var classList = conversationEl.className.split(/\s+/);
   return classList.includes('group-conversation');
+}
+
+function isBlockedUserChat(conversationEl) {
+  if (isGroupChat(conversationEl)) {
+    return false;
+  }
+  var classList = conversationEl.className.split(/\s+/);
+  return classList.includes('blocked');
 }
 
 function goToBottom(id) {
@@ -223,4 +235,9 @@ function showChat() {
     $('#chat-options').addClass('active-chat');
     $('#send-message').addClass('active-chat');
   }
+  document.getElementById('send-message').disabled = false;
+}
+
+function makeMessageInputInaccessible() {
+  document.getElementById('send-message').disabled = true;
 }
