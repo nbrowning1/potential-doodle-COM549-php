@@ -3,7 +3,7 @@
 function do_html_header($title) {
   // print an HTML header
 ?>
-<!doctype html>
+<!DOCTYPE html>
   <html>
   <head>
     <meta charset="utf-8">

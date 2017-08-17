@@ -4,6 +4,7 @@
 
 - conversations
   - block user
+    - hide on typeahead for target user, remove conversation visibility for target user
   - favourite user
   - edit message functionality - edit or delete
   

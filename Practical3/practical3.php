@@ -2,14 +2,20 @@
 
 $usernameError = $passwordError = $generalError = "";
 
-$username = isset($_POST['username']) ? $_POST['username'] : "";
-$password = isset($_POST['password']) ? $_POST['password'] : "";
+$username = getPostValueIfPresent('username');
+$password = getPostValueIfPresent('password');
 
-// if actually submitting form
+// Get a post value, setting its value to empty if not defined at all
+function getPostValueIfPresent($name) {
+  return isset($_POST[$name]) ? $_POST[$name] : '';
+}
+
+// If actually submitting form, perform login
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (formValid($username, $password)) {
     $db = connectToDb();
 
+    // Comparing hashed password to database as they're already stored in their hashed version
     $hashedPassword = sha1($password);
     if (!attemptLogin($db, $username, $hashedPassword)) {
       $generalError = 'Authentication failed - re-check your username and password';
@@ -17,6 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
   }
 }
 
+// Checking form is valid by way of the fields not being empty
 function formValid($username, $password) {
   if (empty($username) || empty($password)) {
     global $usernameError;
@@ -34,9 +41,9 @@ function formValid($username, $password) {
 
 function connectToDb() {
   $host = 'localhost';
-  $username = 'root';
-  $password = 'root';
-  $database = 'practical2';
+  $username = 'B00652112';
+  $password = 'pleaseleavealone1';
+  $database = 'b00652112';
   $db = new mysqli($host, $username, $password, $database);
   if (mysqli_connect_errno()) {
     echo 'Could not connect to database';
@@ -47,7 +54,7 @@ function connectToDb() {
 }
 
 function attemptLogin($db, $username, $password) {
-  $stmt = $db->prepare('SELECT * FROM users WHERE Username = ? AND Password = ?');
+  $stmt = $db->prepare('SELECT * FROM UsersPracticals WHERE Username = ? AND Password = ?');
 
   $stmt->bind_param('si', $username, $password);
   $stmt->execute();
@@ -62,11 +69,12 @@ function attemptLogin($db, $username, $password) {
 
   $stmt->free_result();
   
-  // uses binded variables from above to show landing page for user
+  // Uses binded variables from above to show landing page for user
   include 'landingPage.php';
   exit;
 }
 
+// Returns true if no problems found, AKA unexpected errors or no rows returned from query
 function validateCredentials($stmt) {
   if ($stmt->error) {
     echo 'Error occurred: ' . $stmt->error;

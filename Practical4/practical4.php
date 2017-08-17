@@ -13,139 +13,94 @@
     
     $fileStr = file_get_contents('http://scm.ulster.ac.uk/weather/Realtime.txt');
     $bits = explode(" ", $fileStr);
-
-    $date = $bits[0];
-    $time = $bits[1];
-    $temperature = $bits[2];
-    $humidity = $bits[3];
-    $dewPoint = $bits[4];
-    $avgWindSpeed = $bits[5];
-    $latestWindSpeed = $bits[6];
-    $windBearing = $bits[7];
-    $currentRainRate = $bits[8];
-    $rainToday = $bits[9];
-    $seaLevelPressure = $bits[10];
-    $windDirection = $bits[11];
-    $beaufortWindSpeed = $bits[12];
     
+    // Common unit values
     $windSpeedUnit = $bits[13];
     $temperatureUnit = $bits[14];
     $pressureUnit = $bits[15];
     $rainUnit = $bits[16];
-    
-    $windRun = $bits[17];
-    $pressureTrend = $bits[18];
-    $monthlyRainfall = $bits[19];
-    $yearlyRainfall = $bits[20];
-    $yesterdayRainfall = $bits[21];
-    $insideTemperature = $bits[22];
-    $insideHumidity = $bits[23];
-    $windChill = $bits[24];
-    $temperatureTrendValue = $bits[25];
-    $todayHighTemperature = $bits[26];
-    $todayHighTemperatureTime = $bits[27];
-    $todayLowTemperature = $bits[28];
-    $todayLowTemperatureTime = $bits[29];
-    $todayHighWindSpeed = $bits[30];
-    $todayHighWindSpeedTime = $bits[31];
-    $todayHighWindGust = $bits[32];
-    $todayHighWindGustTime = $bits[33];
-    $todayHighPressure = $bits[34];
-    $todayHighPressureTime = $bits[35];
-    $todayLowPressure = $bits[36];
-    $todayLowPressureTime = $bits[37];
-    $cumulusVersions = $bits[38];
-    $cumulusBuildNumber = $bits[39];
-    $tenMinuteHighGust = $bits[40];
-    $heatIndex = $bits[41];
-    $humidex = $bits[42];
-    $uvIndex = $bits[43];
-    $evapotranspirationToday = $bits[44];
-    $solarRadiation = $bits[45];
-    $tenMinuteAvgWindBearing = $bits[46];
-    $rainfallLastHour = $bits[47];
-    $currentZambrettiForecast = $bits[48];
-    $stationInDaylightFlag = $bits[49];
-    $stationLostContactWithSensors = $bits[50];
-    $avgWindDirection = $bits[51];
-    $cloudBase = $bits[52];
-    $cloudBaseUnits = $bits[53];
-    $apparentTemperature = $bits[54];
-    $sunshineHoursToday = $bits[55];
-    $theoreticalMaxSolarRadiation = $bits[56];
-    $isItSunny = $bits[57];
+    $cloudBaseUnit = $bits[53];
 
-    outputStatistic("Date", $date, null);
-    outputStatistic("Time", $time, null);
-    outputStatisticWithProgress("Outside temperature", $temperature, $temperatureUnit, 40);
-    outputStatistic("Relative humidity", $humidity, null);
-    outputStatistic("Dewpoint", $dewPoint, null);
-    outputStatistic("Wind speed (average)", $avgWindSpeed, null);
-    outputStatistic("Latest wind speed reading", $latestWindSpeed, null);
-    outputStatistic("Wind bearing (degrees)", $windBearing, null);
-    outputStatistic("Current rain rate (per hour)", $currentRainRate, null);
-    outputStatistic("Rain today", $rainToday, null);
-    outputStatistic("Barometer (sea level pressure)", $seaLevelPressure, null);
-    outputStatistic("Current wind direction", $windDirection, null);
-    outputStatistic("Wind speed (beaufort)", $beaufortWindSpeed, null);
-    outputStatistic("Wind run (today)", $windRun, null);
-    outputStatistic("Pressure trend value", $pressureTrend, null);
-    outputStatistic("Monthly rainfall", $monthlyRainfall, null);
-    outputStatistic("Yearly rainfall", $yearlyRainfall, null);
-    outputStatistic("Yesterday's rainfall", $yesterdayRainfall, null);
-    outputStatistic("Inside temperature", $insideTemperature, null);
-    outputStatistic("Inside humidity", $insideHumidity, null);
-    outputStatistic("Wind chill", $windChill, null);
-    outputStatistic("Temperature trend value", $temperatureTrendValue, null);
+    outputStatistic("Date", 0, null);
+    outputStatistic("Time", 1, null);
+    outputStatisticWithProgress("Outside temperature", 2, $temperatureUnit, 40);
+    outputStatistic("Relative humidity", 3, '%');
+    outputStatistic("Dewpoint", 4, $temperatureUnit);
+    outputStatistic("Wind speed (average)", 5, $windSpeedUnit);
+    outputStatistic("Latest wind speed reading", 6, $windSpeedUnit);
+    outputStatistic("Wind bearing (degrees)", 7, null);
+    outputStatistic("Current rain rate (per hour)", 8, $rainUnit);
+    outputStatistic("Rain today", 9, $rainUnit);
+    outputStatistic("Barometer (sea level pressure)", 10, $pressureUnit);
+    outputStatistic("Current wind direction", 11, null);
+    outputStatistic("Wind speed (beaufort)", 12, null);
+    outputStatistic("Wind run (today)", 17, null);
+    outputStatistic("Pressure trend value", 18, $pressureUnit);
+    outputStatistic("Monthly rainfall", 19, $rainUnit);
+    outputStatistic("Yearly rainfall", 20, $rainUnit);
+    outputStatistic("Yesterday's rainfall", 21, $rainUnit);
+    outputStatistic("Inside temperature", 22, $temperatureUnit);
+    outputStatistic("Inside humidity", 23, '%');
+    outputStatistic("Wind chill", 24, $temperatureUnit);
+    outputStatistic("Temperature trend value", 25, $temperatureUnit);
     
     echo '<hr>';
     
-    outputStatistic("Today's high temperature", $todayHighTemperature, null);
-    outputStatistic("Time of today's high temperature", $todayHighTemperatureTime, null);
-    outputStatistic("Today's low temperature", $todayLowTemperature, null);
-    outputStatistic("Time of today's low temperature", $todayLowTemperatureTime, null);
-    outputStatistic("Today's high wind speed", $todayHighWindSpeed, null);
-    outputStatistic("Time of today's high wind speed", $todayHighWindSpeedTime, null);
-    outputStatistic("Today's high wind gust", $todayHighWindGust, null);
-    outputStatistic("Time of today's high wind gust", $todayHighWindGustTime, null);
-    outputStatistic("Today's high pressure", $todayHighPressure, null);
-    outputStatistic("Time of today's high pressure", $todayHighPressureTime, null);
-    outputStatistic("Today's low pressure", $todayLowPressure, null);
-    outputStatistic("Time of today's low pressure", $todayLowPressureTime, null);
+    outputStatistic("Today's high temperature", 26, $temperatureUnit);
+    outputStatistic("Time of today's high temperature", 27, null);
+    outputStatistic("Today's low temperature", 28, $temperatureUnit);
+    outputStatistic("Time of today's low temperature", 29, null);
+    outputStatistic("Today's high wind speed", 30, $windSpeedUnit);
+    outputStatistic("Time of today's high wind speed", 31, null);
+    outputStatistic("Today's high wind gust", 32, null);
+    outputStatistic("Time of today's high wind gust", 33, null);
+    outputStatistic("Today's high pressure", 34, $pressureUnit);
+    outputStatistic("Time of today's high pressure", 35, null);
+    outputStatistic("Today's low pressure", 36, $pressureUnit);
+    outputStatistic("Time of today's low pressure", 37, null);
     
     echo '<hr>';
     
-    outputStatistic("Cumulus Versions", $cumulusVersions, null);
-    outputStatistic("Cumulus build number", $cumulusBuildNumber, null);
-    outputStatistic("10-minute high gust", $tenMinuteHighGust, null);
-    outputStatistic("Heat index", $heatIndex, null);
-    outputStatistic("Humidex", $humidex, null);
-    outputStatistic("UV index", $uvIndex, null);
-    outputStatistic("Evapotranspiration today", $evapotranspirationToday, null);
-    outputStatistic("Solar radiation", $solarRadiation, "W/m2");
-    outputStatistic("10-minute average wind bearing", $tenMinuteAvgWindBearing, "degrees");  
-    outputStatistic("Rainfall last hour", $rainfallLastHour, null);
-    outputStatistic("Number of the current (Zambretti) forecast", $currentZambrettiForecast, null);
-    outputFlagStatistic("Station is currently in daylight", $stationInDaylightFlag, null);
-    outputFlagStatistic("Station has lost contact with its remote sensors", $stationLostContactWithSensors, null);
-    outputStatistic("Average wind direction", $avgWindDirection, null);
-    outputStatistic("Cloud base", $cloudBase, null);
-    outputStatistic("Cloud base units", $cloudBaseUnits, null);
-    outputStatistic("Apparent temperature", $apparentTemperature, null);
-    outputStatistic("Sunshine hours so far today", $sunshineHoursToday, null);
-    outputStatistic("Current theoretical max solar radiaton", $theoreticalMaxSolarRadiation, null);
-    outputFlagStatistic("The sun is shining", $isItSunny, null);
+    outputStatistic("Cumulus Versions", 38, null);
+    outputStatistic("Cumulus build number", 39, null);
+    outputStatistic("10-minute high gust", 40, null);
+    outputStatistic("Heat index", 41, $temperatureUnit);
+    outputStatistic("Humidex", 42, null);
+    outputStatistic("UV index", 43, null);
+    outputStatistic("Evapotranspiration today", 44, $rainUnit);
+    outputStatistic("Solar radiation", 45, "W/m2");
+    outputStatistic("10-minute average wind bearing", 46, "degrees");  
+    outputStatistic("Rainfall last hour", 47, $rainUnit);
+    outputStatistic("Number of the current (Zambretti) forecast", 48, null);
+    outputFlagStatistic("Station is currently in daylight", 49, null);
+    outputFlagStatistic("Station has lost contact with its remote sensors", 50, null);
+    outputStatistic("Average wind direction", 51, null);
+    outputStatistic("Cloud base", 52, $cloudBaseUnit);
+    outputStatistic("Apparent temperature", 54, $temperatureUnit);
+    outputStatistic("Sunshine hours so far today", 55, null);
+    outputStatistic("Current theoretical max solar radiaton", 56, null);
+    outputFlagStatistic("The sun is shining", 57, null);
     
-    function outputStatistic($label, $value, $unit) {
-      echo "<p><b>$label</b>: $value $unit</p>";
+    // Outputs a regular statistic - a label, the array index to derive the value and units
+    function outputStatistic($label, $arrayIndex, $unit) {
+      global $bits;
+      echo "<p><b>$label</b>: $bits[$arrayIndex] $unit</p>";
     }
     
-    function outputFlagStatistic($label, $value, $unit) {
+    /* Outputs a flag statistic - same as outputStatistic() but will evaluate 'false' or 'true'
+        for the value to make it more human-readable */
+    function outputFlagStatistic($label, $arrayIndex, $unit) {
+      global $bits;
+      $value = $bits[$arrayIndex];
       $value = $value == 0 ? 'false' : 'true';
       echo "<p><b>$label</b>: $value $unit</p>";
     }
     
-    function outputStatisticWithProgress($label, $value, $unit, $maxVal) {
+    /* Outputs a progress statistic - same as outputStatistic() but will also display a progress bar
+        using $maxVal variable to define the upper limit of the progress bar */
+    function outputStatisticWithProgress($label, $arrayIndex, $unit, $maxVal) {
+      global $bits;
+      $value = $bits[$arrayIndex];
       echo "<p><b>$label</b>: $value $unit <progress value=\"$value\" max=\"$maxVal\"></progress></p>";
     }
     

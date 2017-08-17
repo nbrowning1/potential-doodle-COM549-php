@@ -40,13 +40,13 @@ function insert_order($order_details) {
     $customerid = $customer->customerid;
   } else {
     $query = "insert into customers values
-            ('', '" . $conn->real_escape_string($name) ."','" . $conn->real_escape_string($address) . 
+            (NULL, '" . $conn->real_escape_string($name) ."','" . $conn->real_escape_string($address) . 
             "','". $conn->real_escape_string($city) ."','". $conn->real_escape_string($state) . 
             "','". $conn->real_escape_string($zip) ."','". $conn->real_escape_string($country)."')";
     $result = $conn->query($query);
 
     if (!$result) {
-       return false;
+      return false;
     }
   }
 
@@ -55,7 +55,7 @@ function insert_order($order_details) {
   $date = date("Y-m-d");
 
   $query = "insert into orders values
-            ('', '". $conn->real_escape_string($customerid) . "', '". $conn->real_escape_string($_SESSION['total_price']) . 
+            (NULL, '". $conn->real_escape_string($customerid) . "', '". $conn->real_escape_string($_SESSION['total_price']) . 
              "', '". $conn->real_escape_string($date) ."', 'PARTIAL',
              '" . $conn->real_escape_string($ship_name) . "', '" . $conn->real_escape_string($ship_address) . 
              "', '". $conn->real_escape_string($ship_city)."', '" . $conn->real_escape_string($ship_state) ."',

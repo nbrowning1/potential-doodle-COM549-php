@@ -1,64 +1,58 @@
-create database book_sc;
+CREATE DATABASE book_sc;
 
-use book_sc;
+USE book_sc;
 
-create table customers
-(
-  customerid int unsigned not null auto_increment primary key,
-  name char(60) not null,
-  address char(80) not null,
-  city char(30) not null,
+CREATE TABLE customers (
+  customerid int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  name char(60) NOT NULL,
+  address char(80) NOT NULL,
+  city char(30) NOT NULL,
   state char(20),
   zip char(10),
-  country char(20) not null
+  country char(20) NOT NULL
 );
 
-create table orders
-(
-  orderid int unsigned not null auto_increment primary key,
-  customerid int unsigned not null,
+CREATE TABLE orders (
+  orderid int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  customerid int unsigned NOT NULL,
   amount float(6,2),
-  date date not null,
+  date date NOT NULL,
   order_status char(10),
-  ship_name char(60) not null,
-  ship_address char(80) not null,
-  ship_city char(30) not null,
+  ship_name char(60) NOT NULL,
+  ship_address char(80) NOT NULL,
+  ship_city char(30) NOT NULL,
   ship_state char(20),
   ship_zip char(10),
-  ship_country char(20) not null
+  ship_country char(20) NOT NULL
 );
 
-create table books
-(
-   isbn char(13) not null primary key,
+CREATE TABLE books (
+   isbn char(13) NOT NULL PRIMARY KEY,
    author char(80),
    title char(100),
    catid int unsigned,
-   price float(4,2) not null,
+   price float(4,2) NOT NULL,
    description varchar(255)
 );
 
-create table categories
-(
-  catid int unsigned not null auto_increment primary key,
-  catname char(60) not null
+CREATE TABLE categories (
+  catid int unsigned NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  catname char(60) NOT NULL
 );
 
-create table order_items
-(
-  orderid int unsigned not null,
-  isbn char(13) not null,
-  item_price float(4,2) not null,
-  quantity tinyint unsigned not null,
-  primary key (orderid, isbn)
+CREATE TABLE order_items (
+  orderid int unsigned NOT NULL,
+  isbn char(13) NOT NULL,
+  item_price float(4,2) NOT NULL,
+  quantity tinyint unsigned NOT NULL,
+  PRIMARY KEY (orderid, isbn)
 );
 
-create table admin
-(
-  username char(16) not null primary key,
-  password char(40) not null
+CREATE TABLE admin (
+  username char(16) NOT NULL PRIMARY KEY,
+  password char(40) NOT NULL
 );
 
-grant select, insert, update, delete
-on book_sc.*
-to book_sc@localhost identified by 'password';
+GRANT SELECT, INSERT, UPDATE, DELETE
+ON book_sc.*
+TO book_sc@localhost identified by 'password';

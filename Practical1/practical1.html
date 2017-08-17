@@ -1,16 +1,22 @@
 <html>
   <head>
     <title>Currency Convertor</title>
+    <style>
+    *        {font-family: Arial, Helvetica, sans-serif;}
+    .label   {width: 125px; display: inline-block; margin:0;}
+    </style>
   </head>
 </html>
 <body>
   <form action="practical1.php"  method="post">
     
-    Amount: <input name="amount" type="text">
+    <p class="label">Amount: </p>
+    <input name="amount" type="text">
     
     <br><br>
     
-    From: <select name="from">
+    <p class="label">From: </p>
+    <select name="from">
       <option>USD</option>
       <option>EUR</option>
       <option>GBP</option>
@@ -25,7 +31,8 @@
     
     <br><br>
     
-    To: <select name="to">
+    <p class="label">To: </p>
+    <select name="to">
       <option>USD</option>
       <option>EUR</option>
       <option>GBP</option>

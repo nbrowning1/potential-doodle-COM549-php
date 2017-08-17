@@ -13,9 +13,10 @@ $confirmPassword = getPostValueIfPresent('confirm_password');
 $userType = getPostValueIfPresent('user_type');
 
 try {
-  // if actually submitting form
+  // If actually submitting form, perform registration
   if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
+    // Success assumed until error hit
     $successStatus = true;
     $successTable = "";
 
@@ -50,15 +51,16 @@ try {
   $generalError = $e->getMessage();
 }
 
+// Get a post value, setting its value to empty if not defined at all
 function getPostValueIfPresent($name) {
-  return isset($_POST[$name]) ? $_POST[$name] : "";
+  return isset($_POST[$name]) ? $_POST[$name] : '';
 }
 
 function connectToDb() {
   $host = 'localhost';
-  $username = 'root';
-  $password = 'root';
-  $database = 'practical2';
+  $username = 'B00652112';
+  $password = 'pleaseleavealone1';
+  $database = 'b00652112';
   $db = new mysqli($host, $username, $password, $database);
   if (mysqli_connect_errno()) {
     echo 'Could not connect to database';
@@ -68,8 +70,12 @@ function connectToDb() {
   }
 }
 
+/* Checks that the form is valid - fields aren't empty and some stricter validation checks for fields
+    like name / email address fields. If validation fails, specific error messages will be set to feed
+    back to the user */
 function formValid($firstName, $surname, $email, $password, $confirmPassword, $userType) {
   
+  // For accessing & modifying these variables from outside the function
   global $fnameError;
   global $snameError;
   global $emailError;
@@ -78,56 +84,50 @@ function formValid($firstName, $surname, $email, $password, $confirmPassword, $u
   global $userTypeError;
   
   $formEmpty = empty($firstName) || empty($surname) || empty($email) || empty($password) || empty($confirmPassword) || empty($userType);
-    
+  
+  // Set specific error messages for empty form fields
   if ($formEmpty) {
-    
     if (empty($firstName)) {
       $fnameError = "First name cannot be empty";
     }
-    
     if (empty($surname)) {
       $snameError = "Surname cannot be empty";
     }
-    
     if (empty($email)) {
       $emailError = "Email cannot be empty";
     }
-    
     if (empty($password)) {
       $passwordError = "Password cannot be empty";
     }
-    
     if (empty($confirmPassword)) {
       $cPasswordError = "Confirm Password cannot be empty";
     }
-    
     if (empty($userType)) {
       $userTypeError = "User type cannot be empty";
     }
-    
     return false;
   }
   
-  // check name is only letters and -
-  if (!valid_name($firstName) || !valid_name($surname)) {
-    if (!valid_name($firstName)) {
+  // Check that name meets validation
+  if (!validName($firstName) || !validName($surname)) {
+    if (!validName($firstName)) {
       $fnameError = "Invalid name";
     }
     
-    if (!valid_name($surname)) {
+    if (!validName($surname)) {
       $snameError = "Invalid name";
     }
     
     return false;
   }
   
-  // check email address is valid
-  if (!valid_email($email)) {
+  // Check that email address meets validation
+  if (!validEmail($email)) {
     $emailError = "Invalid email address";
     return false;
   }
   
-  // check that password / confirmation matches
+  // Check that password / confirmation matches
   if ($password != $confirmPassword) {
     $cPasswordError = "Passwords do not match";
     return false;
@@ -136,20 +136,21 @@ function formValid($firstName, $surname, $email, $password, $confirmPassword, $u
   return true;
 }
 
-function valid_name($name) {
+// Check name is in form [alphanumeric with -]
+function validName($name) {
   return (preg_match('/^[a-zA-Z\-]+$/', $name));
 }
 
-function valid_email($address) {
-  // check an email address is possibly valid
+// Check email address is in form [alphanumeric with _ . -]@[alphanumeric with -].[alphanumeric with - .]
+function validEmail($address) {
   return (preg_match('/^[a-zA-Z0-9_\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$/', $address));
 }
 
+// Check that username is valid for the DB - includes a check that the username isn't already in use
 function validForDb($db, $username) {
   global $generalError;
   
-  // check if username is unique
-  $query = 'SELECT * FROM users WHERE Username = ?';
+  $query = 'SELECT * FROM UsersPracticals WHERE Username = ?';
   $stmt = $db->prepare($query);
   $stmt->bind_param('s', $username);
   $stmt->execute();
@@ -160,8 +161,9 @@ function validForDb($db, $username) {
     return false;
   }
 
+  // Check if username is unique - if any rows come back, there was a match with an existing user
   if ($stmt->num_rows > 0) {
-    $generalError = 'That username is taken - go back and choose another one.';
+    $generalError = 'Username taken! Please choose another';
     return false;
   }
 
@@ -170,6 +172,8 @@ function validForDb($db, $username) {
   return true;
 }
 
+/* Gets user type as an int, to meet data type defined by DB for this field. If unrecognised,
+    an exception will be thrown */
 function getUserTypeId($userType) {
   if ($userType == 'Super Admin') {
     return 0;
@@ -182,8 +186,10 @@ function getUserTypeId($userType) {
   }
 }
 
+// Inserts user to database, hashing password before insert
 function insertUserToDb($db, $firstName, $surname, $username, $password, $userType) {
-  $query = 'INSERT INTO users(Firstname, Surname, Username, Password, DateRegistered, UserType) VALUES (?, ?, ?, ?, now(), ?)';
+  // Uses MySQL function now() to get current dateTime without having to handle it in PHP
+  $query = 'INSERT INTO UsersPracticals(Firstname, Surname, Username, Password, DateRegistered, UserType) VALUES (?, ?, ?, ?, now(), ?)';
   $stmt = $db->prepare($query);
 
   $hashedPassword = sha1($password);
@@ -191,20 +197,19 @@ function insertUserToDb($db, $firstName, $surname, $username, $password, $userTy
   $stmt->bind_param('ssssi', $firstName, $surname, $username, $hashedPassword, $userType);
   $stmt->execute();
   if ($stmt->error) {
-    echo 'Error occurred: ' . $stmt->error;
-    exit;
+    throw new Exception('Error occurred: ' . $stmt->error);
   }
 
   $stmt->free_result();
 }
 
+// Shows users from the database in table format
 function showUsersFromDb($db) {
   global $successTable;
   
-  $stmt = $db->prepare('SELECT * FROM users');
+  $stmt = $db->prepare('SELECT * FROM UsersPracticals');
   if ($stmt->error) {
-    echo('Could not get users: ' . $stmt->error);
-    exit;
+    throw new Exception('Could not get users: ' . $stmt->error);
   }
   $stmt->execute();
   $stmt->store_result();
@@ -223,6 +228,7 @@ function showUsersFromDb($db) {
     <td $styleBorderStyle>Registration Date</td>
     <td $styleBorderStyle>User Type ID</td>
   </tr>";
+  
   while ($stmt->fetch()) {
     $tdFunc = "tableData";
     $successTable .= "<tr $styleBorderStyle>
@@ -282,6 +288,7 @@ function showUsersFromDb($db) {
       
       <p class="label">User Type</p> 
       <select name="user_type">
+        <!-- Re-sets selected attribute if was previously selected (AKA if form failed validation) -->
         <option <?php if($userType == 'Super Admin') echo "selected"; ?>>Super Admin</option>
         <option <?php if($userType == 'Admin') echo "selected"; ?>>Admin</option>
         <option <?php if($userType == 'Coach') echo "selected"; ?>>Coach</option>

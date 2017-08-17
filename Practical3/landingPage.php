@@ -1,6 +1,12 @@
 <?php
-  // check that posted
+  // If no POST request, terminate
   if (!$_SERVER["REQUEST_METHOD"] == "POST") {
+    exit;
+  }
+
+  // Make sure expected variables are coming from practical3.php - terminate if issues found
+  if (!(isset($uFirstName) && isset($uSurname) && isset($uUsername) && isset($uDateReg) && isset($uUserType))) {
+    echo 'Unexpected error occurred';
     exit;
   }
 
@@ -20,6 +26,9 @@
 
 <html>
   <head>
+    <style>
+    *        {font-family: Arial, Helvetica, sans-serif;}
+    </style>
   </head>
   <body>
     <a href="practical3.php">Logout</a>

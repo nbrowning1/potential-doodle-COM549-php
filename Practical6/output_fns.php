@@ -11,6 +11,7 @@ function do_html_header($title = '') {
     $_SESSION['total_price'] = '0.00';
   }
 ?>
+
   <html>
   <head>
     <title><?php echo htmlspecialchars($title); ?></title>
@@ -40,11 +41,13 @@ function do_html_header($title = '') {
   </td>
   <td align="right" rowspan="2" width="135">
   <?php
+  
      if(isset($_SESSION['admin_user'])) {
        display_button('logout.php', 'log-out', 'Log Out');
      } else {
        display_button('show_cart.php', 'view-cart', 'View Your Shopping Cart');
      }
+  
   ?>
   </tr>
   <tr>
@@ -59,6 +62,7 @@ function do_html_header($title = '') {
   </td>
   </tr>
   </table>
+    
 <?php
   if($title) {
     do_html_heading($title);
@@ -165,7 +169,9 @@ function display_book_details($book) {
 
 function display_checkout_form() {
   //display the form that asks for name and address
+  
 ?>
+
   <br />
   <table border="0" width="100%" cellspacing="0">
   <form action="purchase.php" method="post">
@@ -227,12 +233,16 @@ function display_checkout_form() {
   </tr>
   </form>
   </table><hr />
+
 <?php
+  
 }
 
 function display_shipping($shipping) {
   // display table row with shipping cost and total price including shipping
+  
 ?>
+
   <table border="0" width="100%" cellspacing="0">
   <tr><td align="left">Shipping</td>
       <td align="right"> <?php echo number_format($shipping, 2); ?></td></tr>
@@ -240,70 +250,80 @@ function display_shipping($shipping) {
       <th bgcolor="#cccccc" align="right">$ <?php echo number_format($shipping+$_SESSION['total_price'], 2); ?></th>
   </tr>
   </table><br />
+
 <?php
+  
 }
 
 function display_card_form($name) {
   //display form asking for credit card details
+  
 ?>
+
   <table border="0" width="100%" cellspacing="0">
-  <form action="process.php" method="post">
-  <tr><th colspan="2" bgcolor="#cccccc">Credit Card Details</th></tr>
-  <tr>
-    <td>Type</td>
-    <td><select name="card_type">
-        <option value="VISA">VISA</option>
-        <option value="MasterCard">MasterCard</option>
-        <option value="American Express">American Express</option>
-        </select>
-    </td>
-  </tr>
-  <tr>
-    <td>Number</td>
-    <td><input type="text" name="card_number" value="" maxlength="16" size="40"></td>
-  </tr>
-  <tr>
-    <td>AMEX code (if required)</td>
-    <td><input type="text" name="amex_code" value="" maxlength="4" size="4"></td>
-  </tr>
-  <tr>
-    <td>Expiry Date</td>
-    <td>Month
-       <select name="card_month">
-       <option value="01">01</option>
-       <option value="02">02</option>
-       <option value="03">03</option>
-       <option value="04">04</option>
-       <option value="05">05</option>
-       <option value="06">06</option>
-       <option value="07">07</option>
-       <option value="08">08</option>
-       <option value="09">09</option>
-       <option value="10">10</option>
-       <option value="11">11</option>
-       <option value="12">12</option>
-       </select>
-       Year
-       <select name="card_year">
-       <?
-       for ($y = date("Y"); $y < date("Y") + 10; $y++) {
-         echo "<option value=\"".$y."\">".$y."</option>";
-       }
-       ?>
-       </select>
-  </tr>
-  <tr>
-    <td>Name on Card</td>
-    <td><input type="text" name="card_name" value = "<?php echo $name; ?>" maxlength="40" size="40"></td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center">
-      <p><strong>Please press Purchase to confirm your purchase, or Continue Shopping to
-      add or remove items</strong></p>
-     <?php display_form_button('purchase', 'Purchase These Items'); ?>
-    </td>
-  </tr>
+    <form action="process.php" method="post">
+      <tr><th colspan="2" bgcolor="#cccccc">Credit Card Details</th></tr>
+      <tr>
+        <td>Type</td>
+        <td><select name="card_type">
+            <option value="VISA">VISA</option>
+            <option value="MasterCard">MasterCard</option>
+            <option value="American Express">American Express</option>
+            </select>
+        </td>
+      </tr>
+      <tr>
+        <td>Number</td>
+        <td><input type="text" name="card_number" value="" maxlength="16" size="40"></td>
+      </tr>
+      <tr>
+        <td>AMEX code (if required)</td>
+        <td><input type="text" name="amex_code" value="" maxlength="4" size="4"></td>
+      </tr>
+      <tr>
+        <td>Expiry Date</td>
+        <td>Month
+           <select name="card_month">
+           <option value="01">01</option>
+           <option value="02">02</option>
+           <option value="03">03</option>
+           <option value="04">04</option>
+           <option value="05">05</option>
+           <option value="06">06</option>
+           <option value="07">07</option>
+           <option value="08">08</option>
+           <option value="09">09</option>
+           <option value="10">10</option>
+           <option value="11">11</option>
+           <option value="12">12</option>
+           </select>
+           Year
+           <select name="card_year">
+             
+           <?php
+  
+           for ($y = date("Y"); $y < date("Y") + 10; $y++) {
+             echo "<option value=\"".$y."\">".$y."</option>";
+           }
+  
+           ?>
+             
+           </select>
+      </tr>
+      <tr>
+        <td>Name on Card</td>
+        <td><input type="text" name="card_name" value = "<?php echo $name; ?>" maxlength="40" size="40"></td>
+      </tr>
+      <tr>
+        <td colspan="2" align="center">
+          <p><strong>Please press Purchase to confirm your purchase, or Continue Shopping to
+          add or remove items</strong></p>
+         <?php display_form_button('purchase', 'Purchase These Items'); ?>
+        </td>
+      </tr>
+    </form>
   </table>
+
 <?php
 }
 
@@ -378,8 +398,9 @@ function display_cart($cart, $change = true, $images = 1) {
 }
 
 function display_login_form() {
-  // dispaly form asking for name and password
+  // display form asking for name and password
 ?>
+
  <form method="post" action="admin.php">
  <table bgcolor="#cccccc">
    <tr>
@@ -393,16 +414,19 @@ function display_login_form() {
      <input type="submit" value="Log in"/></td></tr>
    <tr>
  </table></form>
+
 <?php
 }
 
 function display_admin_menu() {
 ?>
+
 <br />
 <a href="index.php">Go to main site</a><br />
 <a href="insert_category_form.php">Add a new category</a><br />
 <a href="insert_book_form.php">Add a new book</a><br />
 <a href="change_password_form.php">Change admin password</a><br />
+
 <?php
 }
 

@@ -19,34 +19,35 @@ function display_category_form($category = '') {
 ?>
   <form method="post"
       action="<?php echo $edit ? 'edit_category.php' : 'insert_category.php'; ?>">
-  <table border="0">
-  <tr>
-    <td>Category Name:</td>
-    <td><input type="text" name="catname" size="40" maxlength="40"
-          value="<?php echo htmlspecialchars($edit ? $category['catname'] : ''); ?>" /></td>
-   </tr>
-  <tr>
-    <td <?php if (!$edit) { echo "colspan=2";} ?> align="center">
-      <?php
-         if ($edit) {
-            echo "<input type=\"hidden\" name=\"catid\" value=\"". htmlspecialchars($category['catid'])."\" />";
-         }
-      ?>
-      <input type="submit"
-       value="<?php echo $edit ? 'Update' : 'Add'; ?> Category" /></form>
-     </td>
-     <?php
-        if ($edit) {
-          //allow deletion of existing categories
-          echo "<td>
-                <form method=\"post\" action=\"delete_category.php\">
-                <input type=\"hidden\" name=\"catid\" value=\"". htmlspecialchars($category['catid'])."\" />
-                <input type=\"submit\" value=\"Delete category\" />
-                </form></td>";
-       }
-     ?>
-  </tr>
-  </table>
+    <table border="0">
+      <tr>
+        <td>Category Name:</td>
+        <td><input type="text" name="catname" size="40" maxlength="40"
+              value="<?php echo htmlspecialchars($edit ? $category['catname'] : ''); ?>" /></td>
+       </tr>
+      <tr>
+        <td <?php if (!$edit) { echo "colspan=2";} ?> align="center">
+          <?php
+             if ($edit) {
+                echo "<input type=\"hidden\" name=\"catid\" value=\"". htmlspecialchars($category['catid'])."\" />";
+             }
+          ?>
+          <input type="submit"
+           value="<?php echo $edit ? 'Update' : 'Add'; ?> Category" />
+        </td>
+        <?php
+          if ($edit) {
+            //allow deletion of existing categories
+            echo '<td>
+                  <form method="post" action="delete_category.php">
+                  <input type="hidden" name="catid" value="'. htmlspecialchars($category['catid']).'" />
+                  <input type="submit" value="Delete category" />
+                  </form></td>';
+          }
+        ?>
+      </tr>
+    </table>
+  </form>
 <?php
 }
 
@@ -70,74 +71,73 @@ function display_book_form($book = '') {
   <form method="post"
         action="<?php echo $edit ? 'edit_book.php' : 'insert_book.php';?>">
   <table border="0">
-  <tr>
-    <td>ISBN:</td>
-    <td><input type="text" name="isbn"
-         value="<?php echo htmlspecialchars($edit ? $book['isbn'] : ''); ?>" /></td>
-  </tr>
-  <tr>
-    <td>Book Title:</td>
-    <td><input type="text" name="title"
-         value="<?php echo htmlspecialchars($edit ? $book['title'] : ''); ?>" /></td>
-  </tr>
-  <tr>
-    <td>Book Author:</td>
-    <td><input type="text" name="author"
-         value="<?php echo htmlspecialchars($edit ? $book['author'] : ''); ?>" /></td>
-   </tr>
-   <tr>
-      <td>Category:</td>
-      <td><select name="catid">
-      <?php
-          // list of possible categories comes from database
-          $cat_array=get_categories();
-          foreach ($cat_array as $thiscat) {
-               echo "<option value=\"".htmlspecialchars($thiscat['catid'])."\"";
-               // if existing book, put in current catgory
-               if (($edit) && ($thiscat['catid'] == $book['catid'])) {
-                   echo " selected";
-               }
-               echo ">".htmlspecialchars($thiscat['catname'])."</option>";
-          }
-          ?>
-          </select>
-        </td>
-   </tr>
-   <tr>
-    <td>Price:</td>
-    <td><input type="text" name="price"
-               value="<?php echo htmlspecialchars($edit ? $book['price'] : ''); ?>" /></td>
-   </tr>
-   <tr>
-     <td>Description:</td>
-     <td><textarea rows="3" cols="50"
-          name="description"><?php echo htmlspecialchars($edit ? $book['description'] : ''); ?></textarea></td>
+    <tr>
+      <td>ISBN:</td>
+      <td><input type="text" name="isbn"
+           value="<?php echo htmlspecialchars($edit ? $book['isbn'] : ''); ?>" /></td>
     </tr>
     <tr>
-      <td <?php if (!$edit) { echo "colspan=2"; }?> align="center">
-         <?php
-            if ($edit)
-             // we need the old isbn to find book in database
-             // if the isbn is being updated
-             echo "<input type=\"hidden\" name=\"oldisbn\"
-                    value=\"".htmlspecialchars($book['isbn'])."\" />";
-         ?>
-        <input type="submit"
-               value="<?php echo $edit ? 'Update' : 'Add'; ?> Book" />
-        </form></td>
+      <td>Book Title:</td>
+      <td><input type="text" name="title"
+           value="<?php echo htmlspecialchars($edit ? $book['title'] : ''); ?>" /></td>
+    </tr>
+    <tr>
+      <td>Book Author:</td>
+      <td><input type="text" name="author"
+           value="<?php echo htmlspecialchars($edit ? $book['author'] : ''); ?>" /></td>
+     </tr>
+     <tr>
+        <td>Category:</td>
+        <td><select name="catid">
         <?php
-           if ($edit) {
-             echo "<td>
-                   <form method=\"post\" action=\"delete_book.php\">
-                   <input type=\"hidden\" name=\"isbn\"
-                    value=\"".htmlspecialchars($book['isbn'])."\" />
-                   <input type=\"submit\" value=\"Delete book\"/>
-                   </form></td>";
+            // list of possible categories comes from database
+            $cat_array=get_categories();
+            foreach ($cat_array as $thiscat) {
+                 echo "<option value=\"".htmlspecialchars($thiscat['catid'])."\"";
+                 // if existing book, put in current catgory
+                 if (($edit) && ($thiscat['catid'] == $book['catid'])) {
+                     echo " selected";
+                 }
+                 echo ">".htmlspecialchars($thiscat['catname'])."</option>";
             }
-          ?>
-         </td>
+            ?>
+            </select>
+          </td>
+     </tr>
+     <tr>
+      <td>Price:</td>
+      <td><input type="text" name="price"
+                 value="<?php echo htmlspecialchars($edit ? $book['price'] : ''); ?>" /></td>
+     </tr>
+     <tr>
+       <td>Description:</td>
+       <td><textarea rows="3" cols="50"
+            name="description"><?php echo htmlspecialchars($edit ? $book['description'] : ''); ?></textarea></td>
+     </tr>
+     <tr>
+        <td <?php if (!$edit) { echo "colspan=2"; }?> align="center">
+           <?php
+              if ($edit)
+               // we need the old isbn to find book in database
+               // if the isbn is being updated
+               echo "<input type=\"hidden\" name=\"oldisbn\"
+                      value=\"".htmlspecialchars($book['isbn'])."\" />";
+           ?>
+          <input type="submit"
+                 value="<?php echo $edit ? 'Update' : 'Add'; ?> Book" />
+          </td>
+          <?php
+             if ($edit) {
+               echo "<td>
+                     <form method=\"post\" action=\"delete_book.php\">
+                     <input type=\"hidden\" name=\"isbn\"
+                      value=\"".htmlspecialchars($book['isbn'])."\" />
+                     <input type=\"submit\" value=\"Delete book\"/>
+                     </form></td>";
+              }
+            ?>
       </tr>
-  </table>
+    </table>
   </form>
 <?php
 }
