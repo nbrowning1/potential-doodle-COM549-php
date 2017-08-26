@@ -36,8 +36,8 @@ function getConversations($db, $user) {
     // same for the second comparison conversation
     $bCompareUsername = $user->id == $b->user_1->id ? $b->user_2->username : $b->user_1->username;
     
-    // returns int value (-1, 0, 1) indicating comparison status
-    return strcmp($aCompareUsername, $bCompareUsername);
+    // returns int value (-1, 0, 1) indicating comparison status, case-insensitive compare
+    return strcmp(strtoupper($aCompareUsername), strtoupper($bCompareUsername));
   });
   
   return $conversations;

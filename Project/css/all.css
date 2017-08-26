@@ -55,6 +55,19 @@ body {
   padding-top: 10px;
 }
 
+/* first conversation (regular or group) will also have top border */
+#conversations-pane .conversation.top-conversation {
+  border-top: 1px solid red;
+}
+
+#conversations-pane .conversations-divider {
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #D3D3D3;
+}
+
 .conversation.blocked {
   color: whitesmoke;
   background-color: grey;
@@ -70,6 +83,20 @@ body {
   content: '(blocked)';
   display: inline-block;
   margin-left: 5px;
+}
+
+.conversation.favourited {
+  background-color: yellow;
+}
+
+.conversation.favourited.active {
+  background-color: gold;
+}
+
+.conversation.favourited::after {
+  font-family: 'Glyphicons Halflings';
+  content: "\e006";
+  margin-left: 10px;
 }
 
 .conversation .conversation-number-unread {

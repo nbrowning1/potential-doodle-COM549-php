@@ -18,7 +18,41 @@ $(document).ready(function() {
   });
   
   $(document).on('click', asId(FAVOURITE_USER_ID), function(event) {
-    console.log('favourite user for ' + getActiveId());
+    var userToFavourite = getActiveId();
+    $.ajax({
+      url: '../web/conversations/manage_favourite_user.php',
+      type: 'POST',
+      data: {
+        username: userToFavourite,
+        favouriteStatus: 'favourite'
+      },
+      success: function(data) {
+        if (data.error) {
+          // TODO : do something
+        } else {
+          updateConversationsPane();
+        }
+      }
+    });
+  });
+  
+  $(document).on('click', asId(UNFAVOURITE_USER_ID), function(event) {
+    var userToUnfavourite = getActiveId();
+    $.ajax({
+      url: '../web/conversations/manage_favourite_user.php',
+      type: 'POST',
+      data: {
+        username: userToUnfavourite,
+        favouriteStatus: 'unfavourite'
+      },
+      success: function(data) {
+        if (data.error) {
+          // TODO : do something
+        } else {
+          updateConversationsPane();
+        }
+      }
+    });
   });
   
   $(document).on('click', asId(BLOCK_USER_ID), function(event) {
@@ -184,7 +218,7 @@ function asId(idName) {
   return '#' + idName;
 }
 
-function populateOptionsDropdown(isGroupConversation, isBlockedUser) {
+function populateOptionsDropdown(isGroupConversation, isBlockedUser, isFavouritedUser) {
   var chatOptionsDropdown = document.getElementById('chat-options-dropdown');
   $(chatOptionsDropdown).empty();
   if (isGroupConversation) {
@@ -193,7 +227,13 @@ function populateOptionsDropdown(isGroupConversation, isBlockedUser) {
     chatOptionsDropdown.appendChild(createDropdownDivider());
     chatOptionsDropdown.appendChild(createDropdownItem(GROUP_LEAVE_ID, 'Leave group', 'leave-group-modal'));
   } else {
-    chatOptionsDropdown.appendChild(createDropdownItem(FAVOURITE_USER_ID, 'Favourite user'));
+   
+    if (isFavouritedUser) {
+      chatOptionsDropdown.appendChild(createDropdownItem(UNFAVOURITE_USER_ID, 'Unfavourite user'));
+    } else {
+      chatOptionsDropdown.appendChild(createDropdownItem(FAVOURITE_USER_ID, 'Favourite user'));
+    }
+    
     chatOptionsDropdown.appendChild(createDropdownDivider());
    
     if (isBlockedUser) {

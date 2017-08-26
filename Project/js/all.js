@@ -160,6 +160,15 @@ function updateConversationsPane(updatedConversationName) {
           hideChat();
         }
       }
+      
+      var firstRegularConversation = $('.conversation')[0];
+      var firstGroupConversation = $('.group-conversation')[0];
+      if (firstRegularConversation) {
+        firstRegularConversation.className += " top-conversation";
+      }
+      if (firstGroupConversation) {
+        firstGroupConversation.className += " top-conversation";
+      }
     }
   });
 }
@@ -168,8 +177,9 @@ function updateChatPane(activeConversationEl, scroll) {
   var activeChat = activeConversationEl.id;
   var isGroupConversation = isGroupChat(activeConversationEl);
   var isBlockedUser = isBlockedUserChat(activeConversationEl);
+  var isFavouritedUser = isFavouritedUserChat(activeConversationEl);
   
-  populateOptionsDropdown(isGroupConversation, isBlockedUser);
+  populateOptionsDropdown(isGroupConversation, isBlockedUser, isFavouritedUser);
 
   $.ajax({
     type: "POST",
@@ -209,6 +219,14 @@ function isBlockedUserChat(conversationEl) {
   }
   var classList = conversationEl.className.split(/\s+/);
   return classList.includes('blocked');
+}
+
+function isFavouritedUserChat(conversationEl) {
+  if (isGroupChat(conversationEl)) {
+    return false;
+  }
+  var classList = conversationEl.className.split(/\s+/);
+  return classList.includes('favourited');
 }
 
 function goToBottom(id) {
