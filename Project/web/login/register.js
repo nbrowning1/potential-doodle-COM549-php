@@ -7,10 +7,14 @@ $(document).ready(function() {
     var usernameErrorEl = $('#username-error');
     var passwordErrorEl = $('#password-error');
     var confirmPasswordErrorEl = $('#confirm-password-error');
+    var recoveryQuestionErrorEl = $('#recovery-question-error');
+    var recoveryAnswerErrorEl = $('#recovery-answer-error');
     var validationErrorEl = $('#validation-error');
     usernameErrorEl.text('');
     passwordErrorEl.text('');
     confirmPasswordErrorEl.text('');
+    recoveryQuestionErrorEl.text('');
+    recoveryAnswerErrorEl.text('');
     validationErrorEl.text('');
     
     var formData = serializeForm('#register-form');
@@ -21,7 +25,9 @@ $(document).ready(function() {
       data: {
         username: formData['username'],
         password: formData['password'],
-        confirmPassword: formData['confirmPassword']
+        confirmPassword: formData['confirmPassword'],
+        recoveryQuestion: formData['recoveryQuestion'],
+        recoveryAnswer: formData['recoveryAnswer']
       },
       success: function(data) {
         if (data.error) {
@@ -33,6 +39,12 @@ $(document).ready(function() {
           }
           if (data.confirmPasswordError) {
             confirmPasswordErrorEl.text(data.confirmPasswordError);
+          }
+          if (data.recoveryQuestionError) {
+            recoveryQuestionErrorEl.text(data.recoveryQuestionError);
+          }
+          if (data.recoveryAnswerError) {
+            recoveryAnswerErrorEl.text(data.recoveryAnswerError);
           }
           if (data.validationFailure) {
             validationErrorEl.text(data.validationFailure);

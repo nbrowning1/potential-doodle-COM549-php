@@ -1,5 +1,9 @@
 <?php
 
+function getPostValue($key) {
+  return isset($_POST[$key]) ? $_POST[$key] : '';
+}
+
 function successResponse() {
   return array("success"=>true);
 }

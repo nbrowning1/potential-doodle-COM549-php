@@ -1,6 +1,6 @@
 <?php
 
-// check if username is unique for registration
+// check if username is unique for registration or available for password recovery
 function usernameIsAvailable($db, $username) {
   $query = 'SELECT * FROM users WHERE username = ?';
   $stmt = $db->prepare($query);
@@ -21,12 +21,12 @@ function usernameIsAvailable($db, $username) {
   return true;
 }
 
-function insertUserToDb($db, $username, $password, $hint, $answer) {
-  $query = 'INSERT INTO users(username, password, hint, answer, reg_date, user_type) VALUES (?, sha1(?), ?, ?, now(), 0)';
+function insertUserToDb($db, $username, $password, $recoveryQ, $recoveryA) {
+  $query = 'INSERT INTO users(username, password, recovery_question, recovery_answer, reg_date, user_type) VALUES (?, sha1(?), ?, ?, now(), 0)';
   $stmt = $db->prepare($query);
 
   
-  $stmt->bind_param('ssss', $username, $password, $hint, $answer);
+  $stmt->bind_param('ssss', $username, $password, $recoveryQ, $recoveryA);
   $stmt->execute();
   if ($stmt->error) {
     throw new RuntimeException('Unexpected error occurred: ' . $stmt->error);
@@ -55,6 +55,13 @@ function successfulLogin($db, $username, $password) {
   return true;
 }
 
+function updateUserPassword($db, $username, $newPassword) {
+  $stmt = $db->prepare('UPDATE users SET password = sha1(?) WHERE username = ?');
+  
+  $stmt->bind_param('ss', $newPassword, $username);
+  $stmt->execute();
+}
+
 // gets the username as defined when they created the account, as login is case-insensitive
 function getUsernameProperCase($db, $usernameAnyCase) {
   $stmt = $db->prepare('SELECT username FROM users WHERE username = ?');
@@ -73,11 +80,11 @@ function getAllUsers($db) {
   
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType, $uHasUpdates);
+  $stmt->bind_result($uId, $uUsername, $uPassword, $uRecoveryQ, $uRecoveryA, $uRegDate, $uUserType, $uHasUpdates);
   
   $users = array();
   while ($stmt->fetch()) {
-    array_push($users, new User($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType, $uHasUpdates));
+    array_push($users, new User($uId, $uUsername, $uPassword, $uRecoveryQ, $uRecoveryA, $uRegDate, $uUserType, $uHasUpdates));
   }
   
   return $users;
@@ -89,10 +96,10 @@ function getUserByUsername($db, $username) {
   $stmt->bind_param('s', $username);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType, $uHasUpdates);
+  $stmt->bind_result($uId, $uUsername, $uPassword, $uRecoveryQ, $uRecoveryA, $uRegDate, $uUserType, $uHasUpdates);
   
   $stmt->fetch();
-  return new User($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType, $uHasUpdates);
+  return new User($uId, $uUsername, $uPassword, $uRecoveryQ, $uRecoveryA, $uRegDate, $uUserType, $uHasUpdates);
 }
 
 function getUserById($db, $userId) {
@@ -101,10 +108,10 @@ function getUserById($db, $userId) {
   $stmt->bind_param('i', $userId);
   $stmt->execute();
   $stmt->store_result();
-  $stmt->bind_result($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType, $uHasUpdates);
+  $stmt->bind_result($uId, $uUsername, $uPassword, $uRecoveryQ, $uRecoveryA, $uRegDate, $uUserType, $uHasUpdates);
   
   $stmt->fetch();
-  return new User($uId, $uUsername, $uPassword, $uHint, $uAnswer, $uRegDate, $uUserType, $uHasUpdates);
+  return new User($uId, $uUsername, $uPassword, $uRecoveryQ, $uRecoveryA, $uRegDate, $uUserType, $uHasUpdates);
 }
 
 function setUserHasUpdatesByUsername($db, $username, $value) {
@@ -122,6 +129,5 @@ function setUserHasUpdatesById($db, $id, $value) {
   $stmt->bind_param('ii', $updateValue, $id);
   $stmt->execute();
 }
-
 
 ?>

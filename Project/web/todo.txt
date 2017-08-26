@@ -1,18 +1,17 @@
 - group conversations
   - focus on conversation when added
-  - clicking on username makes that user the active convo
+  o clicking on username makes that user the active convo
 
 - conversations
   - block user
-    - hide on typeahead for target user, remove conversation visibility for target user
     - don't allow when user is favourited
+    o hide on typeahead for target user, remove conversation visibility for target user
   - favourite user
     - don't allow when user is blocked
-  - edit message functionality - edit or delete
+  o edit message functionality - edit or delete
   
-- register / login
-  - forgot password functionality
-    - password hints
+- register / login / recover
+  o some feedback to show password was changed
   
 - misc
   - use private functions where possible
@@ -24,6 +23,7 @@
   - validate message length - lower limit and test - gives PHP error currently
   - more robust active conversation indicators than setting name in ID - could cause unexpected behaviour if name conflicts with id of another unrelated element
   - show number of unread in tab name
+  - do something with user_type column in users or remove it.. or justify it
   
 - scalability
   - mysqli_insert_id might cause some issues when users are using it concurrently. some more robust solution for the DB - locks? better way to get the ID?
