@@ -54,16 +54,21 @@ $(document).ready(function() {
     
     var isGroupConversation = isGroupChat(conversationToDeleteEl);
     
-    hideChat();
-    
     $.ajax({
       type: "POST",
-      url: '../web/conversations_refresh.php',
-      data: { hide_id: conversationToDelete,
+      url: '../web/conversations/hide_conversation.php',
+      data: { hide: conversationToDelete,
               isGroupConversation: isGroupConversation },
-      success: function(html) {
-        // refresh conversations
-        $("#conversations-pane").html(html);
+      success: function(response) {
+        if (response.success) {
+          // delete conversation from UI
+          conversationToDeleteEl.remove();
+          if (response.noChat) {
+            hideChat();
+          }
+        } else {
+          // do something
+        }
       }
     });
   });

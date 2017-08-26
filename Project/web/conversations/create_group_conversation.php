@@ -43,6 +43,12 @@ function addGroupCreatorNameToMembers($groupCreatorUsername, $usernamesToAdd) {
 function createNewGroupConversation($groupName, $usernamesToAdd) {
   $db = connectToDb();
   
+  if (!groupNameIsAvailable($db, $groupName)) {
+    $error = errorResponse();
+    $error["groupNameError"] = "A group already exists with this name";
+    returnError($error);
+  }
+  
   $usersToAddToGroup = array();
   foreach ($usernamesToAdd as $usernameToAdd) {
     $userToAdd = getUserByUsername($db, $usernameToAdd);

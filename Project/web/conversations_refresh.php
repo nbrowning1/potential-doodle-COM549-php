@@ -7,15 +7,14 @@ session_start();
 $currentUsername = $_SESSION['user'];
 // TODO: more appropriate defaults?
 $active = isset($_SESSION['active']) ? $_SESSION['active'] : -1;
-$hideId = isset($_POST['hide_id']) ? $_POST['hide_id'] : -1;
 
 $db = connectToDb();
 $currentUser = getUserByUsername($db, $currentUsername);
 
-echoRegularConversations($db, $currentUser, $active, $hideId);
-echoGroupConversations($db, $currentUser, $active, $hideId);
+echoRegularConversations($db, $currentUser, $active);
+echoGroupConversations($db, $currentUser, $active);
 
-function echoRegularConversations($db, $currentUser, $active, $hideId) {
+function echoRegularConversations($db, $currentUser, $active) {
   
   $conversations = getConversations($db, $currentUser);
   $conversationsToOutput = array();
@@ -34,12 +33,6 @@ function echoRegularConversations($db, $currentUser, $active, $hideId) {
       $otherUser = $user2;
     } else {
       $otherUser = $user1;
-    }
-
-    // hide conversation if refresh request desires it
-    if ($otherUser->username == $hideId) {
-      updateConversationVisibility($db, $conversation->id, $currentUser->id);
-      continue;
     }
 
     // if active class, add class to modify the style of conversation
@@ -81,10 +74,10 @@ function echoRegularConversations($db, $currentUser, $active, $hideId) {
 }
 
 function echoGroupDivider() {
-  echo '<div class="conversations-divider"><b><u>Groups</u></b></div>';
+  echo '<div class="conversations-divider"><b><u><i>Groups</i></u></b></div>';
 }
 
-function echoGroupConversations($db, $currentUser, $active, $hideId) {
+function echoGroupConversations($db, $currentUser, $active) {
   
   $groupConversations = getGroupsForUser($db, $currentUser);
   $groupConversationsToOutput = array();
@@ -92,12 +85,6 @@ function echoGroupConversations($db, $currentUser, $active, $hideId) {
   foreach ($groupConversations as $groupConversation) {
     
     $unreadMsgCount = count(getUnreadChatMessagesForUser($db, $groupConversation, true, $currentUser));
-    
-    // hide conversation if refresh request desires it
-    if ($groupConversation->name == $hideId) {
-      updateGroupUserGroupVisibility($db, $groupConversation->id, $currentUser);
-      continue;
-    }
 
     // if active class, add class to modify the style of conversation
     $activeClass = $active == $groupConversation->name ? 'active' : '';

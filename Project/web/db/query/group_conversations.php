@@ -1,5 +1,26 @@
 <?php
 
+// check if group name is unique for creation
+function groupNameIsAvailable($db, $name) {
+  $query = 'SELECT * FROM group_conversations WHERE name = ?';
+  $stmt = $db->prepare($query);
+  $stmt->bind_param('s', $name);
+  $stmt->execute();
+  $stmt->store_result();
+
+  if ($stmt->error) {
+    throw new RuntimeException('Unexpected error occurred: ' . $stmt->error);
+  }
+
+  if ($stmt->num_rows > 0) {
+    return false;
+  }
+
+  $stmt->free_result();
+  
+  return true;
+}
+
 function insertGroupConversationToDb($db, $groupName, $groupUsers) {
 
   $query = 'INSERT INTO group_conversations(name) VALUES (?)';

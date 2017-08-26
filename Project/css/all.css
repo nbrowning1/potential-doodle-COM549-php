@@ -49,7 +49,7 @@ body {
 #conversations-pane .conversation {
   width: 100%;
   height: 50px;
-  border-bottom: 1px solid red;
+  border-bottom: 1px solid #0074D9;
   text-align: center;
   display: block;
   padding-top: 10px;
@@ -57,26 +57,26 @@ body {
 
 /* first conversation (regular or group) will also have top border */
 #conversations-pane .conversation.top-conversation {
-  border-top: 1px solid red;
+  border-top: 1px solid #0074D9;
 }
 
 #conversations-pane .conversations-divider {
   height: 30px;
+  padding-left: 10px;
   display: flex;
   justify-content: center;
-  align-items: center;
-  background-color: #D3D3D3;
+  flex-direction: column;
 }
 
 .conversation.blocked {
-  color: whitesmoke;
-  background-color: grey;
+  background-color: #333333;
+  color: #DDDDDD;
   font-style: italic;
 }
 
 .conversation.blocked.active {
-  background-color: black;
-  color: whitesmoke;
+  background-color: #111111;
+  color: #DDDDDD;
 }
 
 .conversation.blocked::after {
@@ -86,11 +86,11 @@ body {
 }
 
 .conversation.favourited {
-  background-color: yellow;
+  background-color: #FFDC00;
 }
 
 .conversation.favourited.active {
-  background-color: gold;
+  background-color: #FFBF00;
 }
 
 .conversation.favourited::after {

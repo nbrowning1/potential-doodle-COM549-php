@@ -1,11 +1,13 @@
 - group conversations
-  - more validation when creating - does it already exist? easy check
+  - focus on conversation when added
   - clicking on username makes that user the active convo
 
 - conversations
   - block user
     - hide on typeahead for target user, remove conversation visibility for target user
+    - don't allow when user is favourited
   - favourite user
+    - don't allow when user is blocked
   - edit message functionality - edit or delete
   
 - register / login

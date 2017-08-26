@@ -37,7 +37,7 @@ if (!isset($_SESSION['user'])) {
       <!-- bootstrap search box with icon -->
       <div class="form-group has-feedback nomargin-container">
         
-        <input id="username-search" name="nameToAdd" type="text" class="form-control typeahead" placeholder="Add somebody..." />
+        <input id="username-search" name="nameToAdd" type="text" class="form-control typeahead" placeholder="Search..." />
         <span class="glyphicon glyphicon-search form-control-feedback"></span>
         
         <!-- hidden input for group searches -->
