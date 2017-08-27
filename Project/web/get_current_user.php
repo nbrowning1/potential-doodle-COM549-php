@@ -1,6 +1,6 @@
 <?php
 
-include_once('utils.php');
+require_once('utils.php');
 
 session_start();
 

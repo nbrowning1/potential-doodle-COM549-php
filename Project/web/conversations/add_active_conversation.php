@@ -1,18 +1,15 @@
 <?php
 
-include_once('../db/connection.php');
-include_once('../db/include.php');
-include_once('manage_conversations.php');
+require_once('../include.php');
+require_once('manage_conversations.php');
 
 session_start();
 
-$nameToAdd = isset($_POST["nameToAdd"]) ? $_POST["nameToAdd"] : "";
-$groupToAdd = isset($_POST["groupToAdd"]) ? $_POST["groupToAdd"] : "";
+$nameToAdd = getPostValue('nameToAdd');
+$groupToAdd = getPostValue('groupToAdd');
 
-if (empty($nameToAdd) && empty($groupToAdd)) {
-  $error = errorResponse();
-  $error["searchError"] = "Name cannot be empty";
-  returnError($error);
+if (allEmpty($nameToAdd, $groupToAdd)) {
+  returnErrorResponse('searchError', 'Name cannot be empty');
 }
 
 addActiveConversation($nameToAdd, $groupToAdd);
@@ -23,20 +20,8 @@ function addActiveConversation($nameToAdd, $groupToAdd) {
   addGroupConversationToActiveConversations($groupToAdd);
   
   if (!$conversationAddStatus->success) {
-    $error = errorResponse();
-    $error["searchError"] = $conversationAddStatus->msg;
-    returnError($error);
+    returnErrorResponse('searchError', $conversationAddStatus->msg);
   }
-}
-
-function errorResponse() {
-  return array("error"=>true);
-}
-
-function returnError($errorArray) {
-  header('Content-type: application/json');
-  echo json_encode($errorArray);
-  exit;
 }
 
 ?>

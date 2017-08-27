@@ -1,52 +1,43 @@
 <?php
 
-include_once('../db/connection.php');
-include_once('../db/include.php');
+require_once('../include.php');
 
 session_start();
+$currentUsername = $_SESSION['user'];
 
-$groupCreatorUsername = $_SESSION['user'];
+$groupName = getPostValue('groupName');
+$usernamesToAdd = getPostValueArray('members');
+$usernamesToAdd = addCurrentUserToMembers($currentUsername, $usernamesToAdd);
 
-$groupName = isset($_POST["groupName"]) ? $_POST["groupName"] : "";
-$usernamesToAdd = array();
-if (isset($_POST["members"])) {
-  $members = $_POST["members"];
-  if (is_array($members)) {
-    $usernamesToAdd = $members;
-  } else {
-    array_push($usernamesToAdd, $members);
-  }
-}
-
-$usernamesToAdd = addGroupCreatorNameToMembers($groupCreatorUsername, $usernamesToAdd);
-
-if (empty($groupName) || count($usernamesToAdd) < 2) {
-  $error = errorResponse();
-  if (empty($groupName)) {
-    $error["groupNameError"] = "Name cannot be empty";
-  }
-  if (count($usernamesToAdd) < 2) {
-    $error["membersError"] = "Must have at least one group member (aside from yourself)";
-  }
-  returnError($error);
-}
-
+validateData($groupName, $usernamesToAdd);
 createNewGroupConversation($groupName, $usernamesToAdd);
 
-function addGroupCreatorNameToMembers($groupCreatorUsername, $usernamesToAdd) {
-  if (!in_array($groupCreatorUsername, $usernamesToAdd)) {
-    array_push($usernamesToAdd, $groupCreatorUsername);
+function addCurrentUserToMembers($currentUsername, $usernamesToAdd) {
+  if (!in_array($currentUsername, $usernamesToAdd)) {
+    array_push($usernamesToAdd, $currentUsername);
   }
   return $usernamesToAdd;
+}
+
+function validateData($groupName, $usernamesToAdd) {
+  // < 2 check because usernames to add already includes the current user
+  if (empty($groupName) || count($usernamesToAdd) < 2) {
+    $response = errorResponse();
+    if (empty($groupName)) {
+      $response['groupNameError'] = 'Name cannot be empty';
+    }
+    if (count($usernamesToAdd) < 2) {
+      $response['membersError'] = 'Must have at least one group member (aside from yourself)';
+    }
+    returnJson($response);
+  }
 }
 
 function createNewGroupConversation($groupName, $usernamesToAdd) {
   $db = connectToDb();
   
   if (!groupNameIsAvailable($db, $groupName)) {
-    $error = errorResponse();
-    $error["groupNameError"] = "A group already exists with this name";
-    returnError($error);
+    returnErrorResponse('groupNameError', 'A group already exists with this name');
   }
   
   $usersToAddToGroup = array();
@@ -56,16 +47,6 @@ function createNewGroupConversation($groupName, $usernamesToAdd) {
   }
   
   insertGroupConversationToDb($db, $groupName, $usersToAddToGroup);
-}
-
-function errorResponse() {
-  return array("error"=>true);
-}
-
-function returnError($errorArray) {
-  header('Content-type: application/json');
-  echo json_encode($errorArray);
-  exit;
 }
 
 ?>

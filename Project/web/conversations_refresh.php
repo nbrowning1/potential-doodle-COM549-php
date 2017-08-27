@@ -1,7 +1,7 @@
 <?php
   
-include_once('db/connection.php');
-include_once('db/include.php');
+require_once('db/connection.php');
+require_once('include.php');
 
 session_start();
 $currentUsername = $_SESSION['user'];
@@ -41,12 +41,6 @@ function echoRegularConversations($db, $currentUser, $active) {
     // if user is blocked, add class to modify the style of conversation
     $userIsBlocked = isUserBlockedForUser($db, $currentUser, $otherUser);
     $blockedClass = $userIsBlocked ? 'blocked' : '';
-    
-    // current user is blocked by other user.. awkward - don't show conversation. Just inverted logic from above
-//    $imTheBadGuy = isUserBlockedForUser($db, $otherUser, $currentUser);
-//    if ($imTheBadGuy) {
-//      continue;
-//    }
     
     // if user is favourited, add class to modify the style of conversation
     $userIsFavourited = isUserFavouritedForUser($db, $currentUser, $otherUser);

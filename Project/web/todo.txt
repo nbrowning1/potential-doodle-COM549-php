@@ -2,6 +2,7 @@
   o clicking on username makes that user the active convo
 
 - conversations
+  - when all group conversations removed, takes a hot second for the Groups label to go away
   o edit message functionality - edit or delete
   
 - register / login / recover
@@ -12,6 +13,7 @@
   - typeahead 
     - would be cool to hide blocked users (or show it)
   - styling
+  - htmlspecialchars everywhere - SANITISE EVERYTHING
   - more DB constraints - e.g. uniqueness for group / user names
   - general validation about length of stuff
   - validate message length - lower limit and test - gives PHP error currently

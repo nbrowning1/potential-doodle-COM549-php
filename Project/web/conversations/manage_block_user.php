@@ -1,23 +1,19 @@
 <?php
 
-include_once('../db/connection.php');
-include_once('../db/include.php');
+require_once('../include.php');
 
 session_start();
+$currentUsername = $_SESSION['user'];
 
-$targetUsername = isset($_POST["username"]) ? $_POST["username"] : "";
-$blockStatus = isset($_POST["blockStatus"]) ? $_POST["blockStatus"] : "";
+$targetUsername = getPostValue('username');
+$blockStatus = getPostValue('blockStatus');
+// TODO: change to boolean from AJAX
 if (!($blockStatus == 'block' || $blockStatus == 'unblock')) {
-  $response = errorResponse();
-  $response['invalidOption'] = 'Invalid block status';
-  returnError($response);
+  returnErrorResponse('invalidOption', 'Invalid block status');
 }
 $shouldBlock = $blockStatus == 'block' ? true : false;
 
 $db = connectToDb();
-
-$currentUsername = $_SESSION['user'];
-
 manageTargetUserBlockStatus($db, $currentUsername, $targetUsername, $shouldBlock);
 
 function manageTargetUserBlockStatus($db, $currentUsername, $targetUsername, $shouldBlock) {
@@ -26,16 +22,6 @@ function manageTargetUserBlockStatus($db, $currentUsername, $targetUsername, $sh
   } else {
     removeBlockedUserByUsername($db, $currentUsername, $targetUsername);
   }
-}
-
-function errorResponse() {
-  return array("error"=>true);
-}
-
-function returnError($errorArray) {
-  header('Content-type: application/json');
-  echo json_encode($errorArray);
-  exit;
 }
 
 ?>

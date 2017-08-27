@@ -1,8 +1,8 @@
 <?php
 
-include_once('../db/connection.php');
-include_once('../db/include.php');
+require_once('../include.php');
 
+// TODO: change to json response to be consistent with everything else
 class AddStatus {
   public $success;
   public $msg;
@@ -14,25 +14,26 @@ class AddStatus {
 }
 
 function addConversationToActiveConversations($userToAddUsername) {
-  $currentUsername = $_SESSION['user'];
-
   $db = connectToDb();
-
+  $currentUsername = $_SESSION['user'];
   $currentUser = getUserByUsername($db, $currentUsername);
   $userToAdd = getUserByUsername($db, $userToAddUsername);
 
-  if (empty($currentUser->id) || empty($userToAdd->id)) {
+  if (anyEmpty($currentUser->id, $userToAdd->id)) {
     return new AddStatus(false, "Couldn't find user");
   }
   
   if ($currentUser->id == $userToAdd->id) {
-    return new AddStatus(false, "That's you, silly");
+    return new AddStatus(false, "That's you!");
   }
   
   $potentialConversation = getConversationByUsers($db, $currentUser, $userToAdd);
   
   if ($potentialConversation->id != null) {
-    $conversationAlreadyVisibleForUser = (($currentUser->id == $potentialConversation->user_1->id && $potentialConversation->user_1_visibility == 1) || ($currentUser->id == $potentialConversation->user_2->id && $potentialConversation->user_2_visibility == 1));
+    $currentUserIsUser1AndSetVisible = $currentUser->id == $potentialConversation->user_1->id && $potentialConversation->user_1_visibility == 1;
+    $currentUserIsUser2AndSetVisible = $currentUser->id == $potentialConversation->user_2->id && $potentialConversation->user_2_visibility == 1;
+    
+    $conversationAlreadyVisibleForUser = $currentUserIsUser1AndSetVisible || $currentUserIsUser2AndSetVisible;
     
     if ($conversationAlreadyVisibleForUser) {
       return new AddStatus(true, null);
@@ -41,7 +42,7 @@ function addConversationToActiveConversations($userToAddUsername) {
       updateConversationVisibility($db, $potentialConversation->id, $currentUser->id);
     }
   } else {
-    // create new conversation between users
+    // create new conversation between users - default visible for this user and hidden for other user
     insertConversationToDb($db, $currentUser, $userToAdd);
   }
   return new AddStatus(true, null);
@@ -49,12 +50,11 @@ function addConversationToActiveConversations($userToAddUsername) {
 
 function addGroupConversationToActiveConversations($groupToAddName) {
   $db = connectToDb();
-  
   $currentUsername = $_SESSION['user'];
   $currentUser = getUserByUsername($db, $currentUsername);
 
   if (empty($groupToAddName)) {
-    return new AddStatus(false, "Enter a group name");
+    return new AddStatus(false, 'Enter a group name');
   }
   
   $potentialConversation = getGroupByName($db, $groupToAddName);

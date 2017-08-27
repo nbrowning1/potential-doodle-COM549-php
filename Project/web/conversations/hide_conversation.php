@@ -1,28 +1,16 @@
 <?php
 
-include_once('../db/connection.php');
-include_once('../db/include.php');
-include_once('../utils.php');
+require_once('../include.php');
 
 session_start();
-
 $active = $_SESSION['active'];
-$hideName = isset($_POST["hide"]) ? $_POST["hide"] : "";
-// TODO: DRY
-$isGroupConversationStr = isset($_POST['isGroupConversation']) ? $_POST['isGroupConversation'] : false;
-// needed because ajax calls pass variable values to PHP as a string... https://stackoverflow.com/questions/7408976/bool-parameter-from-jquery-ajax-received-as-literal-string-false-true-in-php
-$isGroupConversation;
-if ($isGroupConversationStr === 'true') {
-  $isGroupConversation = true;
-} else if ($isGroupConversationStr === 'false') {
-  $isGroupConversation = false;
-} else {
-  // must already be boolean - assign directly
-  $isGroupConversation = $isGroupConversationStr;
-}
+$currentUsername = $_SESSION['user'];
+
+$hideName = getPostValue('hide');
+$isGroupConversation = getPostValueBoolean('isGroupConversation');
 
 $db = connectToDb();
-$currentUser = getUserByUsername($db, $_SESSION['user']);
+$currentUser = getUserByUsername($db, $currentUsername);
 
 if ($isGroupConversation) {
   $groupConversation = getGroupByName($db, $hideName);
@@ -35,7 +23,7 @@ if ($isGroupConversation) {
 
 $response = successResponse();
 if ($hideName == $active) {
-  $response["noChat"] = true;
+  $response['noChat'] = true;
 }
 returnJson($response);
 

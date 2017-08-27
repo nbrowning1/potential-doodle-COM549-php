@@ -1,46 +1,39 @@
 <?php
 
-include_once('../db/connection.php');
-include_once('../db/include.php');
+require_once('../include.php');
 
 session_start();
-$db = connectToDb();
-  
+$db = connectToDb();  
 $currentUser = getUserByUsername($db, $_SESSION['user']);
 
-$oldName = isset($_POST["oldName"]) ? $_POST["oldName"] : "";
-$newName = isset($_POST["newName"]) ? $_POST["newName"] : "";
+$oldName = getPostValue('oldName');
+$newName = getPostValue('newName');
 
-// shouldn't need validation for old name because it's not form input - maybe put it for safety but cba rn
-if (empty($newName)) {
-  $error = errorResponse();
-  if (empty($newName)) {
-    $error["groupNameError"] = "New name cannot be empty";
+validateData($db, $oldName, $newName);
+
+function validateData($db, $oldName, $newName) {
+  if ($oldName == $newName) {
+    exit;
   }
-  returnError($error);
+
+  if (empty($newName)) {
+    returnErrorResponse('groupNameError', 'New name cannot be empty');
+  }
+
+  if (!groupNameIsAvailable($db, $newName)) {
+    returnErrorResponse('groupNameError', 'A group already exists with this name');
+  }
 }
 
 renameGroupConversation($db, $oldName, $newName, $currentUser);
 
 function renameGroupConversation($db, $oldName, $newName, $currentUser) {
-  
   updateGroupName($db, $oldName, $newName);
   
+  // show admin message to inform group of change
   $conversation = getGroupByName($db, $newName);
   $message = "$currentUser->username renamed this conversation from '$oldName' to '$newName'";
-  
   insertAdminChatMessageToDb($db, $currentUser, $message, $conversation, true);
-}
-
-function errorResponse() {
-  return array("error"=>true);
-}
-
-// TODO: DRY
-function returnError($errorArray) {
-  header('Content-type: application/json');
-  echo json_encode($errorArray);
-  exit;
 }
 
 ?>

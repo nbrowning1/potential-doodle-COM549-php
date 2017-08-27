@@ -29,10 +29,17 @@ $(document).ready(function() {
           usernameField.blur();
           usernameField.val("");
           groupField.val("");
-          updateConversationsPane();
+          
           // set active to newly added conversation
-          $.post('../web/conversations/update_active_conversation.php', {
-            newActive: formData['nameToAdd']
+          $.ajax({
+            url: '../web/conversations/update_active_conversation.php',
+            type: 'POST',
+            data: {
+              newActive: formData['nameToAdd']
+            },
+            success: function(data) {
+              updateConversationsPane();
+            }
           });
         }
       }

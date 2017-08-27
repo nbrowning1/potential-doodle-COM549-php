@@ -1,21 +1,16 @@
 <?php
 
-include_once('../db/connection.php');
-include_once('../db/include.php');
+require_once('../include.php');
 
 session_start();
-
-$groupName = isset($_POST["groupName"]) ? $_POST["groupName"] : "";
+$currentUsername = $_SESSION['user'];
+$groupName = getPostValue('groupName');
 
 $db = connectToDb();
-
-$currentUser = getUserByUsername($db, $_SESSION['user']);
-
+$currentUser = getUserByUsername($db, $currentUsername);
 removeSelfFromGroupConversation($db, $groupName, $currentUser);
 
-
 function removeSelfFromGroupConversation($db, $groupName, $currentUser) {
-  
   $group = getGroupByName($db, $groupName);
   
   // will also delete group if this is the last member leaving
@@ -23,18 +18,7 @@ function removeSelfFromGroupConversation($db, $groupName, $currentUser) {
   
   // add admin style message to inform members of change
   $message = "$currentUser->username left the conversation";
-  
   insertAdminChatMessageToDb($db, $currentUser, $message, $group, true);
-}
-
-function errorResponse() {
-  return array("error"=>true);
-}
-
-function returnError($errorArray) {
-  header('Content-type: application/json');
-  echo json_encode($errorArray);
-  exit;
 }
 
 ?>
