@@ -22,12 +22,27 @@ function addBlockedUserByUsername($db, $username, $usernameToBlock) {
   $query = 'INSERT INTO users_blocked_users(user_id, blocked_user_id) VALUES (?, ?)';
   
   manageBlockedUserByUsername($db, $username, $usernameToBlock, $query);
+  
+  $message = "$username has blocked $usernameToBlock. Neither user will be able to send messages until this block has been removed";
+  addAdminMessageForBlockStatus($db, $username, $usernameToBlock, $message);
 }
 
 function removeBlockedUserByUsername($db, $username, $usernameToUnblock) {
   $query = 'DELETE FROM users_blocked_users WHERE user_id = ? AND blocked_user_id = ?';
   
   manageBlockedUserByUsername($db, $username, $usernameToUnblock, $query);
+  
+  $message = "$username has unblocked $usernameToUnblock";
+  addAdminMessageForBlockStatus($db, $username, $usernameToUnblock, $message);
+}
+
+function addAdminMessageForBlockStatus($db, $username, $otherUsername, $message) {
+  // show some message to make clear what's happening. Toyed with the idea of making the blocking user invisible to the blocked user but if both users block eachother then it becomes a deadlock
+  $currentUser = getUserByUsername($db, $username);
+  $otherUser = getUserByUsername($db, $otherUsername);
+  $conversation = getConversationByUsers($db, $currentUser, $otherUser);
+  
+  insertAdminChatMessageToDb($db, $currentUser, $message, $conversation, false);
 }
 
 function manageBlockedUserByUsername($db, $username, $usernameToManage, $query) {

@@ -55,6 +55,27 @@ function getAllGroups($db) {
   return $groups;
 }
 
+// perhaps this should replace some usages of getAllGroups()
+function getAllGroupsForSearch($db, $currentUser) {
+  $query = "SELECT  *
+            FROM    group_conversations
+            WHERE 	id IN (SELECT group_id FROM groups_users WHERE user_id = ?)";
+  $stmt = $db->prepare($query);
+  
+  $stmt->bind_param('i', $currentUser->id);
+  $stmt->execute();
+  $stmt->store_result();
+  $stmt->bind_result($gcId, $gcName);
+  
+  $groups = array();
+  while ($stmt->fetch()) {
+    $group = createGroupObj($db, $gcId, $gcName);
+    array_push($groups, $group);
+  }
+  
+  return $groups;
+}
+
 function getGroupById($db, $groupConversationId) {
   $stmt = $db->prepare('SELECT * FROM group_conversations WHERE id = ?');
   

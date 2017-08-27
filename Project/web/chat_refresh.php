@@ -53,11 +53,12 @@ if ($isGroupConversation) {
 }
 
 $otherUserIsBlocked = !$isGroupConversation && isUserBlockedForUser($db, $currentUser, $otherUser);
+$imTheBadGuy = !$isGroupConversation && isUserBlockedForUser($db, $otherUser, $currentUser);
 
 // add message if new one sent
 if (!empty($_POST['message'])) {
-  // but don't allow sending if other user is blocked - javascript will try to disallow this but stop it at serverside if the user is a weasel
-  if (!$otherUserIsBlocked) {
+  // but don't allow sending if either user is blocked - javascript will try to disallow this but stop it at serverside if the user is a weasel
+  if (!($otherUserIsBlocked || $imTheBadGuy)) {
     $message = htmlspecialchars($_POST['message']);
 
     insertChatMessageToDb($db, $currentUser, $message, $conversation, $isGroupConversation);
@@ -124,7 +125,7 @@ markMessagesAsReadForUser($db, $currentUser, $userChatMessages);
 $response = array();
 $response['chatContent'] = $chatHtml;
 $response['chatTitle'] = $chatTitle;
-$response['blockedUser'] = $otherUserIsBlocked;
+$response['cantSendMsg'] = $otherUserIsBlocked || $imTheBadGuy;
 
 returnJson($response);
 ?>

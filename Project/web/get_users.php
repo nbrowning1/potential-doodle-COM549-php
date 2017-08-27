@@ -6,7 +6,10 @@ include_once('utils.php');
 
 $db = connectToDb();
 
-$users = getAllUsers($db);
+session_start();
+$currentUser = getUserByUsername($db, $_SESSION['user']);
+
+$users = getAllUsersForSearch($db, $currentUser);
 $usersToWrite = array();
 
 foreach ($users as $user) {

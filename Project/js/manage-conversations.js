@@ -75,6 +75,11 @@ $(document).ready(function() {
           // and clear field values
           $('#add-group-users').text('');
           $('#group-name').val('');
+          
+          // set active to newly added conversation
+          $.post('../web/conversations/update_active_conversation.php', {
+            newActive: formData['groupName']
+          });
         }
       }
     });

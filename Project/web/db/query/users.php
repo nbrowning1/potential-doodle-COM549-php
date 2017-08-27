@@ -90,6 +90,28 @@ function getAllUsers($db) {
   return $users;
 }
 
+// perhaps this should replace some usages of getAllUsers()
+function getAllUsersForSearch($db, $currentUser) {
+  // exclude current user
+  $query = "SELECT  *
+            FROM    users
+            WHERE 
+            NOT     (id = ?)";
+  $stmt = $db->prepare($query);
+  
+  $stmt->bind_param('i', $currentUser->id);
+  $stmt->execute();
+  $stmt->store_result();
+  $stmt->bind_result($uId, $uUsername, $uPassword, $uRecoveryQ, $uRecoveryA, $uRegDate, $uUserType, $uHasUpdates);
+  
+  $users = array();
+  while ($stmt->fetch()) {
+    array_push($users, new User($uId, $uUsername, $uPassword, $uRecoveryQ, $uRecoveryA, $uRegDate, $uUserType, $uHasUpdates));
+  }
+  
+  return $users;
+}
+
 function getUserByUsername($db, $username) {
   $stmt = $db->prepare('SELECT * FROM users WHERE username = ?');
   

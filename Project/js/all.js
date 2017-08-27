@@ -197,7 +197,7 @@ function updateChatPane(activeConversationEl, scroll) {
         hideChat();
       } else {
         showChat();
-        if (response.blockedUser) {
+        if (response.cantSendMsg) {
           makeMessageInputInaccessible();
         }
         

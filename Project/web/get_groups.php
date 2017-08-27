@@ -6,7 +6,10 @@ include_once('utils.php');
 
 $db = connectToDb();
 
-$groups = getAllGroups($db);
+session_start();
+$currentUser = getUserByUsername($db, $_SESSION['user']);
+
+$groups = getAllGroupsForSearch($db, $currentUser);
 $groupsToWrite = array();
 
 foreach ($groups as $group) {

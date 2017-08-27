@@ -26,6 +26,7 @@ $(document).ready(function() {
   });
   
   // occasional polling for updates
+  // is this needed? users-groups-refresh does its own refresh so this can be a lot lower without straining any resources
   setInterval(refresh, 30000);
   
   // grab refreshed references from UsersGroupsRefresh (does its own refreshing for users & groups)
@@ -38,19 +39,13 @@ $(document).ready(function() {
   
   function populateUsers(updatedUsers) {
     $.each(updatedUsers, function(i, user) {
-      // exclude self
-      if (currentUser !== user.username) {
-        users.push(user.username);
-      }
+      users.push(user.username);
     });
   };
 
   function populateGroups(updatedGroups) {
     $.each(updatedGroups, function(i, group) {
-      // exclude groups not containing user
-      if ($.inArray(currentUser, group.members) > -1) {
-        groups.push(group);
-      }
+      groups.push(group);
     });
   };
   

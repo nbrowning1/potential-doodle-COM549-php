@@ -1,10 +1,7 @@
 - group conversations
-  - focus on group conversation when created
   o clicking on username makes that user the active convo
 
 - conversations
-  - block user
-    - hide on typeahead for target user, disable message sending
   o edit message functionality - edit or delete
   
 - register / login / recover
@@ -22,6 +19,7 @@
   - show number of unread in tab name
   - don't let message send input use stored data
   - do something with user_type column in users or remove it.. or justify it
+  - safeguard vs accessing other PHP files via URL
   
 - scalability
   - mysqli_insert_id might cause some issues when users are using it concurrently. some more robust solution for the DB - locks? better way to get the ID?
