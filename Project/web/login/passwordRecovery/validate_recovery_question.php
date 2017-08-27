@@ -18,7 +18,8 @@ if (empty($answer)) {
 
 $db = connectToDb();
 $correctAnswer = getUserByUsername($db, $username)->recoveryA;
-if ($answer != $correctAnswer) {
+// case-insensitive matching
+if (strtoupper($answer) != strtoupper($correctAnswer)) {
   $response = errorResponse();
   $response['answerError'] = "Incorrect answer";
   returnJson($response);

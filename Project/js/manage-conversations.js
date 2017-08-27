@@ -30,6 +30,10 @@ $(document).ready(function() {
           usernameField.val("");
           groupField.val("");
           updateConversationsPane();
+          // set active to newly added conversation
+          $.post('../web/conversations/update_active_conversation.php', {
+            newActive: formData['nameToAdd']
+          });
         }
       }
     });

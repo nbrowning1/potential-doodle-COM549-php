@@ -228,17 +228,22 @@ function populateOptionsDropdown(isGroupConversation, isBlockedUser, isFavourite
     chatOptionsDropdown.appendChild(createDropdownItem(GROUP_LEAVE_ID, 'Leave group', 'leave-group-modal'));
   } else {
    
+    // allow unfavourite if user is already favourited, and don't allow favouriting a blocked user (until unblocked)
     if (isFavouritedUser) {
       chatOptionsDropdown.appendChild(createDropdownItem(UNFAVOURITE_USER_ID, 'Unfavourite user'));
-    } else {
+    } else if (!isBlockedUser) {
       chatOptionsDropdown.appendChild(createDropdownItem(FAVOURITE_USER_ID, 'Favourite user'));
     }
     
-    chatOptionsDropdown.appendChild(createDropdownDivider());
+    // only need divider if user isn't blocked or favourited - otherwise there will only be one option (to unblock or unfavourite)
+    if (!(isFavouritedUser || isBlockedUser)) {
+      chatOptionsDropdown.appendChild(createDropdownDivider());
+    }
    
+    // allow unblock if user is already blocked, and don't allow blocking a favourited user (until unfavourited)
     if (isBlockedUser) {
       chatOptionsDropdown.appendChild(createDropdownItem(UNBLOCK_USER_ID, 'Unblock user'));
-    } else {
+    } else if (!isFavouritedUser) {
       chatOptionsDropdown.appendChild(createDropdownItem(BLOCK_USER_ID, 'Block user', 'block-user-modal'));
     }
   }

@@ -35,7 +35,7 @@ function addConversationToActiveConversations($userToAddUsername) {
     $conversationAlreadyVisibleForUser = (($currentUser->id == $potentialConversation->user_1->id && $potentialConversation->user_1_visibility == 1) || ($currentUser->id == $potentialConversation->user_2->id && $potentialConversation->user_2_visibility == 1));
     
     if ($conversationAlreadyVisibleForUser) {
-      return new AddStatus(false, "Conversation already exists");
+      return new AddStatus(true, null);
     } else {
       // make visible again
       updateConversationVisibility($db, $potentialConversation->id, $currentUser->id);
@@ -61,7 +61,7 @@ function addGroupConversationToActiveConversations($groupToAddName) {
   
   if ($potentialConversation->id != null) {
     if (groupVisibleForUser($db, $potentialConversation->id, $currentUser)) {
-      return new AddStatus(false, "Conversation already exists");
+      return new AddStatus(true, null);
     } else {
       // make visible again
       updateGroupUserGroupVisibility($db, $potentialConversation->id, $currentUser);

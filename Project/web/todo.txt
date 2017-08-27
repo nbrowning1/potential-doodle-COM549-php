@@ -1,13 +1,10 @@
 - group conversations
-  - focus on conversation when added
+  - focus on group conversation when created
   o clicking on username makes that user the active convo
 
 - conversations
   - block user
-    - don't allow when user is favourited
-    o hide on typeahead for target user, remove conversation visibility for target user
-  - favourite user
-    - don't allow when user is blocked
+    - hide on typeahead for target user, disable message sending
   o edit message functionality - edit or delete
   
 - register / login / recover
@@ -23,6 +20,7 @@
   - validate message length - lower limit and test - gives PHP error currently
   - more robust active conversation indicators than setting name in ID - could cause unexpected behaviour if name conflicts with id of another unrelated element
   - show number of unread in tab name
+  - don't let message send input use stored data
   - do something with user_type column in users or remove it.. or justify it
   
 - scalability

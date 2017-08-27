@@ -109,7 +109,14 @@ $(document).ready(function() {
     },
     {
       name: 'users',
-      source: userMatcher()
+      source: userMatcher(),
+      templates: {
+        empty: [
+          '<div class="tt-none" style="padding-left:20px;"><i>',
+            'No results found',
+          '</i></div>'
+        ].join('\n')
+      }
     },
     {
       name: 'groups',
@@ -118,6 +125,11 @@ $(document).ready(function() {
         return group.groupname;
       },
       templates: {
+        empty: [
+          '<div class="tt-none" style="padding-left:20px;"><i>',
+            'No results found',
+          '</i></div>'
+        ].join('\n'),
         suggestion: function (group) {
           var membersList = group.members.join(", ");  
           return '<p><b><u>Group:</u></b> ' + group.groupname + ': <i>' + membersList + '</i></p>';
@@ -137,6 +149,18 @@ $(document).ready(function() {
       }
     
       form.submit();
+    })
+    .on('typeahead:render', function(e, objs, async, name) {
+      // needed to only show one 'No results' message for the multiple datasets (users & groups) since the empty template has to be defined per dataset
+      var noResultsEls = $('.tt-none');
+      var numSuggestions = $('.tt-suggestion.tt-selectable').length;
+
+      // Hide all notFound messages
+      noResultsEls.hide();
+      // Only show the first message if there are zero results available
+      if (numSuggestions === 0) {
+          noResultsEls.first().show();
+      }
     });
   
 });

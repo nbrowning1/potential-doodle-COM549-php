@@ -15,7 +15,7 @@ $db = connectToDb();
 $userToUpdate = getUserByUsername($db, $username);
 $correctAnswer = $userToUpdate->recoveryA;
 // re-validate to be sure
-if ($answer != $correctAnswer) {
+if (strtoupper($answer) != strtoupper($correctAnswer)) {
   // should not happen, redirect to fresh recovery
   header("Location: recover.php");
 }

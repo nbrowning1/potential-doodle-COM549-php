@@ -42,6 +42,12 @@ function echoRegularConversations($db, $currentUser, $active) {
     $userIsBlocked = isUserBlockedForUser($db, $currentUser, $otherUser);
     $blockedClass = $userIsBlocked ? 'blocked' : '';
     
+    // current user is blocked by other user.. awkward - don't show conversation. Just inverted logic from above
+    $imTheBadGuy = isUserBlockedForUser($db, $otherUser, $currentUser);
+    if ($imTheBadGuy) {
+      continue;
+    }
+    
     // if user is favourited, add class to modify the style of conversation
     $userIsFavourited = isUserFavouritedForUser($db, $currentUser, $otherUser);
     $favouritedClass = $userIsFavourited ? 'favourited' : '';
