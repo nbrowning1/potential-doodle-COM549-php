@@ -20,7 +20,7 @@ $(document).ready(function() {
           if (data.usernameError) {
             usernameErrorEl.text(data.usernameError);
           }
-        } else {
+        } else if (data.success) {
           $.ajax({
             url: 'recover.php',
             type: 'POST',
@@ -62,7 +62,7 @@ $(document).ready(function() {
           if (data.answerError) {
             answerErrorEl.text(data.answerError);
           }
-        } else {
+        } else if (data.success) {
           $.ajax({
             url: 'recover.php',
             type: 'POST',
@@ -110,9 +110,8 @@ $(document).ready(function() {
           if (data.confirmPasswordError) {
             confirmPasswordErrorEl.text(data.confirmPasswordError);
           }
-        } else {
+        } else if (data.success) {
           window.location = '../login.html';
-          // $('.snackbar').fadeIn(400).delay(3000).fadeOut(400);
         }
       }
     });

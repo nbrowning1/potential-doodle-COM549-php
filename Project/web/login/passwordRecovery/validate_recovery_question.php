@@ -1,8 +1,6 @@
 <?php
 
-require_once('../../db/connection.php');
-require_once('../../../include.php');
-require_once('../../utils.php');
+require_once('../../include.php');
 
 $username = getPostValue('username');
 if (empty($username)) {
@@ -11,18 +9,16 @@ if (empty($username)) {
 }
 $answer = getPostValue('answer');
 if (empty($answer)) {
-  $response = errorResponse();
-  $response['answerError'] = "Answer cannot be empty";
-  returnJson($response);
+  returnErrorResponse('answerError', 'Answer cannot be empty');
 }
 
 $db = connectToDb();
 $correctAnswer = getUserByUsername($db, $username)->recoveryA;
 // case-insensitive matching
 if (strtoupper($answer) != strtoupper($correctAnswer)) {
-  $response = errorResponse();
-  $response['answerError'] = "Incorrect answer";
-  returnJson($response);
+  returnErrorResponse('answerError', 'Incorrect answer');
 }
+
+returnSuccessResponse();
 
 ?>

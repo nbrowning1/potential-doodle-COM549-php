@@ -67,6 +67,10 @@ function redirectResponse($location) {
   return array("redirectTo"=>$location);
 }
 
+function returnSuccessResponse() {
+  returnJson(successResponse());
+}
+
 function returnErrorResponse($key, $value) {
   returnResponse(errorResponse(), $key, $value);
 }

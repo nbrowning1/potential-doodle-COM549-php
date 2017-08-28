@@ -1,22 +1,18 @@
 <?php
 
-require_once('../db/connection.php');
-require_once('../../include.php');
-require_once('../utils.php');
+require_once('../include.php');
 
-$username = $_POST['username'];
-$password = $_POST['password'];
-$confirmPassword = $_POST['confirmPassword'];
-$question = isset($_POST['recoveryQuestion']) ? $_POST['recoveryQuestion'] : '';
-$answer = $_POST['recoveryAnswer'];
+$username = getPostValue('username');
+$password = getPostValue('password');
+$confirmPassword = getPostValue('confirmPassword');
+$question = getPostValue('recoveryQuestion');
+$answer = getPostValue('recoveryAnswer');
 
 $db = connectToDb();
 validateForm($username, $password, $confirmPassword, $question, $answer);
 
 if (!usernameIsAvailable($db, $username)) {
-  $errorResponse = errorResponse();
-  $errorResponse["validationFailure"] = "Username taken - please choose another";
-  returnJson($errorResponse);
+  returnErrorResponse('validationFailure', 'Username taken - please choose another');
 }
 
 // TODO: add validation check (false if DB constraints fail)
@@ -24,12 +20,13 @@ insertUserToDb($db, $username, $password, $question, $answer);
 
 $db->close();
 
+// workaround in JS as PHP header() wasn't working for some reason
 $redirectResponse = redirectResponse("login.html");
 returnJson($redirectResponse);
 
 // TODO: add length checks
 function validateForm($username, $password, $confirmPassword, $question, $answer) {
-  if (empty($username) || empty($password) || empty($confirmPassword) || empty($question) || !isValidQuestion($question) || empty($answer)) {
+  if (anyEmpty($username, $password, $confirmPassword, $question, $answer) || !isValidQuestion($question)) {
     $errorResponse = errorResponse();
     if (empty($username)) {
       $errorResponse["usernameError"] = "Username cannot be empty";
@@ -52,9 +49,7 @@ function validateForm($username, $password, $confirmPassword, $question, $answer
   }
   
   if ($password != $confirmPassword) {
-    $errorResponse = errorResponse();
-    $errorResponse["confirmPasswordError"] = "Passwords do not match";
-    returnJson($errorResponse);
+    returnErrorResponse('confirmPasswordError', 'Passwords do not match');
   }
 }
 

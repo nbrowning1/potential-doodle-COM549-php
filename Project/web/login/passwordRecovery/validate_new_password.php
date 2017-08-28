@@ -1,8 +1,6 @@
 <?php
 
-require_once('../../db/connection.php');
-require_once('../../../include.php');
-require_once('../../utils.php');
+require_once('../../include.php');
 
 $username = getPostValue('username');
 $answer = getPostValue('answer');
@@ -22,7 +20,7 @@ if (strtoupper($answer) != strtoupper($correctAnswer)) {
 
 $password = getPostValue('password');
 $confirmPassword = getPostValue('confirmPassword');
-if (empty($password) || empty($confirmPassword)) {
+if (anyEmpty($password, $confirmPassword)) {
   $response = errorResponse();
   if (empty($password)) {
     $response['passwordError'] = "Password cannot be empty";
@@ -34,11 +32,11 @@ if (empty($password) || empty($confirmPassword)) {
 }
 
 if ($password != $confirmPassword) {
-  $response = errorResponse();
-  $response['confirmPasswordError'] = "Passwords do not match";
-  returnJson($response);
+  returnErrorResponse('confirmPasswordError', 'Passwords do not match');
 }
 
 updateUserPassword($db, $userToUpdate->username, $password);
+
+returnSuccessResponse();
 
 ?>

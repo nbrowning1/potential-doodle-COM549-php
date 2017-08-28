@@ -1,21 +1,17 @@
 <?php
 
-require_once('../../db/connection.php');
-require_once('../../../include.php');
-require_once('../../utils.php');
+require_once('../../include.php');
 
 $username = getPostValue('username');
 if (empty($username)) {
-  $response = errorResponse();
-  $response['usernameError'] = "Username cannot be empty";
-  returnJson($response);
+  returnErrorResponse('usernameError', 'Username cannot be empty');
 }
 
 $db = connectToDb();
 if (usernameIsAvailable($db, $username)) {
-  $response = errorResponse();
-  $response['usernameError'] = "Username does not exist";
-  returnJson($response);
+  returnErrorResponse('usernameError', 'Username does not exist');
 }
+
+returnSuccessResponse();
 
 ?>
