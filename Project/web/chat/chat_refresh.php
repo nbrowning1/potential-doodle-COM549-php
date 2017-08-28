@@ -1,8 +1,6 @@
 <?php
 
-require_once('db/connection.php');
-require_once('include.php');
-require_once('utils.php');
+require_once('../include.php');
 
 session_start();
 $currentUsername = $_SESSION['user'];

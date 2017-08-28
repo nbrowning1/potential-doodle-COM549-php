@@ -24,7 +24,7 @@ var UsersGroupsRefresh = (function() {
   function _refreshUsers() {
     return new Promise(function(resolve, reject) {
       $.ajax({
-        url: '../web/get_users.php',
+        url: '../chat/get_users.php',
         type: 'POST',
         data: { },
         success: function(response) {
@@ -44,7 +44,7 @@ var UsersGroupsRefresh = (function() {
   function _refreshGroups() {
     return new Promise(function(resolve, reject) {
       $.ajax({
-        url: '../web/get_groups.php',
+        url: '../chat/get_groups.php',
         type: 'POST',
         data: { },
         success: function(response) {

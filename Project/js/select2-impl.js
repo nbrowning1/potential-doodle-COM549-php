@@ -5,7 +5,7 @@ $(document).ready(function() {
     placeholder: "Add people",
     
     ajax: {
-      url: "../web/get_users.php",
+      url: "../chat/get_users.php",
       dataType: 'json',
       delay: 250,
       data: function (term) {
@@ -38,7 +38,7 @@ $(document).ready(function() {
     placeholder: "Add people",
     
     ajax: {
-      url: "../web/get_users.php",
+      url: "../chat/get_users.php",
       dataType: 'json',
       delay: 250,
       data: function (term) {

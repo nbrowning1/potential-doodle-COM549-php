@@ -13,7 +13,7 @@ $(document).ready(function() {
     var groupField = $('#group-search');
     
     $.ajax({
-      url: '../web/conversations/add_active_conversation.php',
+      url: '../conversations/add_active_conversation.php',
       type: 'POST',
       data: {
         nameToAdd: formData['nameToAdd'],
@@ -32,7 +32,7 @@ $(document).ready(function() {
           
           // set active to newly added conversation
           $.ajax({
-            url: '../web/conversations/update_active_conversation.php',
+            url: '../conversations/update_active_conversation.php',
             type: 'POST',
             data: {
               newActive: formData['nameToAdd']
@@ -61,7 +61,7 @@ $(document).ready(function() {
     var formData = serializeForm('#create-new-group');
     
     $.ajax({
-      url: '../web/conversations/create_group_conversation.php',
+      url: '../conversations/create_group_conversation.php',
       type: 'POST',
       data: {
         groupName: formData['groupName'],
@@ -84,7 +84,7 @@ $(document).ready(function() {
           $('#group-name').val('');
           
           // set active to newly added conversation
-          $.post('../web/conversations/update_active_conversation.php', {
+          $.post('../conversations/update_active_conversation.php', {
             newActive: formData['groupName']
           });
         }

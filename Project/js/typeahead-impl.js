@@ -6,7 +6,7 @@ $(document).ready(function() {
   
   $.ajax({
     type: "POST",
-    url: '../web/get_current_user.php',
+    url: '../chat/get_current_user.php',
     data: { },
     success: function(response) {
       if (response.user) {

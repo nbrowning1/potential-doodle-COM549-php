@@ -1,14 +1,12 @@
 <?php
-  
-require_once('db/connection.php');
-require_once('include.php');
-require_once('utils.php');
+
+require_once('../include.php');
 
 session_start();
 $currentUsername = $_SESSION['user'];
 
 if (!isset($_POST['hasUpdates'])) {
-  returnResponse(false);
+  returnUpdateResponse(false);
 }
 $hasUpdatesStr = $_POST['hasUpdates'];
 
@@ -28,12 +26,12 @@ $db = connectToDb();
 
 try {
   setUserHasUpdatesByUsername($db, $currentUsername, $hasUpdates);
-  returnResponse(true);
+  returnUpdateResponse(true);
 } catch (Exception $e) {
-  returnResponse(false);  
+  returnUpdateResponse(false);  
 }
 
-function returnResponse($success) {
+function returnUpdateResponse($success) {
   $response = array("successfulUpdate"=>$success);
   returnJson($response);
 }

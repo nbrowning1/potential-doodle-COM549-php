@@ -90,7 +90,7 @@ $(document).ready(function() {
       
       $.ajax({
         type: "POST",
-        url: '../web/chat_refresh.php',
+        url: '../chat/chat_refresh.php',
         data: { use_same_active: true,
                 message: message,
                 isGroupConversation: isGroupConversation },
@@ -119,7 +119,7 @@ function checkViewNeedsRefreshed() {
   return new Promise(function(resolve, reject) {
     $.ajax({
       type: "POST",
-      url: '../web/refresh_checker.php',
+      url: '../chat/refresh_checker.php',
       data: { },
       success: function(response) {
         resolve(response);
@@ -134,7 +134,7 @@ function checkViewNeedsRefreshed() {
 function setHasUpdatesForCurrentUser(status) {
   $.ajax({
     type: "POST",
-    url: '../web/refresh_updater.php',
+    url: '../chat/refresh_updater.php',
     data: { 
       hasUpdates: status
     },
@@ -149,7 +149,7 @@ function setHasUpdatesForCurrentUser(status) {
 function updateConversationsPane(updatedConversationName) {
   $.ajax({
     type: "POST",
-    url: '../web/conversations_refresh.php',
+    url: '../chat/conversations_refresh.php',
     data: { },
     success: function(html) {
       // refresh conversations
@@ -192,7 +192,7 @@ function updateChatPane(activeConversationEl, scroll) {
 
   $.ajax({
     type: "POST",
-    url: '../web/chat_refresh.php',
+    url: '../chat/chat_refresh.php',
     data: { active: activeChat,
             isGroupConversation: isGroupConversation },
     success: function(response) {

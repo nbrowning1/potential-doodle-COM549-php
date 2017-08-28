@@ -14,7 +14,7 @@ if (successfulLogin($db, $username, $password)) {
   $_SESSION['user'] = getUsernameProperCase($db, $username);
   
   // send redirect response to let JS handle it because apparently header doesn't work - tried multiple workarounds e.g. ob_start but nothing worked
-  $redirectResponse = redirectResponse('../chat.php');
+  $redirectResponse = redirectResponse('../chat/chat.php');
   returnJson($redirectResponse);
 } else {
   returnErrorResponse('validationFailure', 'Authentication failed');

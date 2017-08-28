@@ -3,7 +3,7 @@
 session_start();
 // if not logged in, redirect to login page
 if (!isset($_SESSION['user'])) {
-  header("Location: login/login.html");
+  header("Location: ../login/login.html");
   session_destroy();
   exit;
 }
@@ -13,21 +13,21 @@ if (!isset($_SESSION['user'])) {
 <html>
   <head>
     <title>Conversations</title>
-    <link rel="stylesheet" href="../css/bootstrap.min.css">
-    <link rel="stylesheet" href="../css/typeahead.css">
-    <link rel="stylesheet" href="../css/select2.min.css">
-    <link rel="stylesheet" href="../css/all.css">
-    <script src="../js/jquery-3.2.1.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/users-groups-refresh.js"></script>
-    <script src="../js/typeahead.js"></script>
-    <script src="../js/typeahead-impl.js"></script>
-    <script src="../js/select2.min.js"></script>
-    <script src="../js/select2-impl.js"></script>
-    <script src="../js/utils.js"></script>
-    <script src="../js/manage-conversations.js"></script>
-    <script src="../js/chat-options.js"></script>
-    <script src="../js/all.js"></script>
+    <link rel="stylesheet" href="../../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/typeahead.css">
+    <link rel="stylesheet" href="../../css/select2.min.css">
+    <link rel="stylesheet" href="../../css/all.css">
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/bootstrap.min.js"></script>
+    <script src="../../js/users-groups-refresh.js"></script>
+    <script src="../../js/typeahead.js"></script>
+    <script src="../../js/typeahead-impl.js"></script>
+    <script src="../../js/select2.min.js"></script>
+    <script src="../../js/select2-impl.js"></script>
+    <script src="../../js/utils.js"></script>
+    <script src="../../js/manage-conversations.js"></script>
+    <script src="../../js/chat-options.js"></script>
+    <script src="../../js/all.js"></script>
   </head>
   <body>
     
@@ -52,7 +52,7 @@ if (!isset($_SESSION['user'])) {
       <span><?php echo $_SESSION['user'] ?></span>
       &nbsp;&nbsp;
       <!-- logout -->
-      <a href="login/logout.php" class="btn btn-info" role="button">Log out</a>
+      <a href="../login/logout.php" class="btn btn-info" role="button">Log out</a>
     </div>
     
     <br>
