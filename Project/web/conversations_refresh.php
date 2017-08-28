@@ -79,7 +79,7 @@ function echoGroupDivider() {
 
 function echoGroupConversations($db, $currentUser, $active) {
   
-  $groupConversations = getGroupsForUser($db, $currentUser);
+  $groupConversations = getGroupsForUser($db, $currentUser, true);
   $groupConversationsToOutput = array();
   
   foreach ($groupConversations as $groupConversation) {

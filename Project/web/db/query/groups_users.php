@@ -66,7 +66,6 @@ function groupVisibleForUser($db, $groupConversationId, $user) {
   return $guGroupVisibility;
 }
 
-// TODO : 2 queries into 1 - UPDATE .. SET .. = NOT(..) WHERE group_id = .. AND user_id = .. - should maybe just have a setTrue and setFalse method though - toggle doesnt really make sense
 function updateGroupUserGroupVisibility($db, $groupConversationId, $user) {
   
   $stmt = $db->prepare('SELECT * FROM groups_users WHERE group_id = ? AND user_id = ?');

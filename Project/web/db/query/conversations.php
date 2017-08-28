@@ -29,7 +29,8 @@ function getConversations($db, $user) {
     array_push($conversations, new Conversation($cId, $user1, $user2, $cUser1Visibility, $cUser2Visibility));
   }
   
-  // use ($user) to pass external variable into comparator function
+  // Sorts conversations alphabetically by the other username in the conversation
+  // 'use ($user)' to pass external variable into comparator function
   usort($conversations, function($a, $b) use ($user) {
     // find comparison username for first conversation being compared - we want the OTHER user in the conversation to compare
     $aCompareUsername = $user->id == $a->user_1->id ? $a->user_2->username : $a->user_1->username;
@@ -91,6 +92,7 @@ function updateConversationVisibility($db, $conversationId, $userId) {
   $db->query($sql);
 }
 
+// used e.g. when a message is sent to a conversation - new message so it should show in both users' conversations
 function setConversationVisibleForBothUsers($db, $conversationId) {
   $stmt = $db->prepare("UPDATE conversations SET user_1_visibility = 1, user_2_visibility = 1 WHERE id = ?");
   

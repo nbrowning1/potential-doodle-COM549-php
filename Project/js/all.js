@@ -63,6 +63,10 @@ $(document).ready(function() {
         if (response.success) {
           // delete conversation from UI
           conversationToDeleteEl.remove();
+          // if no groups left, delete divider
+          if (document.getElementsByClassName('group-conversation').length === 0) {
+            $('.conversations-divider').remove();
+          }
           if (response.noChat) {
             hideChat();
           }

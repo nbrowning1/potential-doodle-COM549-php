@@ -39,30 +39,16 @@ function insertGroupConversationToDb($db, $groupName, $groupUsers) {
   insertGroupUsersForGroup($db, $groupId, $groupUsers);
 }
 
-function getAllGroups($db) {
-  $stmt = $db->prepare('SELECT * FROM group_conversations ORDER BY name');
-  
-  $stmt->execute();
-  $stmt->store_result();
-  $stmt->bind_result($gcId, $gcName);
-  
-  $groups = array();
-  while ($stmt->fetch()) {
-    $group = createGroupObj($db, $gcId, $gcName);
-    array_push($groups, $group);
-  }
-  
-  return $groups;
-}
-
-// perhaps this should replace some usages of getAllGroups()
-function getAllGroupsForSearch($db, $currentUser) {
+function getGroupsForUser($db, $user, $onlyVisibleGroups) {
+  // if we only want visible groups, append extra query
+  $additionalQuery = $onlyVisibleGroups ? 'AND group_visibility = 1' : '';
   $query = "SELECT  *
             FROM    group_conversations
-            WHERE 	id IN (SELECT group_id FROM groups_users WHERE user_id = ?)";
+            WHERE 	id IN (SELECT group_id FROM groups_users WHERE user_id = ? $additionalQuery) 
+            ORDER BY name";
   $stmt = $db->prepare($query);
   
-  $stmt->bind_param('i', $currentUser->id);
+  $stmt->bind_param('i', $user->id);
   $stmt->execute();
   $stmt->store_result();
   $stmt->bind_result($gcId, $gcName);
@@ -100,23 +86,6 @@ function getGroupByName($db, $groupName) {
   $stmt->fetch();
   
   return createGroupObj($db, $gcId, $gcName);
-}
-
-function getGroupsForUser($db, $user) {
-  $allGroups = getAllGroups($db);
-  
-  $groupIdsUserBelongsTo = getGroupIdsForUser($db, $user);
-  
-  $groupsForUser = array();
-  foreach ($allGroups as $group) {
-    $userPartOfGroup = in_array($group->id, $groupIdsUserBelongsTo);
-    
-    if ($userPartOfGroup) {
-      array_push($groupsForUser, $group);
-    }
-  }
-  
-  return $groupsForUser;
 }
 
 function updateGroupName($db, $oldName, $newName) {

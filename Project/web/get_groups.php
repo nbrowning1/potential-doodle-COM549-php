@@ -9,7 +9,7 @@ $db = connectToDb();
 session_start();
 $currentUser = getUserByUsername($db, $_SESSION['user']);
 
-$groups = getAllGroupsForSearch($db, $currentUser);
+$groups = getGroupsForUser($db, $currentUser, false);
 $groupsToWrite = array();
 
 foreach ($groups as $group) {
