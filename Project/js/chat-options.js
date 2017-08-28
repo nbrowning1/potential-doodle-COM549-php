@@ -20,7 +20,7 @@ $(document).ready(function() {
   $(document).on('click', asId(FAVOURITE_USER_ID), function(event) {
     var userToFavourite = getActiveId();
     $.ajax({
-      url: '../web/conversations/manage_favourite_user.php',
+      url: '../conversations/manage_favourite_user.php',
       type: 'POST',
       data: {
         username: userToFavourite,
@@ -39,7 +39,7 @@ $(document).ready(function() {
   $(document).on('click', asId(UNFAVOURITE_USER_ID), function(event) {
     var userToUnfavourite = getActiveId();
     $.ajax({
-      url: '../web/conversations/manage_favourite_user.php',
+      url: '../conversations/manage_favourite_user.php',
       type: 'POST',
       data: {
         username: userToUnfavourite,
@@ -63,7 +63,7 @@ $(document).ready(function() {
   $(document).on('click', asId(UNBLOCK_USER_ID), function(event) {
     var usernameToUnblock = getActiveId();
     $.ajax({
-      url: '../web/conversations/manage_block_user.php',
+      url: '../conversations/manage_block_user.php',
       type: 'POST',
       data: {
         username: usernameToUnblock,
@@ -97,7 +97,7 @@ $(document).ready(function() {
     var formData = serializeForm('#add-member-group');
     
     $.ajax({
-      url: '../web/conversations/add_members_group_conversation.php',
+      url: '../conversations/add_members_group_conversation.php',
       type: 'POST',
       data: {
         groupName: groupName,
@@ -137,7 +137,7 @@ $(document).ready(function() {
     var newName = formData['groupName'];
     
     $.ajax({
-      url: '../web/conversations/rename_group_conversation.php',
+      url: '../conversations/rename_group_conversation.php',
       type: 'POST',
       data: {
         oldName: oldName,
@@ -165,7 +165,7 @@ $(document).ready(function() {
     var groupName = $('#leave-group-title-current-group').text();
     
     $.ajax({
-      url: '../web/conversations/leave_group_conversation.php',
+      url: '../conversations/leave_group_conversation.php',
       type: 'POST',
       data: {
         groupName: groupName
@@ -187,7 +187,7 @@ $(document).ready(function() {
     var username = $('#block-user-title-user-name').text();
     
     $.ajax({
-      url: '../web/conversations/manage_block_user.php',
+      url: '../conversations/manage_block_user.php',
       type: 'POST',
       data: {
         username: username,

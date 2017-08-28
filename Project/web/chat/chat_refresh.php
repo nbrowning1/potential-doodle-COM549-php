@@ -21,18 +21,7 @@ if (isset($_POST['active'])) {
   exit;
 }
 
-$isGroupConversationStr = isset($_POST['isGroupConversation']) ? $_POST['isGroupConversation'] : false;
-// needed because ajax calls pass variable values to PHP as a string... https://stackoverflow.com/questions/7408976/bool-parameter-from-jquery-ajax-received-as-literal-string-false-true-in-php
-$isGroupConversation;
-if ($isGroupConversationStr === 'true') {
-  $isGroupConversation = true;
-} else if ($isGroupConversationStr === 'false') {
-  $isGroupConversation = false;
-} else {
-  // must already be boolean - assign directly
-  $isGroupConversation = $isGroupConversationStr;
-}
-
+$isGroupConversation = getPostValueBoolean('isGroupConversation');
 $_SESSION['active'] = $active;
 
 $conversation;
@@ -54,10 +43,10 @@ $otherUserIsBlocked = !$isGroupConversation && isUserBlockedForUser($db, $curren
 $imTheBadGuy = !$isGroupConversation && isUserBlockedForUser($db, $otherUser, $currentUser);
 
 // add message if new one sent
-if (!empty($_POST['message'])) {
-  // but don't allow sending if either user is blocked - javascript will try to disallow this but stop it at serverside if the user is a weasel
+if (!empty(getPostValue('message'))) {
+  // but don't allow sending if either user is blocked - javascript will try to disallow this but stop it at serverside for safety
   if (!($otherUserIsBlocked || $imTheBadGuy)) {
-    $message = htmlspecialchars($_POST['message']);
+    $message = htmlspecialchars(getPostValue('message'));
 
     insertChatMessageToDb($db, $currentUser, $message, $conversation, $isGroupConversation);
   }
