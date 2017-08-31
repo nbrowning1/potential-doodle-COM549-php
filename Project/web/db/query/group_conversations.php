@@ -2,6 +2,8 @@
 
 // check if group name is unique for creation
 function groupNameIsAvailable($db, $name) {
+  $name = htmlspecialchars($name);
+  
   $query = 'SELECT * FROM group_conversations WHERE name = ?';
   $stmt = $db->prepare($query);
   $stmt->bind_param('s', $name);
@@ -23,6 +25,8 @@ function groupNameIsAvailable($db, $name) {
 
 function insertGroupConversationToDb($db, $groupName, $groupUsers) {
 
+  $groupName = htmlspecialchars($groupName);
+  
   $query = 'INSERT INTO group_conversations(name) VALUES (?)';
   $stmt = $db->prepare($query);
   
@@ -76,6 +80,8 @@ function getGroupById($db, $groupConversationId) {
 }
 
 function getGroupByName($db, $groupName) {
+  $groupName = htmlspecialchars($groupName);
+  
   $stmt = $db->prepare('SELECT * FROM group_conversations WHERE name = ?');
   
   $stmt->bind_param('s', $groupName);
@@ -89,6 +95,9 @@ function getGroupByName($db, $groupName) {
 }
 
 function updateGroupName($db, $oldName, $newName) {
+  $oldName = htmlspecialchars($oldName);
+  $newName = htmlspecialchars($newName);
+  
   $query = 'UPDATE group_conversations SET name = ? WHERE name = ?';
   $stmt = $db->prepare($query);
   

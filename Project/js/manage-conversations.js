@@ -83,9 +83,16 @@ $(document).ready(function() {
           $('#add-group-users').text('');
           $('#group-name').val('');
           
-          // set active to newly added conversation
-          $.post('../conversations/update_active_conversation.php', {
-            newActive: formData['groupName']
+          // set active to newly added conversation and refresh
+          $.ajax({
+            url: '../conversations/update_active_conversation.php',
+            type: 'POST',
+            data: {
+              newActive: formData['groupName']
+            },
+            success: function(data) { 
+              updateConversationsPane();
+            }
           });
         }
       }

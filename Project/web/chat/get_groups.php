@@ -5,7 +5,7 @@ require_once('../include.php');
 $db = connectToDb();
 
 session_start();
-$currentUser = getUserByUsername($db, $_SESSION['user']);
+$currentUser = getUserByUsername($db, getSessionValue('user'));
 
 $groups = getGroupsForUser($db, $currentUser, false);
 $groupsToWrite = array();

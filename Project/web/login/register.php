@@ -15,7 +15,6 @@ if (!usernameIsAvailable($db, $username)) {
   returnErrorResponse('validationFailure', 'Username taken - please choose another');
 }
 
-// TODO: add validation check (false if DB constraints fail)
 insertUserToDb($db, $username, $password, $question, $answer);
 
 $db->close();
@@ -24,7 +23,6 @@ $db->close();
 $redirectResponse = redirectResponse("login.html");
 returnJson($redirectResponse);
 
-// TODO: add length checks
 function validateForm($username, $password, $confirmPassword, $question, $answer) {
   if (anyEmpty($username, $password, $confirmPassword, $question, $answer) || !isValidQuestion($question)) {
     $errorResponse = errorResponse();
@@ -50,6 +48,14 @@ function validateForm($username, $password, $confirmPassword, $question, $answer
   
   if ($password != $confirmPassword) {
     returnErrorResponse('confirmPasswordError', 'Passwords do not match');
+  }
+  
+  if (!isValidUsername($username)) {
+    returnErrorResponse('usernameError', 'Username should be 3-20 alphanumeric characters');
+  }
+  
+  if (!isValidPassword($password)) {
+    returnErrorResponse('passwordError', 'Password does not meet requirements. Password must be at least 6 characters, contain 1 lowercase, 1 uppercase, and 1 numeric character');
   }
 }
 

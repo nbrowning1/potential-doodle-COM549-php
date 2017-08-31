@@ -2,6 +2,8 @@
 
 // check if username is unique for registration or available for password recovery
 function usernameIsAvailable($db, $username) {
+  $username = htmlspecialchars($username);
+  
   $query = 'SELECT * FROM users WHERE username = ?';
   $stmt = $db->prepare($query);
   $stmt->bind_param('s', $username);
@@ -22,6 +24,9 @@ function usernameIsAvailable($db, $username) {
 }
 
 function insertUserToDb($db, $username, $password, $recoveryQ, $recoveryA) {
+  
+  $username = htmlspecialchars($username);
+  
   $query = 'INSERT INTO users(username, password, recovery_question, recovery_answer, reg_date, user_type) VALUES (?, sha1(?), ?, ?, now(), 0)';
   $stmt = $db->prepare($query);
 
@@ -36,6 +41,8 @@ function insertUserToDb($db, $username, $password, $recoveryQ, $recoveryA) {
 }
 
 function successfulLogin($db, $username, $password) {
+  $username = htmlspecialchars($username);
+  
   $stmt = $db->prepare('SELECT * FROM users WHERE Username = ? AND Password = sha1(?)');
 
   $stmt->bind_param('ss', $username, $password);
@@ -56,6 +63,8 @@ function successfulLogin($db, $username, $password) {
 }
 
 function updateUserPassword($db, $username, $newPassword) {
+  $username = htmlspecialchars($username);
+  
   $stmt = $db->prepare('UPDATE users SET password = sha1(?) WHERE username = ?');
   
   $stmt->bind_param('ss', $newPassword, $username);
@@ -64,6 +73,8 @@ function updateUserPassword($db, $username, $newPassword) {
 
 // gets the username as defined when they created the account, as login is case-insensitive
 function getUsernameProperCase($db, $usernameAnyCase) {
+  $usernameAnyCase = htmlspecialchars($usernameAnyCase);
+  
   $stmt = $db->prepare('SELECT username FROM users WHERE username = ?');
   
   $stmt->bind_param('s', $usernameAnyCase);
@@ -113,6 +124,8 @@ function getAllUsersForSearch($db, $currentUser) {
 }
 
 function getUserByUsername($db, $username) {
+  $username = htmlspecialchars($username);
+  
   $stmt = $db->prepare('SELECT * FROM users WHERE username = ?');
   
   $stmt->bind_param('s', $username);
@@ -137,6 +150,8 @@ function getUserById($db, $userId) {
 }
 
 function setUserHasUpdatesByUsername($db, $username, $value) {
+  $username = htmlspecialchars($username);
+  
   $updateValue = $value ? 1 : 0;
   $stmt = $db->prepare('UPDATE users SET has_updates = ? WHERE username = ?');
   

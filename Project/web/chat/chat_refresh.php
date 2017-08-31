@@ -3,7 +3,7 @@
 require_once('../include.php');
 
 session_start();
-$currentUsername = $_SESSION['user'];
+$currentUsername = getSessionValue('user');
 
 $db = connectToDb();
 $currentUser = getUserByUsername($db, $currentUsername);
@@ -13,7 +13,7 @@ if (isset($_POST['active'])) {
   $active = $_POST['active']; 
 } else if ($_POST['use_same_active'] && !empty($_SESSION['active'])) {
   // used for new message where we're already on the active chat window
-  $active = $_SESSION['active'];
+  $active = getSessionValue('active');
 } else {
   $response = array();
   $response['noChat'] = true;
@@ -46,7 +46,7 @@ $imTheBadGuy = !$isGroupConversation && isUserBlockedForUser($db, $otherUser, $c
 if (!empty(getPostValue('message'))) {
   // but don't allow sending if either user is blocked - javascript will try to disallow this but stop it at serverside for safety
   if (!($otherUserIsBlocked || $imTheBadGuy)) {
-    $message = htmlspecialchars(getPostValue('message'));
+    $message = getPostValue('message');
 
     insertChatMessageToDb($db, $currentUser, $message, $conversation, $isGroupConversation);
   }

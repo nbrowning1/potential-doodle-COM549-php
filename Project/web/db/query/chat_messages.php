@@ -11,6 +11,8 @@ function insertAdminChatMessageToDb($db, $creator, $message, $conversation, $isG
 }
 
 function insertChatMessageToDbFromQuery($db, $creator, $message, $conversation, $isGroupConversation, $query) {
+  $message = htmlspecialchars($message);
+  
   $stmt = $db->prepare($query);
   
   $conversationId;

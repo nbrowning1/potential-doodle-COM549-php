@@ -3,9 +3,8 @@
 require_once('../include.php');
 
 session_start();
-$currentUsername = $_SESSION['user'];
-// TODO: more appropriate defaults?
-$active = isset($_SESSION['active']) ? $_SESSION['active'] : '';
+$currentUsername = getSessionValue('user');
+$active = getSessionValue('active');
 
 $db = connectToDb();
 $currentUser = getUserByUsername($db, $currentUsername);

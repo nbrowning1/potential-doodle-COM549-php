@@ -3,8 +3,8 @@
 require_once('../include.php');
 
 session_start();
-$active = $_SESSION['active'];
-$currentUsername = $_SESSION['user'];
+$active = getSessionValue('active');
+$currentUsername = getSessionValue('user');
 
 $hideName = getPostValue('hide');
 $isGroupConversation = getPostValueBoolean('isGroupConversation');

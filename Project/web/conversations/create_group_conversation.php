@@ -3,7 +3,7 @@
 require_once('../include.php');
 
 session_start();
-$currentUsername = $_SESSION['user'];
+$currentUsername = getSessionValue('user');
 
 $groupName = getPostValue('groupName');
 $usernamesToAdd = getPostValueArray('members');
@@ -31,6 +31,11 @@ function validateData($groupName, $usernamesToAdd) {
     }
     returnJson($response);
   }
+  
+  // don't need to validate usernames to add because they're locked to existing usernames
+  if (!isValidGroupName($groupName)) {
+    returnErrorResponse('groupNameError', 'Name must be 5-20 alphanumeric characters');
+  }
 }
 
 function createNewGroupConversation($groupName, $usernamesToAdd) {
@@ -38,6 +43,10 @@ function createNewGroupConversation($groupName, $usernamesToAdd) {
   
   if (!groupNameIsAvailable($db, $groupName)) {
     returnErrorResponse('groupNameError', 'A group already exists with this name');
+  }
+  
+  if (!isValidGroupName($groupName)) {
+    returnErrorResponse('groupNameError', 'Name must be 5-20 alphanumeric characters');
   }
   
   $usersToAddToGroup = array();

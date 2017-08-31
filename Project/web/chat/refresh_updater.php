@@ -3,7 +3,7 @@
 require_once('../include.php');
 
 session_start();
-$currentUsername = $_SESSION['user'];
+$currentUsername = getSessionValue('user');
 
 if (!isset($_POST['hasUpdates'])) {
   returnUpdateResponse(false);

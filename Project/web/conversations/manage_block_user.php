@@ -3,11 +3,11 @@
 require_once('../include.php');
 
 session_start();
-$currentUsername = $_SESSION['user'];
+$currentUsername = getSessionValue('user');
 
 $targetUsername = getPostValue('username');
 $blockStatus = getPostValue('blockStatus');
-// TODO: change to boolean from AJAX
+
 if (!($blockStatus == 'block' || $blockStatus == 'unblock')) {
   returnErrorResponse('invalidOption', 'Invalid block status');
 }

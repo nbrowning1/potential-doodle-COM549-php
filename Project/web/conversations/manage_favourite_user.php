@@ -3,11 +3,11 @@
 require_once('../include.php');
 
 session_start();
-$currentUsername = $_SESSION['user'];
+$currentUsername = getSessionValue('user');
 
 $targetUsername = getPostValue('username');
 $favouriteStatus = getPostValue('favouriteStatus');
-// TODO: change to boolean from AJAX
+
 if (!($favouriteStatus == 'favourite' || $favouriteStatus == 'unfavourite')) {
   returnErrorResponse('invalidOption', 'Invalid favourite status');
 }

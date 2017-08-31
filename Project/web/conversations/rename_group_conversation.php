@@ -4,7 +4,7 @@ require_once('../include.php');
 
 session_start();
 $db = connectToDb();  
-$currentUser = getUserByUsername($db, $_SESSION['user']);
+$currentUser = getUserByUsername($db, getSessionValue('user'));
 
 $oldName = getPostValue('oldName');
 $newName = getPostValue('newName');
@@ -22,6 +22,10 @@ function validateData($db, $oldName, $newName) {
 
   if (!groupNameIsAvailable($db, $newName)) {
     returnErrorResponse('groupNameError', 'A group already exists with this name');
+  }
+  
+  if (!isValidGroupName($newName)) {
+    returnErrorResponse('groupNameError', 'Name must be 5-20 alphanumeric characters');
   }
 }
 

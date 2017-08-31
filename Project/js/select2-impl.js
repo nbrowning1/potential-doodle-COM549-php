@@ -1,6 +1,5 @@
 $(document).ready(function() {
   
-  // TODO: DRY - implementations are exactly the same. Would be cool to filter here too
   $('#add-group-users').select2({
     placeholder: "Add people",
     

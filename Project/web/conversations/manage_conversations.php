@@ -2,7 +2,6 @@
 
 require_once('../include.php');
 
-// TODO: change to json response to be consistent with everything else
 class AddStatus {
   public $success;
   public $msg;
@@ -15,7 +14,7 @@ class AddStatus {
 
 function addConversationToActiveConversations($userToAddUsername) {
   $db = connectToDb();
-  $currentUsername = $_SESSION['user'];
+  $currentUsername = getSessionValue('user');
   $currentUser = getUserByUsername($db, $currentUsername);
   $userToAdd = getUserByUsername($db, $userToAddUsername);
 
@@ -50,7 +49,7 @@ function addConversationToActiveConversations($userToAddUsername) {
 
 function addGroupConversationToActiveConversations($groupToAddName) {
   $db = connectToDb();
-  $currentUsername = $_SESSION['user'];
+  $currentUsername = getSessionValue('user');
   $currentUser = getUserByUsername($db, $currentUsername);
 
   if (empty($groupToAddName)) {

@@ -56,7 +56,7 @@ $(document).ready(function() {
     
     $.ajax({
       type: "POST",
-      url: '../web/conversations/hide_conversation.php',
+      url: '../conversations/hide_conversation.php',
       data: { hide: conversationToDelete,
               isGroupConversation: isGroupConversation },
       success: function(response) {

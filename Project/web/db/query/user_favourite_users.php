@@ -31,6 +31,9 @@ function removeFavouritedUserByUsername($db, $username, $usernameToUnfavourite) 
 }
 
 function manageFavouritedUserByUsername($db, $username, $usernameToManage, $query) {
+  $username = htmlspecialchars($username);
+  $usernameToManage = htmlspecialchars($usernameToManage);
+  
   $currentUser = getUserByUsername($db, $username);
   $targetUser = getUserByUsername($db, $usernameToManage);
   

@@ -37,6 +37,9 @@ function removeBlockedUserByUsername($db, $username, $usernameToUnblock) {
 }
 
 function addAdminMessageForBlockStatus($db, $username, $otherUsername, $message) {
+  $username = htmlspecialchars($username);
+  $otherUsername = htmlspecialchars($otherUsername);
+  
   // show some message to make clear what's happening. Toyed with the idea of making the blocking user invisible to the blocked user but if both users block eachother then it becomes a deadlock
   $currentUser = getUserByUsername($db, $username);
   $otherUser = getUserByUsername($db, $otherUsername);
@@ -46,6 +49,9 @@ function addAdminMessageForBlockStatus($db, $username, $otherUsername, $message)
 }
 
 function manageBlockedUserByUsername($db, $username, $usernameToManage, $query) {
+  $username = htmlspecialchars($username);
+  $usernameToManage = htmlspecialchars($usernameToManage);
+  
   $currentUser = getUserByUsername($db, $username);
   $targetUser = getUserByUsername($db, $usernameToManage);
   

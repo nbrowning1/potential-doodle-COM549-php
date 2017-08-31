@@ -8,21 +8,30 @@ CREATE TABLE `Users` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
  `username` varchar(20) NOT NULL UNIQUE,
  `password` varchar(50) NOT NULL,
- `hint` varchar(30) NOT NULL,
- `answer` varchar(30) NOT NULL,
+ `recovery_question` varchar(50) NOT NULL,
+ `recovery_answer` varchar(30) NOT NULL,
  `reg_date` datetime NOT NULL,
  `user_type` int(1) NOT NULL,
  `has_updates` boolean NOT NULL DEFAULT 0,
   PRIMARY KEY (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `Blocked_Users` (
+CREATE TABLE `Users_Blocked_Users` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
  `user_id` int(11) NOT NULL,
  `blocked_user_id` int(11) NOT NULL,
   PRIMARY KEY (id),
   FOREIGN KEY (user_id) REFERENCES Users(id),
   FOREIGN KEY (blocked_user_id) REFERENCES Users(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `Users_Favourite_Users` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `user_id` int(11) NOT NULL,
+ `favourite_user_id` int(11) NOT NULL,
+  PRIMARY KEY (id),
+  FOREIGN KEY (user_id) REFERENCES Users(id),
+  FOREIGN KEY (favourite_user_id) REFERENCES Users(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Conversations` (
@@ -61,9 +70,9 @@ CREATE TABLE `Chat_Messages` (
  `datetime` DATETIME DEFAULT CURRENT_TIMESTAMP,
  `admin_message` boolean NOT NULL DEFAULT 0,
   PRIMARY KEY (id),
-  FOREIGN KEY (creator_id) REFERENCES Users(id),
-  FOREIGN KEY (conversation_id) REFERENCES Conversations(id),
-  FOREIGN KEY (group_conversation_id) REFERENCES Group_Conversations(id)
+  FOREIGN KEY (creator_id) REFERENCES Users(id) ON DELETE CASCADE,
+  FOREIGN KEY (conversation_id) REFERENCES Conversations(id) ON DELETE CASCADE,
+  FOREIGN KEY (group_conversation_id) REFERENCES Group_Conversations(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `Users_Chat_Messages` (
@@ -72,6 +81,6 @@ CREATE TABLE `Users_Chat_Messages` (
  `message_id` int(11) NOT NULL,
  `read_status` boolean NOT NULL,
   PRIMARY KEY (id),
-  FOREIGN KEY (user_id) REFERENCES Users(id),
-  FOREIGN KEY (message_id) REFERENCES Chat_Messages(id)
+  FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE,
+  FOREIGN KEY (message_id) REFERENCES Chat_Messages(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

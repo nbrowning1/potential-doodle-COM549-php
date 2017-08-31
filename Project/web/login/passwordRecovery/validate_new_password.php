@@ -35,6 +35,10 @@ if ($password != $confirmPassword) {
   returnErrorResponse('confirmPasswordError', 'Passwords do not match');
 }
 
+if (!isValidPassword($password)) {
+  returnErrorResponse('passwordError', 'Password does not meet requirements. Password must be at least 6 characters, contain 1 lowercase, 1 uppercase, and 1 numeric character');
+}
+
 updateUserPassword($db, $userToUpdate->username, $password);
 
 returnSuccessResponse();

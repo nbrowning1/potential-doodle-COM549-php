@@ -27,9 +27,7 @@ $(document).ready(function() {
         favouriteStatus: 'favourite'
       },
       success: function(data) {
-        if (data.error) {
-          // TODO : do something
-        } else {
+        if (!data.error) {
           updateConversationsPane();
         }
       }
@@ -46,9 +44,7 @@ $(document).ready(function() {
         favouriteStatus: 'unfavourite'
       },
       success: function(data) {
-        if (data.error) {
-          // TODO : do something
-        } else {
+        if (!data.error) {
           updateConversationsPane();
         }
       }
@@ -70,9 +66,7 @@ $(document).ready(function() {
         blockStatus: 'unblock'
       },
       success: function(data) {
-        if (data.error) {
-          // TODO : do something
-        } else {
+        if (!data.error) {
           updateConversationsPane();
         }
       }
@@ -171,9 +165,7 @@ $(document).ready(function() {
         groupName: groupName
       },
       success: function(data) {
-        if (data.error) {
-          // TODO : do something
-        } else {
+        if (!data.error) {
           // dismiss modal
           $('#leave-group-modal').modal('toggle');
           updateConversationsPane();
@@ -194,9 +186,7 @@ $(document).ready(function() {
         blockStatus: 'block'
       },
       success: function(data) {
-        if (data.error) {
-          // TODO : do something
-        } else {
+        if (!data.error) {
           // dismiss modal
           $('#block-user-modal').modal('toggle');
           updateConversationsPane();
